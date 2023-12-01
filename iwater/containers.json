@@ -1,0 +1,8 @@
+{
+    "flask": {
+        "image": ":wbms-service.flask-container.35",
+        "ports": {
+            "8080": "HTTP"
+        }
+    }
+}
