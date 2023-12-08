@@ -106,4 +106,4 @@ access key: AKIAQWZYNSFUFYLNI5E4
 region: ap-south-1
 
 ### Install lightsailctl plugin for MacOS
-brew install aws/tap/lightsailctl
+brew install aws/tap/lightsailctld
