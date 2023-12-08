@@ -1,6 +1,7 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
+from waitress import serve
 from flask import Flask
 
 load_dotenv()
@@ -26,4 +27,5 @@ def livestocks():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=8080)
+    # app.run(host='0.0.0.0', port=8080)
+    serve(app, listen='*:80')

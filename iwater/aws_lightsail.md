@@ -59,18 +59,18 @@ $
 docker build -t flask-container .
 
 ### Run the Docker Container
-docker run -p 5000:5000 flask-container
+docker run -p 8080:8080 flask-container
 
 ### Create a container Service
-aws lightsail create-container-service --service-name flask-service --power small --scale 1
+aws lightsail create-container-service --service-name wbms-service --power small --scale 1
                                         OR
-aws lightsail create-container-service --service-name flask-service --power nano --scale 1
+aws lightsail create-container-service --service-name wbms-service --power nano --scale 1
 
 ### Check the container services
 aws lightsail get-container-services
 
 ### Push the docker image to lightsail container
-aws lightsail push-container-image --service-name flask-service --label flask-container --image flask-container
+aws lightsail push-container-image --service-name wbms-service --label flask-container --image flask-container
 
 ### Create a containers.json file
 {
@@ -81,6 +81,8 @@ aws lightsail push-container-image --service-name flask-service --label flask-co
         }
     }
 }
+$ replace X with the version number received from get-container-service command $
+
 
 ### Create a public-endpoint.json file
 {
@@ -88,11 +90,20 @@ aws lightsail push-container-image --service-name flask-service --label flask-co
     "containerPort": 8080
 }
 ### Create a container deployment service
-aws lightsail create-container-service-deployment --service-name flask-service --containers file://containers.json --public-endpoint file://public-endpoint.json
+aws lightsail create-container-service-deployment --service-name wbms-service --containers file://containers.json --public-endpoint file://public-endpoint.json
 
 
 ### Clean up
-aws lightsail delete-container-service --service-name flask-service
+aws lightsail delete-container-service --service-name wbms-service
 
 ### Check the container services
 aws lightsail get-container-services
+
+
+### aws configure
+secret access key: TX+KJTY2D1cS/7MeydBzAv9D/nRNPj+dHcXXnqUQ
+access key: AKIAQWZYNSFUFYLNI5E4
+region: ap-south-1
+
+### Install lightsailctl plugin for MacOS
+brew install aws/tap/lightsailctl
