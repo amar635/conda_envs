@@ -1,4 +1,4 @@
 .DS_Store
 iKonnect-studentApp/.DS_Store
-#.env
-#.flaskenv
+.env
+.flaskenv
