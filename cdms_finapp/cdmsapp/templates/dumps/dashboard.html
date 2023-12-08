@@ -1,0 +1,381 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block header %}Project Snapshot{% endblock %}
+
+{% block content %}
+<!--sidebar-->
+<!-- <div class="container-fluid bg-dark">
+    <div class="display-6 text-uppercase text-white text-center">Snapshot - Project <b>WASCA 2.0</b></div>
+</div> -->
+<div class="container-fluid small">
+    <div class="row">
+        <nav id="sidebarMenu" class="col-md-2 col-lg-2 d-md-block bg-secondary sidebar collapse" style="">
+            <div class="position-sticky pt-3 sidebar-sticky">
+                <form method="POST" action="{{ url_for('.filters') }}" enctype="multipart/form-data" class="well">
+                    <!--PROJECT NAME FILTER-->
+                    <div class="card">
+                        <div class="card-header fw-bold">
+                            <small>Select Project Name</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mt-1">
+                                {% for value in data %}
+                                <div class="col-4 d-grid mt-1">
+                                    <input type="submit" class="btn-check" name="projectName"
+                                        id="{{'btn-' + value['shortname']}}" autocomplete="off" value="{{value['id']}}">
+                                    <label
+                                        class="{{'btn btn-dark' if filter_project_id==value['id'] else 'btn btn-outline-dark'}}"
+                                        for="{{'btn-' + value['shortname']}}"
+                                        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .20rem; --bs-btn-font-size: .50rem;">{{value['shortname']}}</label>
+                                </div><!--end col-md-4-->
+                                {% endfor %}
+                            </div><!--end row-->
+                        </div> <!--end card-body-->
+                    </div> <!--end card-->
+                    <!--PROJECT YEAR FILTER-->
+                    {% if financials %}
+                    <div class="card mt-2">
+                        <div class="card-header fw-bold">
+                            <small>Select Project Year</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mt-1">
+    
+                                {% for key in financials[0].keys() %}
+                                    {% if (key != 'description') %}
+                                    <div class="col-3 d-grid">
+                                        <input type="submit" class="btn-check" name="projectYear" id="{{'btn-' + key}}"
+                                            autocomplete="off" value="{{key}}">
+                                        <label
+                                            class="{{'btn btn-dark' if (filter_year|string)==key else 'btn btn-outline-dark'}}"
+                                            for="{{'btn-' + key}}"
+                                            style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .20rem; --bs-btn-font-size: .65rem;">{{key}}</label>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+    
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!--MONTH FILTER-->
+                    <!-- <div class="card mt-2">
+                        <div class="card-header">
+                            <small>Select Month</small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mt-1"> -->
+                    {% for month in pf %}
+                    <!-- <div class="col-3 d-grid mt-1">
+                                    <input type="submit" class="btn-check" name="projectYear" id="{{'btn-' + (month['month_year'].strftime('%b')|capitalize)}}"
+                                        autocomplete="off" value="{{month['month_year'].strftime('%-m')}}">
+                                    <label class="{{'btn btn-primary' if filter_month==(month['month_year'].strftime('%-m')|int) else 'btn btn-outline-primary'}}" for="{{'btn-' + (month['month_year'].strftime('%b')|capitalize)}}"
+                                        style="--bs-btn-padding-y: .20rem; --bs-btn-padding-x: .20rem; --bs-btn-font-size: .65rem;">{{month['month_year'].strftime('%b')|capitalize}}</label>
+                                </div>           -->
+                    {% endfor %}
+                    <!-- </div>
+                        </div>    
+                    </div> -->
+                </form>      
+              <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+                <span>Saved reports</span>
+                <a class="link-secondary" href="#" aria-label="Add a new report">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus-circle align-text-bottom" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg>
+                </a>
+              </h6>
+              <!-- <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                  
+                </li>
+                <li class="nav-item">
+                  
+                </li>
+                <li class="nav-item">
+                  
+                </li>
+                <li class="nav-item">
+                  
+                </li>
+              </ul> -->
+            </div>
+          </nav>
+        <div class="col-md-4 mt-2">
+            <div class="d-grid gap-2 mb-3">
+                <label class="btn btn-primary btn-sm fw-bold text-uppercase" type="button">Project Details -
+                    {{project['shortname']}}</label>
+            </div>
+            <div class="well">
+                <table class="table table-bordered">
+                    <thead class="table-primary">
+                        <tr class="text-center">
+                            <th width="25%">Feature</th>
+                            <th width="75%">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Name</td>
+                            <td>{{project['shortname']}}</td>
+                        </tr>
+                        <tr>
+                            <td>Full Name</td>
+                            <td>{{project['fullname']}}</td>
+                        </tr>
+                        <tr>
+                            <td>Number</td>
+                            <td>{{project['project_number']}}</td>
+                        </tr>
+                        <tr>
+                            <td>Commission Value</td>
+                            <td>&euro; {{'%0.2f'|format(project['comm_value'])}}</td>
+                        </tr>
+                        <tr>
+                            <td>Duration</td>
+                            <td>{{project['from_date']}} to {{project['to_date']}}</td>
+                        </tr>
+                        <tr>
+                            <td>CC</td>
+                            <td>Mohammad El-Khawad</td>
+                        </tr>
+                        <tr>
+                            <td>AV</td>
+                            <td>{{project['av']}}</td>
+                        </tr>
+                        <tr>
+                            <td>DV</td>
+                            <td>{{project['dv']}}</td>
+                        </tr>
+                        <tr>
+                            <td>Finance Manager</td>
+                            <td>{{project['fm']}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+           
+            <div class="{{'well' if showYoy else 'well d-none'}}">
+                
+                <!--For Medium to larger screens-->
+                <div class="d-none d-md-block">
+                    <div class="{{'d-grid gap-2 mb-4' if showYoy else 'd-grid gap-2 mb-4 d-none'}}">
+                        <label class="btn btn-success btn-sm fw-bold" type="button">Year-on-Year Budget Allocation</label>
+                    </div>
+                    <table class="table table-bordered ">
+                        <thead class="table-success">
+                            <tr class="text-center">
+                                {% if showYoy %}
+                                    {% for key in financials[0].keys() %}
+                                    <th class="text-center">{{key|capitalize}}</th>
+                                    {% endfor %}
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if showYoy %}
+                                {%for fin in financials %}
+                                <tr>
+                                    {% for key in financials[0].keys() %}
+                                    <td class="{{'text-end' if loop.index>1 else 'text-start'}}">
+                                        {{('%0.2f'|format(fin[key])) if loop.index>1 else (fin[key]| capitalize)}}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+                <!--For Small and extra-small screens-->
+                <div class="d-md-none">
+                    <div class="{{'d-grid gap-2 mb-4' if showYoy else 'd-grid gap-2 mb-4 d-none'}}">
+                        <label class="btn btn-success btn-sm fw-bold" type="button">Year-on-Year (in Millions)</label>
+                    </div>
+                    <table class="table table-bordered d-md-none">
+                        <thead class="table-success">
+                            <tr class="text-center">
+                                {% if showYoy %}
+                                    {% for key in financials[0].keys() %}
+                                    <th class="text-center">{{key|capitalize}}</th>
+                                    {% endfor %}
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if showYoy %}
+                                {%for fin in financials %}
+                                <tr>
+                                    {% for key in financials[0].keys() %}
+                                    <td class="{{'text-center' if loop.index>1 else 'text-start'}}">
+                                        {{('%0.2f'|format(fin[key]/1000000)) if loop.index>1 else (fin[key]| capitalize)}}
+                                    </td>
+                                    {% endfor %}
+                                </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-2">
+            <div class="card {{'card' if showFinData else 'card d-none'}}">
+                <div class="card-header fw-bold text-center text-uppercase bg-dark text-white">
+                    {{'Project Financials - ' + curr_month}}
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="d-grid gap-2 mb-2">
+                                <label class="btn btn-success btn-sm fw-bold" type="button">Planned vs Actuals</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mt-2">
+                                    <div class="p-3 well bg-dark text-center text-white rounded-2">
+                                        <div class="fs-5 font-monospace mb-2">
+                                            {{total_planned}}
+                                        </div>
+                                        <div class="blockquote-footer small">
+                                            Planned Expenses
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mt-2">
+                                    <div class="p-3 well bg-dark text-center text-white rounded-2">
+                                        <div class="fs-5 font-monospace mb-2">
+                                            {{total_actuals}}
+                                        </div>
+                                        <div class="blockquote-footer small">
+                                            Actually Spent
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mt-2">
+                                    <div class="p-3 well bg-dark text-center text-white rounded-2">
+                                        <div class="fs-5 font-monospace mb-2">
+                                            {{spent_percent}}
+                                        </div>
+                                        <div class="blockquote-footer small">
+                                            Percentage Utilised
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="progress my-2">
+                                <div class="progress-bar bg-success" role="progressbar" aria-label="Success example"
+                                    style="{{progress_width}}" aria-valuenow="{{spent_percent|string}}"
+                                    aria-valuemin="0" aria-valuemax="100">{{(spent_percent)}}</div>
+                            </div>
+                            <hr>
+                            <div class="well">
+                                <canvas id="stackedBarChart" style="height:300px;"></canvas>
+                            </div>
+                            <hr>
+                            <div class="progress my-2">
+                                <div class="progress-bar bg-primary" role="progressbar" aria-label="Success example"
+                                    style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid gap-2 mb-4">
+                                <label class="btn btn-primary btn-sm fw-bold" type="button">Month-on-Month Expenses</label>
+                            </div>
+                            <table class="table table-bordered table-sm">
+                                <thead class="table-primary">
+                                    <tr class="text-center">
+                                        <th>Month</th>
+                                        <th>Planned</th>
+                                        <th>Actuals</th>
+                                    </tr>
+                                </thead>
+                                {% for f in pf %}
+                                <tr>
+                                    <td class="text-start">{{f['month_year'].strftime('%b-%y')|capitalize}}</td>
+                                    <td class="text-end text-primary fw-bold">{{'%0.2f'|format(f['planned'])}}</td>
+                                    <td class="text-end text-success fw-bold">{{'%0.2f'|format(f['actuals'])}}</td>
+                                </tr>
+                                {% endfor %}
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<script>
+    
+    const data = {
+        labels: {{ chart_labels| safe}},
+    datasets: [
+        {
+            label: 'Planned',
+            data: {{ chart_planned }},
+            stack: 'Stack 0',
+            backgroundColor: '#0d6efd',
+            type: 'bar'
+        },
+        {
+            label: 'Spent',
+            data: {{ chart_actuals }},
+            stack: 'Stack 1',
+            backgroundColor: 'rgb(25,135,84)',
+            type: 'bar'
+        },
+        {
+            label: 'cumm_Planned',
+            data: {{ chart_cumm_planned }},
+            stack: 'Stack 2',
+            borderColor: 'rgba(0,128,255,0.5)',
+            backgroundColor: '#0d6efd',
+            type: 'line'
+        },
+        {
+            label: 'cumm_Spent',
+            data: {{ chart_cumm_actuals }},
+            stack: 'Stack 3',
+            borderColor: 'rgba(0,204,102,0.5)',
+            backgroundColor: 'rgb(0,204,102)',
+            type: 'line'
+        },
+    ]
+};
+    const config = {
+        type: 'line',
+        data: data,
+        options: {
+            plugins: {
+                title: {
+                    display: false,
+                    text: 'Chart.js Bar Chart - Stacked'
+                },
+                legend:{
+                    display: false,
+                },
+            },
+            responsive: true,
+            interaction: {
+                intersect: false,
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                },
+                y: {
+                    stacked: true
+                }
+            }
+        }
+    };
+
+    const stackedBarChart = new Chart(
+        document.getElementById('stackedBarChart'),
+        config
+    );
+</script>
+{% endblock %}

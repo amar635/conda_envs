@@ -1,0 +1,290 @@
+{% extends 'base.html' %}
+{% block header %}
+{% block title %}PDF to Audio {% endblock %}
+{% endblock %}
+<!-- <head> -->
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"> -->
+
+<!-- </head> -->
+
+{% block content %}
+<style>
+    .drag-area {
+        border: 2px dashed #acaaaa;
+        height: 500px;
+        width: 700px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+
+    .drag-area.active {
+        border: 2px solid #acaaaa;
+    }
+
+    .drag-area svg {
+        height: 50%;
+        width: 50%;
+        object-fit: cover;
+        border-radius: 5px;
+        opacity: 50%;
+        color: #acaaaa
+    }
+</style>
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills align-items-center">
+            <div class="mx-5">
+                <!-- <div class="text-center fw-normal" style="font-size:0.5rem">SELECT VOICE</div>
+                   <div class="btn-group">
+                        <li class="nav-item">
+                            <input type="radio" class="btn-check" name="options-gender" id="female-outlined"
+                                autocomplete="off" checked>
+                            <label class="btn btn-outline-secondary mx-1" for="female-outlined">
+                                <i class="bi bi-gender-female"></i>
+                            </label>
+                            <div class="text-center fw-lighter" style="font-size:0.5rem">Female</div>
+                        </li>
+                        <li class="nav-item">
+                            <input type="radio" class="btn-check" name="options-gender" id="male-outlined"
+                                autocomplete="off">
+                            <label class="btn btn-outline-secondary mx-1" for="male-outlined">
+                                <i class="bi bi-gender-male"></i>
+                            </label>
+                            <div class="text-center fw-lighter" style="font-size:0.5rem">Male</div>
+                        </li>
+                    </div> -->
+            </div>
+            <div class="text-center mx-auto">
+                <li class="nav-item mx-5">
+                    <div class="text-center fw-bolder" style="font-size:0.5rem">PDF</div>
+                    <button class="btn btn-primary mx-auto disabled" disabled>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="white"
+                            class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+                            <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
+                        </svg></button>
+                    <div class="text-center fw-bolder" style="font-size:0.5rem">TO AUDIO</div>
+                </li>
+            </div>
+            <!-- <div class="mx-5">
+                    <div class="text-center fw-normal" style="font-size:0.5rem">SELECT VOICE MODULATION</div>
+                    <div class="btn-group">
+                        <li class="nav-item">
+                            <input type="radio" class="btn-check" name="options-speed" id="low-outlined"
+                                autocomplete="off" checked>
+                            <label class="btn btn-outline-secondary btn-sm mx-1" for="low-outlined">
+                                &nbsp;&nbsp;>&nbsp;&nbsp;
+                            </label>
+                            <div class="text-center fw-lighter" style="font-size:0.5rem">Low</div>
+                        </li>
+                        <li class="nav-item">
+                            <input type="radio" class="btn-check" name="options-speed" id="medium-outlined"
+                                autocomplete="off">
+                            <label class="btn btn-outline-secondary btn-sm mx-1" for="medium-outlined">
+                                &nbsp;>>&nbsp;&nbsp;
+                            </label>
+                            <div class="text-center fw-lighter" style="font-size:0.5rem">Medium</div>
+                        </li>
+                        <li class="nav-item">
+                            <input type="radio" class="btn-check" name="options-speed" id="high-outlined"
+                                autocomplete="off">
+                            <label class="btn btn-outline-secondary btn-sm mx-1" for="high-outlined">
+                                &nbsp;>>>&nbsp;
+                            </label>
+                            <div class="text-center fw-lighter" style="font-size:0.5rem">High</div>
+                        </li>
+                    </div>
+                </div> -->
+        </ul>
+    </header>
+</div>
+<div class="progress" style="height: 1px;">
+    <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0"
+        aria-valuemax="100"></div>
+</div>
+<div class="container text-center visually-hidden" id="loading_spinner">
+    <div class="alert alert-info my-5">The file is being converted... <b>please wait!!</b><br />
+        <em class="fw-lighter">It takes around 150 secs to convert a 4 page PDF file to audio </em>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" style="height:60vh;">
+        <div class="spinner-border" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+</div>
+<div class="d-flex justify-content-center my-5 align-items-center">
+    <form method="POST" action="{{ url_for('.upload_file') }}" enctype="multipart/form-data">
+        <div class="drag-area">
+            <br>
+            <h2 class="text-muted">PDF to AUDIO</h2>
+            <h3 class="fw-lighter">CONVERTER</h3>
+            <div class="row text-center mx-5 mt-5">
+                <div class="col">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5L14 4.5ZM1.6 11.85H0v3.999h.791v-1.342h.803c.287 0 .531-.057.732-.173.203-.117.358-.275.463-.474a1.42 1.42 0 0 0 .161-.677c0-.25-.053-.476-.158-.677a1.176 1.176 0 0 0-.46-.477c-.2-.12-.443-.179-.732-.179Zm.545 1.333a.795.795 0 0 1-.085.38.574.574 0 0 1-.238.241.794.794 0 0 1-.375.082H.788V12.48h.66c.218 0 .389.06.512.181.123.122.185.296.185.522Zm1.217-1.333v3.999h1.46c.401 0 .734-.08.998-.237a1.45 1.45 0 0 0 .595-.689c.13-.3.196-.662.196-1.084 0-.42-.065-.778-.196-1.075a1.426 1.426 0 0 0-.589-.68c-.264-.156-.599-.234-1.005-.234H3.362Zm.791.645h.563c.248 0 .45.05.609.152a.89.89 0 0 1 .354.454c.079.201.118.452.118.753a2.3 2.3 0 0 1-.068.592 1.14 1.14 0 0 1-.196.422.8.8 0 0 1-.334.252 1.298 1.298 0 0 1-.483.082h-.563v-2.707Zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638H7.896Z" />
+                    </svg>
+                </div>
+                <div class="col">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z" />
+                    </svg>
+                </div>
+                <div class="col">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-volume-up" viewBox="0 0 16 16">
+                        <path
+                            d="M11.536 14.01A8.473 8.473 0 0 0 14.026 8a8.473 8.473 0 0 0-2.49-6.01l-.708.707A7.476 7.476 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z" />
+                        <path
+                            d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.483 5.483 0 0 1 11.025 8a5.483 5.483 0 0 1-1.61 3.89l.706.706z" />
+                        <path
+                            d="M10.025 8a4.486 4.486 0 0 1-1.318 3.182L8 10.475A3.489 3.489 0 0 0 9.025 8c0-.966-.392-1.841-1.025-2.475l.707-.707A4.486 4.486 0 0 1 10.025 8zM7 4a.5.5 0 0 0-.812-.39L3.825 5.5H1.5A.5.5 0 0 0 1 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 7 12V4zM4.312 6.39 6 5.04v5.92L4.312 9.61A.5.5 0 0 0 4 9.5H2v-3h2a.5.5 0 0 0 .312-.11z" />
+                    </svg>
+                </div>
+            </div>
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-up" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646 5.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 6.707V10.5a.5.5 0 0 1-1 0V6.707L6.354 7.854a.5.5 0 1 1-.708-.708l2-2z"/>
+                    <path d="M4.406 3.342A5.53 5.53 0 0 1 8 2c2.69 0 4.923 2 5.166 4.579C14.758 6.804 16 8.137 16 9.773 16 11.569 14.502 13 12.687 13H3.781C1.708 13 0 11.366 0 9.318c0-1.763 1.266-3.223 2.942-3.593.143-.863.698-1.723 1.464-2.383zm.653.757c-.757.653-1.153 1.44-1.153 2.056v.448l-.445.049C2.064 6.805 1 7.952 1 9.318 1 10.785 2.23 12 3.781 12h8.906C13.98 12 15 10.988 15 9.773c0-1.216-1.02-2.228-2.313-2.228h-.5v-.5C12.188 4.825 10.328 3 8 3a4.53 4.53 0 0 0-2.941 1.1z"/>
+                  </svg> -->
+            <button class="btn btn-outline-secondary" disabled>Upload file...</button>
+            <!-- <h6 class="text-muted fw-lighter">CLICK ANYWHERE INSIDE DROPZONE</h6> -->
+            <h5 class="text-muted my-4">OR</h5>
+            <h5 class="text-muted">DRAG & DROP PDF FILE HERE</h5>
+            <h6 class="text-muted"> TO DOWNLOAD AUDIO FILE</h6>
+            <br>
+            <input id="uploaded_file" type="file" name="file" hidden>
+            <input type="submit" id="submitted" hidden>
+        </div>
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+    integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+    crossorigin="anonymous"></script>
+<script>
+    //selecting all required elements
+    const dropArea = document.querySelector(".drag-area"),
+        dragText = dropArea.querySelector("h5"),
+        button_upload = dropArea.querySelector('.btn-outline-secondary'),
+        file_submitted = dropArea.querySelector("#submitted"),
+        uploaded_file = dropArea.querySelector("#uploaded_file"),
+        loading_spinner = document.querySelector("#loading_spinner");
+    // dropdown_menu = document.querySelector("#dropdown_menu");
+    let file; //this is a global variable and we'll use it inside multiple functions
+
+    dropArea.addEventListener("click", () => {
+        if (uploaded_file.files.length > 0) {
+            // do nothing
+        } else {
+            uploaded_file.click();
+            loading_spinner.classList.add("visually-hidden");
+        }
+    });
+    // button_upload.click(() => {
+    //     if (uploaded_file.files.length > 0) {
+    //         // do nothing
+    //     } else {
+    //         uploaded_file.click();
+    //         loading_spinner.classList.add("visually-hidden");
+    //     }
+    // });
+    // uploaded_file.addEventListener("change", () => {
+    //     console.log('file change event triggered');
+    //     submitted.click();
+    // })
+
+    //If user Drag File Over DropArea
+    dropArea.addEventListener("dragover", (event) => {
+        event.preventDefault(); //preventing from default behaviour
+        dropArea.classList.add("active");
+        dragText.textContent = "RELEASE TO UPLOAD FILE";
+    });
+
+    //If user leave dragged File from DropArea
+    dropArea.addEventListener("dragleave", () => {
+        dropArea.classList.remove("active");
+        dragText.textContent = "DRAG & DROP PDF FILE HERE";
+    });
+
+    //If user drop File on DropArea
+    dropArea.addEventListener("drop", (event) => {
+        event.preventDefault(); //preventing from default behaviour
+        // //getting user select file and [0] this means if user select multiple files then we'll select only the first one
+        // file = event.dataTransfer.files[0];
+        if (fileValidated(event)) {
+            show_spinner()
+            submitted.click();
+        } else {
+            alert(
+                "File is too large, please select a file less than 2mb");
+        }
+        // showFile(); //calling function
+    });
+    document.getElementById("uploaded_file").onchange = function () {
+        show_spinner();
+        document.querySelector("form").submit();
+    }
+    function show_spinner() {
+        loading_spinner.classList.remove("visually-hidden");
+        dropArea.classList.add("visually-hidden");
+    }
+    fileValidated = (event) => {
+        uploaded_file.files = event.dataTransfer.files;
+        // const fi = document.getElementById('file');
+        // Check if any file is selected.
+        if (uploaded_file.files.length > 0) {
+            const fsize = uploaded_file.files.item(0).size;
+            const file = Math.round((fsize / 1024));
+
+            // The size of the file.
+            if (file >= 2048) {
+                return false;
+                // alert(
+                //   "File too Big, please select a file less than 4mb");
+            } else {
+                return true;
+                // alert(
+                //   "File too small, please select a file greater than 2mb");
+            }
+        }
+
+        // for (const i = 0; i <= fi.files.length - 1; i++) {
+        //     const fsize = fi.files.item(i).size;
+        //     const file = Math.round((fsize / 1024));
+        // }
+    }
+        // function showFile() {
+        //     let fileType = file.type; //getting selected file type
+        //     let validExtensions = ["/pdf", "pdf", "application/pdf"];
+        //     console.log(file.name);
+        //     // let validExtensions = ["image/jpg", "image/jpeg", "image/png"]; //adding some valid image extensions in array
+        //     if (validExtensions.includes(fileType)) { //if user selected file is an image file
+        //         let fileReader = new FileReader(); //creating new FileReader object
+        //         fileReader.onload = () => {
+        //             let fileURL = fileReader.result; //passing user file source in fileURL variable
+        //             // UNCOMMENT THIS BELOW LINE. I GOT AN ERROR WHILE UPLOADING THIS POST SO I COMMENTED IT
+        //             // let imgTag = `<img src="${fileURL}" alt="image">`; //creating an img tag and passing user selected file source inside src attribute
+        //             // dropArea.innerHTML = imgTag; //adding that created img tag inside dropArea container
+        //             dropArea.innerHTML = file.name;
+        //         }
+        //         fileReader.readAsDataURL(file);
+        //         // file_submitted.click();
+        //     } else {
+        //         alert("This is not a PDF document!" + fileType);
+        //         dropArea.classList.remove("active");
+        //         dragText.textContent = "DRAG & DROP PDF FILE HERE";
+        //     }
+        // }
+</script>
+{% endblock %}
