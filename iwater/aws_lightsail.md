@@ -107,3 +107,9 @@ region: ap-south-1
 
 ### Install lightsailctl plugin for MacOS
 brew install aws/tap/lightsailctld
+
+# POSTGRESQL & SQLALCHEMY 
+
+#### flask db init
+#### flask db migrate -m "Initial migration."
+#### flask db upgrade

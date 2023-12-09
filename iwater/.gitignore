@@ -4,3 +4,4 @@ __pycache__/
 .flaskenv
 containers.json
 public-endpoint.json
+.venv
