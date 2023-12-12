@@ -9,6 +9,7 @@ from flask_smorest import Api
 from wbapp.db_sqlalchemy import db
 
 from wbapp.routes.auth import blp as UserBlueprint
+from wbapp.routes.rainfall_calc import blp as RainfallBlueprint
 
 
 def create_app():
@@ -46,6 +47,7 @@ def create_app():
 
     # Register Blueprints
     api.register_blueprint(UserBlueprint, url_prefix='/api')
+    api.register_blueprint(RainfallBlueprint, url_prefix='/api')
 
     # return the app
     return app
