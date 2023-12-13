@@ -1,5 +1,6 @@
-from flask import request
+from flask import jsonify, request
 from flask_smorest import Blueprint
+from wbapp.classes.water_demand import WaterDemand
 
 from wbapp.classes.available_runoff import AvailableRunoff
 
@@ -10,7 +11,14 @@ blp = Blueprint("Rainfall_data", "rainfall_calc", description="User Authenticati
 @blp.route('/yield', methods=['POST'])
 def post():
     json_data = request.json
-    runoff_yield = AvailableRunoff.get_runoff_yield(json_data['rainfall'], json_data['catchment_type'])
-    return {"Runoff Yield": str(runoff_yield)}
+    runoff_yield = AvailableRunoff.get_runoff_yield(rainfall=json_data['rainfall'])
+    return runoff_yield
+
+@blp.route('/demand', methods=['POST'])
+def post():
+    json_data = request.json
+    human_demand = WaterDemand.human_consumption(json_data['village_id'])
+    agriculture_demand = WaterDemand.agricuture_consumption(json_data['village_id'])
+    return agriculture_demand
 
 

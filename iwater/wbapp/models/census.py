@@ -27,3 +27,7 @@ class CensusDatum(db.Model):
     village_id = db.Column(db.ForeignKey('villages.id'), nullable=False)
 
     village = db.relationship('Village')
+
+    @classmethod
+    def get_by_village(cls, village_id):
+         return cls.query.filter_by(village_id=village_id).first()

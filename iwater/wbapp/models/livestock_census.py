@@ -1,6 +1,6 @@
 from wbapp.db_sqlalchemy import db
 
-class LivestockCensu(db.Model):
+class LivestockCensus(db.Model):
     __tablename__ = 'livestock_census'
     __table_args__ = (
         db.UniqueConstraint('livestock_id', 'village_id'),
@@ -13,3 +13,8 @@ class LivestockCensu(db.Model):
 
     livestock = db.relationship('Livestock')
     village = db.relationship('Village')
+
+    @classmethod
+    def get_by_village_id(cls, village_id):
+        return cls.query.filter_by(village_id=village_id).first()
+        
