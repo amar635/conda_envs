@@ -31,5 +31,9 @@ class WaterDemand:
         return human
     
     def livestock_consumption(village_id):
+        livestocks_ = []
         livestock_census = LivestockCensus.get_by_village_id(village_id=village_id)
-        pass
+        for item in livestock_census:
+            livestocks_.append({'type':item[0],'numbers':int(item[1]),'name':item[5], 'water_use':float(item[4]), 'consumption':float(item[4]) * int(item[1])})
+        return livestocks_
+

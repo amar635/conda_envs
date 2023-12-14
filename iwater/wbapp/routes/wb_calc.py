@@ -19,6 +19,7 @@ def post():
     json_data = request.json
     human_demand = WaterDemand.human_consumption(json_data['village_id'])
     agriculture_demand = WaterDemand.agricuture_consumption(json_data['village_id'])
-    return agriculture_demand
+    livestock_consumption = WaterDemand.livestock_consumption(json_data['village_id'])
+    return livestock_consumption
 
 

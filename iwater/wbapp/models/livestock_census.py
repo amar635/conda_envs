@@ -1,4 +1,5 @@
 from wbapp.db_sqlalchemy import db
+from wbapp.models.livestocks import Livestock
 
 class LivestockCensus(db.Model):
     __tablename__ = 'livestock_census'
@@ -16,5 +17,13 @@ class LivestockCensus(db.Model):
 
     @classmethod
     def get_by_village_id(cls, village_id):
-        return cls.query.filter_by(village_id=village_id).first()
+        query = db.session.query(
+        LivestockCensus.id.label('id'),
+        LivestockCensus.livestock_number.label('livestock_number'),
+        LivestockCensus.livestock_id.label('livestock_id'),
+        LivestockCensus.village_id.label('village_id'),
+        Livestock.water_use.label('water_use'),
+        Livestock.name.label('name')).join(Livestock, 
+        Livestock.id == LivestockCensus.livestock_id).filter(LivestockCensus.village_id == village_id).all()
+        return query
         
