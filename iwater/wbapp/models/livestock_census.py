@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from wbapp.db_sqlalchemy import db
 from wbapp.models.livestocks import Livestock
 
@@ -16,14 +17,14 @@ class LivestockCensus(db.Model):
     village = db.relationship('Village')
 
     @classmethod
-    def get_by_village_id(cls, village_id):
+    def get_by_village_id(cls, village_ids):
         query = db.session.query(
-        LivestockCensus.id.label('id'),
-        LivestockCensus.livestock_number.label('livestock_number'),
-        LivestockCensus.livestock_id.label('livestock_id'),
-        LivestockCensus.village_id.label('village_id'),
-        Livestock.water_use.label('water_use'),
-        Livestock.name.label('name')).join(Livestock, 
-        Livestock.id == LivestockCensus.livestock_id).filter(LivestockCensus.village_id == village_id).all()
+        Livestock.type,
+        Livestock.name,
+        func.sum(LivestockCensus.livestock_number).label('livestock_number'),
+        func.avg(Livestock.water_use).label('water_use')
+        ).join(Livestock, Livestock.id == LivestockCensus.livestock_id)\
+        .filter(LivestockCensus.village_id.in_(village_ids))\
+        .group_by(Livestock.id, Livestock.name, Livestock.type).all()
         return query
         

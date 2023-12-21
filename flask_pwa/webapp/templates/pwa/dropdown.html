@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<!-- Dropdown Trigger -->
+<div class="container mt-5">
+    <div class="input-field col s12">
+        <select>
+            <option value="" disabled selected>Select State</option>
+            {% for state in states %}
+                <option value="{{state['id'] | safe}}">{{ state["name"] | safe}}</option>
+            {% endfor %}
+        </select>
+        <label>Select a State</label>
+    </div>
+    <div class="input-field col s12 mt-5">
+        <select>
+            <option value="" disabled selected>Select District</option>
+            {% for i in range (35) %}
+            <option value="{{i}}">Option {{ i }}</option>
+            {% endfor %}
+        </select>
+        <label>Select a State</label>
+    </div>
+    <div class="input-field col s12 mt-5">
+        <select>
+            <option value="" disabled selected>Select Block</option>
+            {% for i in range (35) %}
+            <option value="{{i}}">Option {{ i }}</option>
+            {% endfor %}
+        </select>
+        <label>Select a State</label>
+    </div>
+    <div class="input-field col s12 mt-5">
+        <select>
+            <option value="" disabled selected>Select Village</option>
+            {% for i in range (35) %}
+            <option value="{{i}}">Option {{ i }}</option>
+            {% endfor %}
+        </select>
+        <label>Select a State</label>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block script %}
+<script>
+    
+</script>
+
+{% endblock %}

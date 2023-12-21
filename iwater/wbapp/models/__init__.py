@@ -8,3 +8,4 @@ from wbapp.models.livestocks import Livestock
 from wbapp.models.census import CensusDatum
 from wbapp.models.rainfall import RainfallDatum
 from wbapp.models.waterbody import Waterbody
+from wbapp.models.strange_table import StrangeRunoff

@@ -1,0 +1,13 @@
+body {
+    -moz-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+th {
+    text-align: match-parent;
+    text-align: -webkit-match-parent;
+}
+
+.material-icons {
+    font-feature-settings: 'liga';
+}

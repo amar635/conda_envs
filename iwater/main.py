@@ -15,9 +15,9 @@ app = create_app()
 # url = os.getenv("DATABASE_URL")
 # connection = psycopg2.connect(url)
 
-@app.route("/")
-def hello_world():
-    return "<h1>Hello, World!</h1>"
+# @app.route("/")
+# def hello_world():
+#     return "<h1>Hello, World!</h1>"
 
 # @app.get("/api/livestocks")
 # def livestocks():
@@ -32,4 +32,4 @@ def hello_world():
 if __name__ == "__main__":
     # app.run(host='0.0.0.0', port=8080)
     # serve(app, listen='*:80') # waitress
-    app.run()  # flask round
+    app.run(port=3000)  # flask round

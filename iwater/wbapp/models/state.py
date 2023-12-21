@@ -1,3 +1,4 @@
+import json
 from wbapp.db_sqlalchemy import db
 
 class State(db.Model):
@@ -7,3 +8,17 @@ class State(db.Model):
     name = db.Column(db.String(80))
     code = db.Column(db.Integer, nullable=False, unique=True)
     census_code = db.Column(db.Integer)
+
+    def json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'code': self.code,
+            'census_code':self.census_code
+        }
+
+    @classmethod
+    def get_states(cls):
+        return cls.query.all()
+    
+

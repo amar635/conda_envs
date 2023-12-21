@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block content %}
+<ul id="tabs-swipe-demo" class="tabs">
+    <li class="tab col s3"><a href="#demand-swipe" class="active red-text text-darken-4">Demand</a></li>
+    <li class="tab col s3"><a  href="#supply-swipe" class="red-text text-darken-4">Supply</a></li>
+    <li class="tab col s3"><a href="#budget-swipe" class="red-text text-darken-4">Budget</a></li>
+</ul>
+<div class="container pink lighten-4" id="demand-swipe">
+    <div class="card-panel grey darken-4 text-center">
+        <span style="font-size: 1.6rem;" class="white-text">WATER DEMAND</span>
+        <div style="font-size:0.8rem;" class="white-text">(Consumption in Hectare Meters)</div>
+    </div>       
+        <div class="row">
+            {% for i in range(3) %}
+            <div class="col s4">
+                <div class="card blue-grey lighten-5">
+                    <div class="card-content black-text text-center">
+                        <span style="font-size: 2rem;">{{water_demand[i]}}</span>
+                        <p style="font-size: 0.6rem;">{{water_demand_labels[i]}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    <div class="card m-1">
+        <div class="card-body">
+            <canvas id="myChart" width="400" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+        </div>
+    </div>
+</div>
+<div class="container teal lighten-4" id="supply-swipe">
+    <div class="card-panel grey darken-4 text-center">
+        <span style="font-size: 1.6rem;" class="white-text">WATER SUPPLY</span>
+        <div style="font-size:0.8rem;" class="white-text">(Runoff in Hectare Meters)</div>
+    </div>       
+        <div class="row">
+            {% for i in range(2) %}
+            <div class="col s4">
+                <div class="card blue-grey lighten-5">
+                    <div class="card-content black-text text-center">
+                        <span style="font-size: 2rem;">{{water_supply[i]}}</span>
+                        <p style="font-size: 0.6rem;">{{water_supply_labels[i]}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    <div class="card m-1">
+        <div class="card-body">
+            <canvas id="pieChart" width="400" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+        </div>
+    </div>
+</div>
+<div class="container amber lighten-4" id="budget-swipe">
+    <div class="card-panel grey darken-4 text-center">
+        <span style="font-size: 1.6rem;" class="white-text">WATER BUDGET</span>
+        <div style="font-size:0.8rem;" class="white-text">(Supply or Deficit)</div>
+    </div>       
+        <div class="row">
+            {% for i in range(2) %}
+            <div class="col s4">
+                <div class="card blue-grey lighten-5">
+                    <div class="card-content black-text text-center">
+                        <span style="font-size: 2rem;">{{water_budget_data[i]}}</span>
+                        <p style="font-size: 0.6rem;">{{water_budget_labels[i]}}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    <div class="card m-1">
+        <div class="card-body">
+            <canvas id="budgetChart" width="400" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="DemandLabels" id="DemandLabels" data-labels="{{water_demand_labels | safe}}">
+<input type="hidden" name="DemandDataset" id="DemandDataset" value="{{water_demand}}">
+<input type="hidden" name="SupplyLabels" id="SupplyLabels" data-labels="{{water_supply_labels | safe}}">
+<input type="hidden" name="SupplyDataset" id="SupplyDataset" value="{{water_supply}}">
+<input type="hidden" name="BudgetLabels" id="BudgetLabels" data-labels="{{water_budget_labels | safe}}">
+<input type="hidden" name="BudgetDataset" id="BudgetDataset" value="{{water_budget_data}}">
+{% endblock %}
+{% block script %}
+<script src="{{ url_for('static', filename='js/chart-js.js') }}"></script>
+<script>
+    // var instance = M.Tabs.init('.tabs');
+</script>
+{% endblock %}
