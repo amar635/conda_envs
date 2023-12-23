@@ -11,9 +11,9 @@ class WaterBudgetCalc:
         self.supply = supply
 
    
-    def get_water_budget():
+    def get_water_budget(payload):
         url = 'http://127.0.0.1:3000/api/demand'
-        water_demand =requests.post(url, json={"village_id":479005})
+        water_demand =requests.post(url, json=payload)
         url = 'http://127.0.0.1:3000/api/supply'
-        water_supply =requests.post(url, json={"village_id":479005})
+        water_supply =requests.post(url, json=payload)
         return {'demand':water_demand.json(), 'supply':water_supply.json()}

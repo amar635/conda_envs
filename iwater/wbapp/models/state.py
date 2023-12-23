@@ -19,6 +19,6 @@ class State(db.Model):
 
     @classmethod
     def get_states(cls):
-        return cls.query.all()
+        return cls.query.order_by(cls.name).all()
     
 

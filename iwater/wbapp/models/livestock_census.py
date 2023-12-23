@@ -1,6 +1,7 @@
 from sqlalchemy import func
 from wbapp.db_sqlalchemy import db
 from wbapp.models.livestocks import Livestock
+from wbapp.models.village import Village
 
 class LivestockCensus(db.Model):
     __tablename__ = 'livestock_census'
@@ -21,10 +22,33 @@ class LivestockCensus(db.Model):
         query = db.session.query(
         Livestock.type,
         Livestock.name,
-        func.sum(LivestockCensus.livestock_number).label('livestock_number'),
+        func.sum(cls.livestock_number).label('livestock_number'),
         func.avg(Livestock.water_use).label('water_use')
-        ).join(Livestock, Livestock.id == LivestockCensus.livestock_id)\
-        .filter(LivestockCensus.village_id.in_(village_ids))\
+        ).join(Livestock, Livestock.id == cls.livestock_id)\
+        .filter(cls.village_id.in_(village_ids))\
         .group_by(Livestock.id, Livestock.name, Livestock.type).all()
         return query
         
+    @classmethod
+    def get_livestock_census(cls, json_data):
+        query = db.session.query(
+        Livestock.type,
+        Livestock.name,
+        func.sum(cls.livestock_number).label('livestock_number'),
+        func.avg(Livestock.water_use).label('water_use')
+        ).join(Livestock, Livestock.id == cls.livestock_id)\
+        .join(Village, Village.id == cls.village_id)\
+        
+
+        if 'village_id' in json_data:
+            query = query.filter(cls.village_id== json_data['village_id'])\
+            .group_by(Livestock.id, Livestock.name, Livestock.type)
+        elif 'block_id' in json_data:
+            query = query.filter(Village.block_id == json_data['block_id'])\
+            .group_by(Livestock.id, Livestock.name, Livestock.type)
+        elif 'district_id' in json_data:
+            query = query.filter(Village.district_id == json_data['district_id'])\
+            .group_by(Livestock.id, Livestock.name, Livestock.type)
+        
+        result = query.all()
+        return query

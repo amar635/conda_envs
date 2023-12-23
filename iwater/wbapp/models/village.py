@@ -16,3 +16,18 @@ class Village(db.Model):
 
     block = db.relationship('Block')
     district = db.relationship('District')
+
+    def json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'code': self.code,
+            'census_code': self.census_code,
+            'district_id': self.district_id,
+            'block_id': self.block_id
+        }
+
+
+    @classmethod
+    def get_villages(cls, block_id):
+        return cls.query.filter_by(block_id = block_id).order_by(cls.name).all()

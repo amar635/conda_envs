@@ -8,11 +8,20 @@ blp = Blueprint("PWA", "pwa_calls", description="api call for pwa")
 
 # blp = Blueprint("Rainfall_data", "rainfall", description="rainfall related calculation")
 
-@blp.route('/index')
+@blp.route('/index', methods=['POST'])
 def index():
     # calculate demand
+    state_id = request.form.get('ddStates')
+    district_id = request.form.get('ddDistricts')
+    block_id = request.form.get('ddBlocks')
+    village_id = request.form.get('ddVillages')
+    payload = {'village_id': village_id}
+    if (village_id == -1 or village_id is None):
+        payload = {'block_id': block_id}
+    if (block_id == -1 or block_id is None):
+        payload = {'district_id': district_id}
     agriculture_demand, human_demand, livestock_demand = 0, 0, 0
-    wb = WaterBudgetCalc.get_water_budget()
+    wb = WaterBudgetCalc.get_water_budget(payload=payload)
     demand = wb['demand']
     agriculture = demand['agriculture']
     for item in range(len(agriculture)):
@@ -70,6 +79,34 @@ def about():
 
 @blp.route('/select')
 def select_state():
-    states = url = 'http://127.0.0.1:3000/api/states'
+    url = 'http://127.0.0.1:3000/api/states'
     states = requests.post(url)
     return render_template('pwa/dropdown.html', states = states.json())
+
+@blp.route('/districts',methods=['POST'])
+def select_state():
+    json_data = request.json
+    url = 'http://127.0.0.1:3000/api/districts'
+    districts = requests.post(url, json=json_data)
+    return districts.json()
+
+@blp.route('/blocks',methods=['POST'])
+def select_state():
+    json_data = request.json
+    url = 'http://127.0.0.1:3000/api/blocks'
+    blocks = requests.post(url, json=json_data)
+    return blocks.json()
+
+@blp.route('/villages',methods=['POST'])
+def select_state():
+    json_data = request.json
+    url = 'http://127.0.0.1:3000/api/villages'
+    villages = requests.post(url, json=json_data)
+    return villages.json()
+
+# @blp.route('/submit',methods=['POST'])
+# def select_state():
+#     json_data = request.json
+#     url = 'http://127.0.0.1:3000/api/villages'
+#     villages = requests.post(url, json=json_data)
+#     return villages.json()

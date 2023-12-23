@@ -10,3 +10,18 @@ class Block(db.Model):
     district_id = db.Column(db.ForeignKey('districts.id'), nullable=False)
 
     district = db.relationship('District')
+
+
+    def json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'code': self.code,
+            'census_code': self.census_code,
+            'district_id': self.district_id
+        }
+
+
+    @classmethod
+    def get_blocks(cls, district_id):
+        return cls.query.filter_by(district_id = district_id).order_by(cls.name).all()

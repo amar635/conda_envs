@@ -2,10 +2,13 @@ import json
 from flask import jsonify, request
 from flask_smorest import Blueprint
 from wbapp.classes.water_demand import WaterDemand
+from wbapp.models.block import Block
+from wbapp.models.district import District
 from wbapp.models.state import State
 
 from wbapp.models.strange_table import StrangeRunoff
 from wbapp.classes.water_supply import WaterSupply
+from wbapp.models.village import Village
 
 blp = Blueprint("Water_Budget", "water_budget", description="water budget calculation")
 
@@ -20,17 +23,17 @@ def post():
 @blp.route('/demand', methods=['POST'])
 def post():
     json_data = request.json
-    human_demand = WaterDemand.human_consumption(json_data['village_id'])
-    agriculture_demand = WaterDemand.agricuture_consumption(json_data['village_id'])
-    livestock_demand = WaterDemand.livestock_consumption(json_data['village_id'])
+    human_demand = WaterDemand.human_consumption(json_data)
+    agriculture_demand = WaterDemand.agricuture_consumption(json_data)
+    livestock_demand = WaterDemand.livestock_consumption(json_data)
     return jsonify({ 'livestock' : livestock_demand, 'agriculture': agriculture_demand, 'human': human_demand })
 
 
 @blp.route("/supply", methods=['POST'])
 def post():
     json_data = request.json
-    available_runoff = WaterSupply.get_available_runoff(json_data['village_id'])
-    harvested_runoff = WaterSupply.get_harvested_runoff(village_id=json_data['village_id'])
+    available_runoff = WaterSupply.get_available_runoff(json_data)
+    harvested_runoff = WaterSupply.get_harvested_runoff(json_data)   
     return {"available": available_runoff, "harvested": harvested_runoff}
 
 @blp.route("/states", methods=['GET','POST'])
@@ -41,6 +44,32 @@ def get():
         states_json.append(state.json())
     return states_json
 
+@blp.route("/districts", methods=['POST'])
+def get():
+    json_data = request.json
+    districts = District.get_districts(json_data['select_id'])
+    districts_json = []
+    for district in districts:
+        districts_json.append(district.json())
+    return districts_json
+
+@blp.route("/blocks", methods=['POST'])
+def get():
+    json_data = request.json
+    blocks = Block.get_blocks(json_data['select_id'])
+    blocks_json = []
+    for block in blocks:
+        blocks_json.append(block.json())
+    return blocks_json
+
+@blp.route("/villages", methods=['POST'])
+def get():
+    json_data = request.json
+    villages = Village.get_villages(json_data['select_id'])
+    villages_json = []
+    for village in villages:
+        villages_json.append(village.json())
+    return villages_json
 
 
 from sqlalchemy.ext.declarative import DeclarativeMeta

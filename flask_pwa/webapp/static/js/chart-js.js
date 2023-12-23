@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const data = {
         labels: demand_labels,
         datasets: [{
-          label: 'My First Dataset',
+          label: 'Water Demand',
           data: JSON.parse(demand_dataset.value),
           backgroundColor: [
             'rgb(255, 99, 132)',
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const budgetData = {
         labels: budget_labels,
         datasets: [{
-          label: 'Pie Dataset',
+          label: 'Water Budget',
           data: JSON.parse(budget_dataset.value),
           backgroundColor: [
             'rgb(255, 99, 132)',
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const pieData = {
         labels: supply_labels,
         datasets: [{
-          label: 'Pie Dataset',
+          label: 'Water Supply',
           data: JSON.parse(supply_dataset.value),
           backgroundColor: [
             'rgb(255, 99, 132)',
