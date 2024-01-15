@@ -1,4 +1,5 @@
 # from datetime import datetime
+from sqlalchemy import and_, func
 from wbapp.db_sqlalchemy import db
 
 class RainfallDatum(db.Model):
@@ -22,6 +23,11 @@ class RainfallDatum(db.Model):
         }
     
     @classmethod
-    def get_rainfall(cls, json_data):
-        rainfall = 760
-        return rainfall
+    def get_rainfall(cls, district_id, year):
+        rainfall_data =  db.session.query(
+            func.sum(cls.actual).label('actual'), 
+            func.sum(cls.normal).label('normal'))\
+            .filter(and_(cls.district_id==district_id,func.extract('year', cls.observation_date).label('year')==year))\
+            .group_by(cls.district_id).first()
+        return rainfall_data.actual
+       

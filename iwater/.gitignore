@@ -5,3 +5,4 @@ __pycache__/
 containers.json
 public-endpoint.json
 .venv
+aws_lightsail.md

@@ -25,3 +25,7 @@ class Block(db.Model):
     @classmethod
     def get_blocks(cls, district_id):
         return cls.query.filter_by(district_id = district_id).order_by(cls.name).all()
+    
+    @classmethod
+    def get_district_by_block(cls, block_id):
+        return cls.query.filter_by(id = block_id).first()

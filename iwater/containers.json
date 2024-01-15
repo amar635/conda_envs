@@ -1,6 +1,6 @@
 {
     "flask": {
-        "image": ":wbms-service.flask-container.35",
+        "image": ":wbms-service.pwa-container.38",
         "ports": {
             "8080": "HTTP"
         }

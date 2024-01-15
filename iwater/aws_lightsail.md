@@ -100,9 +100,14 @@ aws lightsail delete-container-service --service-name wbms-service
 aws lightsail get-container-services
 
 
-### aws configure
+<!-- ### aws configure
 secret access key: TX+KJTY2D1cS/7MeydBzAv9D/nRNPj+dHcXXnqUQ
 access key: AKIAQWZYNSFUFYLNI5E4
+region: ap-south-1 -->
+
+### aws configure
+access key: AKIAQWZYNSFUITE6OJYH
+secret access key: 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
 region: ap-south-1
 
 ### Install lightsailctl plugin for MacOS
@@ -110,6 +115,25 @@ brew install aws/tap/lightsailctld
 
 # POSTGRESQL & SQLALCHEMY 
 
-#### flask db init
-#### flask db migrate -m "Initial migration."
-#### flask db upgrade
+flask db init
+flask db migrate -m "Initial migration."
+flask db upgrade
+
+# COMPONENTS IN JINJA
+templates/components/header.html
+<div class="user">
+    <img class="pfp" src="{{ pfp }}" alt="PFP">
+    <span class="username">{{ username }}</span>
+</div>
+templates/index.html
+<body>
+    <header>{% include 'components/header.html' %}</header>
+
+    <main>
+        <h1>Templating</h1>
+    </main>
+</body>
+
+# PWA Image Generator
+https://www.pwabuilder.com/imageGenerator
+https://bootswatch.com

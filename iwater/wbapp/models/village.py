@@ -31,3 +31,7 @@ class Village(db.Model):
     @classmethod
     def get_villages(cls, block_id):
         return cls.query.filter_by(block_id = block_id).order_by(cls.name).all()
+    
+    @classmethod
+    def get_district_by_village(cls, village_id):
+        return cls.query.filter_by(id = village_id).first()
