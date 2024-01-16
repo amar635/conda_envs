@@ -64,6 +64,14 @@ def index():
 @blp.route("/error")
 def fallback():
     return render_template('pwa/fallback.html')
+
+@blp.route("/human")
+def human():
+    chart_details = {'chart_labels':[], 'chart_data':[], 'chart_labels':[] }
+    human=""
+    agriculture=""
+    livestock=""
+    return render_template('pwa/human.html')
     
 
 @blp.route('/sw.js')
@@ -78,7 +86,7 @@ def about():
     return render_template('pwa/about.html')
 
 @blp.route('/select')
-def select_state():
+def home():
     url = 'http://127.0.0.1:3000/api/states'
     states = requests.post(url)
     return render_template('pwa/dropdown.html', states = states.json())

@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+{% block content %}
+<ul class="nav nav-tabs nav-pills nav-fill" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#human" type="button"
+            role="tab" aria-controls="home" aria-selected="true">Human</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#agriculture" type="button"
+            role="tab" aria-controls="profile" aria-selected="false">Agriculture</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#livestock" type="button"
+            role="tab" aria-controls="profile" aria-selected="false">Livestock</button>
+    </li>
+    <!-- <li class="nav-item" role="presentation">
+      <button class="nav-link" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button" role="tab" aria-controls="messages" aria-selected="false">Messages</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Settings</button>
+    </li> -->
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div class="tab-pane active" id="human" role="tabpanel" aria-labelledby="human-tab" tabindex="0">
+        <div class="card mx-2 my-3 shadow-sm">
+            <div class="card-header text-center fw-bold">Human Count</div>
+            <div class="card-body">
+                <canvas id="humanCountChart" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+            </div>
+        </div>
+        <div class="card mx-2 my-3 shadow-sm">
+            <div class="card-header text-center fw-bold">Human Water Consumption</div>
+            <div class="card-body">
+                <canvas id="humanConsumeChart" aria-label="Hello ARIA World" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="agriculture" role="tabpanel" aria-labelledby="agriculture" tabindex="1">
+        <div class="card mx-2 my-3 shadow-sm">
+            <div class="card-header text-center fw-bold">Agriculture Count</div>
+            <div class="card-body">
+                <canvas id="agriCountChart" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+            </div>
+        </div>
+        <div class="card mx-2 my-3 shadow-sm">
+            <div class="card-header text-center fw-bold">Agriculture Water Consumption</div>
+            <div class="card-body">
+                <canvas id="agriConsumeChart" aria-label="Hello ARIA World" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane" id="livestock" role="tabpanel" aria-labelledby="livestock-tab" tabindex="2">
+        <div class="card mx-2 my-3 shadow-sm">
+            <div class="card-header text-center fw-bold">Livestock Count</div>
+            <div class="card-body">
+                <canvas id="livestockCountChart" height="100" aria-label="Hello ARIA World" role="img"></canvas>
+            </div>
+        </div>
+        <div class="card mx-2 my-3 shadow-sm">
+            <div class="card-header text-center fw-bold">Livestock Water Consumption</div>
+            <div class="card-body">
+                <canvas id="livestockConsumeChart" aria-label="Hello ARIA World" role="img"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+    $(document).ready(() => {
+        // Demand Doughnut
+        const humanCountCtx = document.getElementById('humanCountChart');
+        const humanConsumeCtx = document.getElementById('humanConsumeChart');
+        const agriCountCtx = document.getElementById('agriCountChart');
+        const agriConsumeCtx = document.getElementById('agriConsumeChart');
+        const livestockCountCtx = document.getElementById('livestockCountChart');
+        const livestockConsumeCtx = document.getElementById('livestockConsumeChart');
+        const barBackgroundColor = [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)'
+        ];
+        const barChartOptions = {
+            indexAxis: 'y',
+            scales: {
+                y: {
+                    grid: { display: false },
+                },
+                x: {
+                    grid: { display: false },
+                }
+            },
+            // Elements options apply to all of the options unless overridden in a dataset
+            // In this case, we are setting the border of each horizontal bar to be 2px wide
+            // elements: {
+            //     bar: {
+            //         borderWidth: 2,
+            //     }
+            // },
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false,
+                    position: 'right',
+                },
+                title: {
+                    display: false,
+                    text: 'Population Count'
+                }
+            }
+        };
+        // <--H U M A N-->
+        const humanCountData = {
+            labels: ['male', 'female'],
+            datasets: [{
+                label: 'Human Count',
+                data: [35, 25],
+                backgroundColor: barBackgroundColor,
+                hoverOffset: 4
+            }]
+        };
+        // config
+        const humanCountConfig = {
+            type: 'bar',
+            data: humanCountData,
+            options: barChartOptions,
+        };
+
+        // setup
+        const humanConsumeData = {
+            labels: ['male', 'female'],
+            datasets: [{
+                label: 'Human Consumption',
+                data: [3.2, 2],
+                backgroundColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(54, 162, 235)',
+                    'rgb(255, 205, 86)'
+                ],
+                hoverOffset: 4
+            }]
+        };
+        // config
+        const humanConsumeConfig = {
+            type: 'doughnut',
+            data: humanConsumeData,
+        };
+
+        // <--A G R I C U L T U R E-->
+        const agriCountData = {
+            labels: ['irrigated', 'rainfed'],
+            datasets: [{
+                label: 'Agri Count',
+                data: [35, 25],
+                backgroundColor: barBackgroundColor,
+                hoverOffset: 4
+            }]
+        };
+        // config
+        const agriCountConfig = {
+            type: 'bar',
+            data: agriCountData,
+            options: barChartOptions,
+        };
+
+        // setup
+        const agriConsumeData = {
+            labels: ['irrigated', 'rainfed'],
+            datasets: [{
+                label: 'Agri Water Consumption',
+                data: [3.2, 2],
+                backgroundColor: barBackgroundColor,
+                hoverOffset: 4
+            }]
+        };
+        // config
+        const agriConsumeConfig = {
+            type: 'doughnut',
+            data: agriConsumeData,
+        };
+
+        // <--L I V E S T O C K-->
+        const livestockCountData = {
+            labels: ['Cattle', 'Horse'],
+            datasets: [{
+                label: 'Human Count',
+                data: [35, 25],
+                backgroundColor: barBackgroundColor,
+                hoverOffset: 4
+            }]
+        };
+        // config
+        const livestockCountConfig = {
+            type: 'bar',
+            data: livestockCountData,
+            options: barChartOptions,
+        };
+
+        // setup
+        const livestockConsumeData = {
+            labels: ['Cattle', 'Horse'],
+            datasets: [{
+                label: 'Human Consumption',
+                data: [3.2, 2],
+                backgroundColor: barBackgroundColor,
+                hoverOffset: 4
+            }]
+        };
+        // config
+        const livestockConsumeConfig = {
+            type: 'doughnut',
+            data: livestockConsumeData,
+        };
+        new Chart(humanCountCtx, humanCountConfig);
+        new Chart(humanConsumeCtx, humanConsumeConfig);
+        new Chart(agriCountCtx, agriCountConfig);
+        new Chart(agriConsumeCtx, agriConsumeConfig);
+        new Chart(livestockConsumeCtx, livestockConsumeConfig);
+        new Chart(livestockCountCtx, livestockCountConfig);
+
+
+    });
+</script>
+{% endblock %}
