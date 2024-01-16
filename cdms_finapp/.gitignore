@@ -1,4 +1,0 @@
-.ebextensions
-__pycache__/
-.flaskenv
-.env
