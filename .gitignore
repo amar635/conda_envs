@@ -1,7 +1,10 @@
 AWSCLIV2.pkg
 .DS_Store
 .venv
+.env
+.flaskenv
 iwater/aws_lightsail.md
+aws_lightsail.md
 iwater/.gitignore
 .gitignore
 iwater/containers.json
