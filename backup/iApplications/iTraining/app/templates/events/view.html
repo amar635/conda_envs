@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="alert alert-dismissible alert-light my-5 text-center">
+    <h5>View Events</h5>
+  </div>
+  {% for event in events%}
+  <div class="card m-2 shadow-sm bg-secondary rounded-1">
+    <div class="card-body">
+      <div class="row">
+        <div class="col">
+          <div class="fs-5 fw-semibold">{{ event.schedule | date('%d %b %Y') }}</div>
+        </div>
+        <div class="col text-end">
+          <button class="btn btn-sm btn-light"><i class="fa-solid fa-xmark"></i></button>  
+        </div>
+      </div>
+      <div class="fs-7 mt-n1"> Registration starts at <span class="fw-bold">{{ event.schedule | date('%I:%M %p') }}</span></div>
+      <div class="fs-6">{{ event.title }} - {{ event.district_code }}</div>
+    </div>
+  </div>
+  {% endfor %}
+  {% endblock %}
