@@ -30,12 +30,12 @@ def create_app():
     app.config["JWT_REFRESH_TOKEN_EXPIRES"] = timedelta(minutes=120)
 
     # SWAGGER UI
-    app.config['API_TITLE']='iWater'
-    app.config['API_VERSION']='v1'
-    app.config["OPENAPI_VERSION"] = "3.0.3"
-    app.config["OPENAPI_URL_PREFIX"] = "/"
-    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"   
-    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+    # app.config['API_TITLE']='iWater'
+    # app.config['API_VERSION']='v1'
+    # app.config["OPENAPI_VERSION"] = "3.0.3"
+    # app.config["OPENAPI_URL_PREFIX"] = "/"
+    # app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"   
+    # app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
 
     db.init_app(app)
     current_directory = os.getcwd()
@@ -48,7 +48,7 @@ def create_app():
     # flask --app iTraining db upgrade
     CORS(app)
     JWTManager(app)
-    api = Api(app)
+    # api = Api(app)
 
     # Register Blueprints
     # api.register_blueprint(UserBlueprint, url_prefix='/api')

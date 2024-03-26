@@ -7,6 +7,7 @@ from iWater.app.classes.water_demand import WaterDemand
 from iWater.app.classes.water_supply import WaterSupply
 from iWater.app.models import District, Block, Village
 from iWater.app.models.rainfall import RainfallDatum
+from iWater.app.models.state import State
 from iWater.app.routes.water_budget import WaterBudgetCalc
 
 
@@ -55,6 +56,7 @@ def home():
     # try:
     if session['payload']:
         payload = session['payload']
+        breadcrumbs = session['breadcrumbs']
     else:
         village_id = request.form.get('ddVillages')
         payload = {"village_id": village_id} 
@@ -68,8 +70,10 @@ def home():
                     payload = request.form.get('payload')
                     payload = payload.replace("\'","\"")
                     payload = json.loads(payload)
+        breadcrumbs = list(State.get_breadcrumps(payload))
+        session['breadcrumbs']=breadcrumbs
         session['payload'] = payload
-   
+
     agriculture_demand, human_demand, livestock_demand, available_runoff, harvested_runoff = get_water_budget(payload) 
 
     # calculate water budget
@@ -81,11 +85,13 @@ def home():
                            water_supply_labels = ["harvested", "available"],
                            water_supply = [round(harvested_runoff,2), round(available_runoff,2)],
                            water_budget_labels = ['demand','supply'],
-                           water_budget_data = [round(water_demand,2), round(water_supply,2)])
+                           water_budget_data = [round(water_demand,2), round(water_supply,2)],
+                           breadcrumbs = breadcrumbs)
 
 @blp.route('/demand')
 def demand():
     payload=session['payload']
+    breadcrumbs = session['breadcrumbs']
     human_demand = WaterDemand.human_consumption(json_data=payload)
     human = get_chart_details(human_demand, 'Human', True)
     agriculture_demand = WaterDemand.agricuture_consumption(json_data=payload)
@@ -96,18 +102,21 @@ def demand():
                            human_chart_details = human,
                            agriculture_chart_details = agriculture,
                            livestock_chart_details = livestock,
-                           payload = payload)
+                           payload = payload,
+                           breadcrumbs = breadcrumbs)
 
 @blp.route('/supply')
 def supply():
     payload=session['payload']
+    breadcrumbs = session['breadcrumbs']
     runoff_available = WaterSupply.available_runoff(json_data=payload)
     available = get_chart_details(runoff_available, 'Available', False)
     runoff_harvested = WaterSupply.harvested_runoff(json_data=payload)
     harvested = get_chart_details(runoff_harvested, 'Harvested', False)    
     return render_template('supply.html',
                            available_chart_details = available,
-                           harvested_chart_details = harvested)
+                           harvested_chart_details = harvested,
+                           breadcrumbs = breadcrumbs)
 
 @blp.route('/budget')
 def budget():
@@ -115,6 +124,7 @@ def budget():
     # try:
     if session['payload']:
         payload = session['payload']
+        breadcrumbs = session['breadcrumbs']
     else:
         village_id = request.form.get('ddVillages')
         payload = {"village_id": village_id} 
@@ -127,8 +137,11 @@ def budget():
                 if district_id is None: 
                     payload = request.form.get('payload')
                     payload = payload.replace("\'","\"")
-                    payload = json.loads(payload)
+                    payload = json.loads(payload)        
+        breadcrumbs = State.get_breadcrumps(payload)
+        session['breadcrumbs']=breadcrumbs
         session['payload'] = payload
+
     human = WaterDemand.human_consumption(json_data=payload)
     agriculture = WaterDemand.agricuture_consumption(json_data=payload)
     livestock = WaterDemand.livestock_consumption(json_data=payload)
@@ -164,7 +177,8 @@ def budget():
                            harvests=runoff_harvested,
                            total_harvest=total_harvest,
                            harvested_runoff=harvested_runoff,
-                           deficit_surplus=deficit_surplus)
+                           deficit_surplus=deficit_surplus,
+                           breadcrumbs = breadcrumbs)
 
 def get_water_budget(payload):
     agriculture_demand, human_demand, livestock_demand = 0, 0, 0
