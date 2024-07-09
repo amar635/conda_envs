@@ -5,30 +5,40 @@
 {%endblock%}
 {%block content%}
 <div class="container-fluid m-0 justify-content-center p-0" style="background-color: #313962; width: 100%;">
-    <div class="container d-flex pt-5" style="width: fit-content;">
-        <iframe width="1228" height="500" src="https://www.youtube.com/embed/rqBq6oPpPZg"
+    <div class="container d-flex pt-5 ratio ratio-16x9">
+        <iframe src="https://www.youtube.com/embed/rqBq6oPpPZg"
             title="Introduction to E-Saksham" frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen></iframe>
     </div>
-    <div class="container d-flex mt-5 justify-content-center roboto">
+    <div class="row justify-content-around py-2">
+        <div class="col-4">
+            <div class="d-grid gap-2">
+                <button class="btn text-nowrap fs-6" style="background-color: #1E96D2; color:#fff">Who should do this course?</button>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="d-grid gap-2">
+                <button class="btn text-nowrap fs-6" style="background-color: #1E96D2; color:#fff">Why this course?</button>
+            </div>
+        </div>
+    </div>
+    <!-- <div class="container d-flex mt-5 justify-content-center roboto">
         <div class="row justify-content-between">
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group me-2" role="group" aria-label="First group">
                     <button type="button" onclick="scrollToDiv('why-this-course')" class="btn text-white no-loader"
                         style="background-color: #1E96D2; width: 16rem;">Why
                         this Course?</button>
-                </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <div class="btn-group me-2" role="group" aria-label="First group">
+                </div>
+                <div class="btn-group ms-2 me-2" role="group" aria-label="First group">
                     <button type="button" onclick="scrollToDiv('who-should-do-this-course')"
                         class="btn text-white no-loader" style="background-color: #1E96D2; width: 16rem;">Who
                         should do this course?</button>
                 </div>
             </div>
         </div>
-
-
-    </div>
+    </div> -->
     
     <div class="row justify-content-center p-0 m-0" style="z-index: 999; position: absolute; width: 100%;">
         
@@ -83,8 +93,8 @@
     <div class="row justify-content-center fw-semibold fs-3 mt-3">
         About this course
     </div>
-    <div class="row mt-5">
-        <div class="col">
+    <div class="row mt-3">
+        <div class="col-md-4 col-sm-12 mt-2">
             <div class="card shadow justify-content-center" style="border-color: white; min-height: 350px;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/group-3.jpg') }}" class="card-img-top" alt="...">
@@ -102,7 +112,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-md-4 col-sm-12 mt-2">
             <div class="card shadow justify-content-center" style="border-color: white; min-height: 350px;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/group-4.jpg') }}" class="card-img-top" alt="...">
@@ -120,7 +130,7 @@
                 </div>
             </div>
         </div>
-        <div class="col">
+        <div class="col-md-4 col-sm-12 mt-2">
             <div class="card shadow justify-content-center" style="border-color: white; min-height: 350px;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/layer-86.jpg') }}" class="card-img-top" alt="...">
@@ -149,14 +159,14 @@
             <div class="card justify-content-center" style="border-color: white;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/Blank_Diagram_2-e1531941866327-768x757.png') }}"
-                        class="card-img-top" alt="...">
+                        class="card-img-top img-fluid" alt="...">
                 </div>
             </div>
         </div>
         <div class="col">
             <div class="card justify-content-center" style="border-color: white;">
                 <div class="container p-3" style="width: fit-content;"><img
-                        src="{{ url_for('static', filename='assets/Untitled1-768x759-2.png') }}" class="card-img-top"
+                        src="{{ url_for('static', filename='assets/Untitled1-768x759-2.png') }}" class="card-img-top img-fluid"
                         alt="...">
                 </div>
             </div>
@@ -164,7 +174,7 @@
         <div class="col">
             <div class="card justify-content-center" style="border-color: white;">
                 <div class="container p-3" style="width: fit-content;"><img
-                        src="{{ url_for('static', filename='assets/Untitled2-768x777-2.png') }}" class="card-img-top"
+                        src="{{ url_for('static', filename='assets/Untitled2-768x777-2.png') }}" class="card-img-top img-fluid"
                         alt="...">
                 </div>
             </div>
@@ -180,7 +190,7 @@
             <div class="card justify-content-center" style="border-color: white;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/Blank-Diagram-2-768x651.png') }}"
-                        class="card-img-top" alt="...">
+                        class="card-img-top img-fluid" alt="...">
                 </div>
             </div>
         </div>
@@ -188,7 +198,7 @@
             <div class="card justify-content-center" style="border-color: white;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/Blank-Diagram-3-768x660.png') }}"
-                        class="card-img-top" alt="...">
+                        class="card-img-top img-fluid" alt="...">
                 </div>
             </div>
         </div>
@@ -196,7 +206,7 @@
             <div class="card justify-content-center" style="border-color: white;">
                 <div class="container p-3" style="width: fit-content;"><img
                         src="{{ url_for('static', filename='assets/Blank-Diagram-4-768x668.png') }}"
-                        class="card-img-top" alt="...">
+                        class="card-img-top img-fluid" alt="...">
                 </div>
             </div>
         </div>

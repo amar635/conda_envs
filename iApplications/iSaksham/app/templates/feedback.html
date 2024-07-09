@@ -75,13 +75,13 @@
     <div class="row p-0" style="height: 50px; min-width: 100%; margin-top:-70px; background-color: white;"></div>
 </div>
 
-<div class="container-fluid m-0 p-0 bg-white justify-content-center" style="width: 100%; display: flex;">
-    <div class="row py-5 mb-5 justify-content-center" style="width: 50%;">
+<div class="container-fluid m-0 p-sm-0 bg-white d-flex justify-content-center">
+    <div class="row py-5 mb-5 justify-content-center">
         <div class="card p-3" style="border-width: 5px;">
     
             <div class="container d-grid justify-content-center">
                 <div class="row text-center">
-                    <div class="fw-semibold fs-1">Leave a Message</div>
+                    <div class="fw-semibold fs-2">Leave a Message</div>
                     <p class="text-secondary pt-2">Your email address will not be published. Required fields are marked.</p>
                 </div>
                 {% with messages = get_flashed_messages() %}
@@ -93,19 +93,19 @@
                         {% endwith %}
                 <form action="{{url_for('learning.feedback')}}" method="post">
                     <div class="row">
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <div class="mt-3">
                                 <input type="text" class="form-control" id="form-size" aria-describedby="emailHelp"
                                     name="name" placeholder="Name *">
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <div class="mt-3">
                                 <input type="text" class="form-control" id="form-size" aria-describedby="emailHelp"
                                     name="email" placeholder="Email *">
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-md-4 col-sm-12">
                             <div class="mt-3">
                                 <input type="text" class="form-control" id="form-size" aria-describedby="emailHelp"
                                     name="subject" placeholder="Subject *">
@@ -113,7 +113,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-md-4 col-sm-12">
                             <div class="mt-3">
                                 <select name="message_type" id="form-size" class="form-select">
                                     <option value="">Select message category *</option>
@@ -124,7 +124,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-6 p-0 m-0">
+                        <div class="col-md-6 col-sm-12 p-0 m-0">
                             <div class="rating">
                                 <input type="radio" id="star5" name="rating" value="5">
                                 <label for="star5"></label>&nbsp;&nbsp;

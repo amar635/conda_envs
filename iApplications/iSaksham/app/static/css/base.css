@@ -178,3 +178,11 @@
     text-align: center;
     /* Align text center */
 }
+
+.fs-7{
+    font-size: 0.7rem;
+}
+
+.fs-8{
+    font-size: 0.6rem;
+}

@@ -10,3 +10,9 @@ psycopg2-binary==2.9.9
 flask_login==0.6.3
 Flask-Migrate==4.0.5
 requests==2.31.0
+langchain==0.1.14
+langchain-community==0.0.30
+pinecone-client==3.2.2
+openai==1.14.3
+tiktoken==0.6.0
+langchain-openai==0.1.3

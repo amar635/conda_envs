@@ -25,17 +25,95 @@
 
         <div class="row" style=" width:100%; border-bottom: 1px solid #ccc; padding-bottom: 10px;">
             <div class="col-4 text-center">
-                <img src="{{ url_for('static', filename='assets/nregs_web-3.png') }}" />
+                <img src="{{ url_for('static', filename='assets/nregs_web-3.png') }}" class="img-fluid" />
             </div>
             <div class="col-4 text-center">
-                <a href="/"><img src="{{ url_for('static', filename='assets/saksham_tag3-3.png') }}" /></a>
+                <a href="/"><img src="{{ url_for('static', filename='assets/saksham_tag3-3.png') }}"
+                        class="img-fluid" /></a>
             </div>
             <div class="col-4 text-center">
-                <img src="{{ url_for('static', filename='assets/giz_web.png') }}" />
+                <img src="{{ url_for('static', filename='assets/giz_web.png') }}" class="img-fluid" />
             </div>
         </div>
         <div class="container">
-            <ul class="navbar-nav p-3" style="font-family: Roboto; font-size: 14px;">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                    <!-- <a class="navbar-brand" href="#">Hidden brand</a> -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/home' in request.path %}active-nav{% endif %}"
+                                href="{{url_for('learning.home')}}">HOME</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/feedback' in request.path %}active-nav{% endif %}"
+                                href="{{url_for('learning.feedback')}}">FEEDBACK</a>
+                        </li>
+                        {%if current_user.is_authenticated%}
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/course' in request.path %}active-nav{% endif %} "
+                                href="{{url_for('learning.course')}}">COURSE</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/faq' in request.path  %}active-nav{% endif %}"
+                                href="{{url_for('learning.faq')}}">FAQ</a>
+                        </li>
+
+                        <li class="nav-item ">
+                            <a class="nav-link {% if '/user_manual' in request.path %}active-nav{% endif %}"
+                                href="{{url_for('learning.user_manual')}}">USER
+                                MANUAL</a>
+                        </li>
+                        {%endif%}
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/contact' in request.path %}active-nav{% endif %} "
+                                href="{{url_for('learning.contact')}}">CONTACT</a>
+                        </li>
+                    </ul>
+                    <form class="d-flex" role="search">
+                        {%if not current_user.is_authenticated %}
+                        <div class="link-login">
+                            <i class="fa-solid fa-user text-secondary"></i>&nbsp;
+                            <a class=" register  {% if request.path == '/register' %}active-nav{%else%} text-secondary{% endif %}"
+                                href="{{url_for('admin.register')}}" style="text-decoration: none;">Register</a>
+                            <span class="slash text-secondary">/</span>
+                            <a href="{{url_for('admin.login')}}"
+                                class="login {% if request.path == '/login' %}active-nav {%else%} text-secondary{% endif %}"
+                                style="text-decoration: none;">Login</a>&nbsp;&nbsp;
+                        </div>
+                        {%else%}
+                        <div class="link-login">
+
+                            <strong class="fw-semibold">Hello, {{name}}</strong>&nbsp;&nbsp;
+
+                            <span class="dropdown">
+                                <button class="btn btn-light no-loader dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    <i class="fas fa-user" style="color: #000000;"></i> <!-- Font Awesome icon -->
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                    style="right: 0; left: auto;">
+                                    <a class="dropdown-item"
+                                        href="{{url_for('admin.change_password',id=current_user.id)}}">Change
+                                        Password</a>
+                                    <a class="dropdown-item" href="{{url_for('admin.logout')}}">Logout</a>
+                                </div>
+                            </span>
+                            {%endif%}
+
+                        </div>
+                        <!-- <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                      <button class="btn btn-outline-success" type="submit">Search</button> -->
+                    </form>
+                </div>
+            </div>
+            <!-- <ul class="navbar-nav p-3" style="font-family: Roboto; font-size: 14px;">
                 <li class="nav-item">
                     <a class="nav-link {% if '/home' in request.path %}active-nav{% endif %}"
                         href="{{url_for('learning.home')}}">HOME</a>
@@ -64,9 +142,9 @@
                     <a class="nav-link {% if '/contact' in request.path %}active-nav{% endif %} "
                         href="{{url_for('learning.contact')}}">CONTACT</a>
                 </li>
-            </ul>
+            </ul> -->
 
-            {%if not current_user.is_authenticated %}
+            <!-- {%if not current_user.is_authenticated %}
             <div class="link-login">
                 <i class="fa-solid fa-user text-secondary"></i>&nbsp;
                 <a class=" register  {% if request.path == '/register' %}active-nav{%else%} text-secondary{% endif %}"
@@ -84,7 +162,7 @@
                 <span class="dropdown">
                     <button class="btn btn-light no-loader dropdown-toggle" type="button" id="dropdownMenuButton"
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fas fa-user" style="color: #000000;"></i> <!-- Font Awesome icon -->
+                        <i class="fas fa-user" style="color: #000000;"></i>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="right: 0; left: auto;">
                         <a class="dropdown-item" href="{{url_for('admin.change_password',id=current_user.id)}}">Change Password</a>
@@ -93,7 +171,7 @@
                 </span>
             {%endif%}
 
-            </div>
+            </div> -->
 
 
     </nav>
@@ -103,7 +181,8 @@
         <div class="splash-header justify-content-center">
             <div class="container align-items-center" id="splash-container">
 
-                <h4 class="text-dark mt-4 fw-semibold style="color: #000000;"> Welcome, {{current_user.name | title() }}</h4>
+                <h4 class="text-dark mt-4 fw-semibold style=" color: #000000;"> Welcome, {{current_user.name | title()
+                    }}</h4>
             </div>
         </div>
     </div>
@@ -138,28 +217,30 @@
     </div>
     <div id="footer" style="width: 100%;">
         <div class="container mt-3 text-secondary">
-            <div class="row" style="border-bottom: 1px solid #646565; padding-bottom: 10px;">
-                <a class="col-3 text-secondary" href="{{url_for('learning.important_links')}}" style="text-decoration: none;">Important
+            <div class="row fs-7" style="border-bottom: 1px solid #646565; padding-bottom: 10px;">
+                <a class="col text-secondary" href="{{url_for('learning.important_links')}}"
+                    style="text-decoration: none;">Important
                     Links</a>
-                <a class="col-3 text-secondary" href="{{url_for('learning.credits')}}" style="text-decoration: none;">Credits</a>
-                <a class="col-3 text-secondary no-loader" href="#" style="text-decoration: none;">Forums</a>
-                <div class="col-3">
-
-                    <div class="container"
+                <a class="col text-secondary" href="{{url_for('learning.credits')}}"
+                    style="text-decoration: none;">Credits</a>
+                <a class="col text-secondary no-loader" href="#" style="text-decoration: none;">Forums</a>
+                <div class="col-md-3 col-sm-12">
+                    <div class="container text-right"
                         style="background:#ffffff; padding: 0.4rem; width: fit-content; border-radius: 8px;">
-                        {%for number in visit_count%}
+                        {% for number in visit_count %}
                         <span class="roboto"
                             style="border: 1px solid #ffffff;color:#FFFFFF;background:#000000; padding: 0.3rem; border-radius: 5px">{{number}}</span>
-                        {%endfor%}
+                        {% endfor %}
                         <span class="text roboto"
                             style="border: 1px solid #ffffff;color:#FFFFFF;background:#000000; padding: 0.2rem; border-radius: 5px">Visits</span>
                     </div>
-
                 </div>
             </div>
+           
             <div class="row mt-2 ps-1">
-                <div class="col-9">Supported By : GIZ (Deutsche Gesellschaft für Internationale Zusammenarbeit)</div>
-                <div class="col-3 text-center">Average Rating: {{average_rating | round(2)}}</div>
+                <div class="col-8 fs-7">Supported By : GIZ <span class="d-none">(Deutsche
+                        Gesellschaft für Internationale Zusammenarbeit)</span></div>
+                <div class="col-4 fs-7 text-center">Average Rating: {{average_rating | round(2)}}</div>
             </div>
         </div>
 

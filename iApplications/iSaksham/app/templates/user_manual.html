@@ -40,8 +40,8 @@
     <div class="row p-0" style="height: 50px; min-width: 100%; margin-top:-70px; background-color: white;"></div>
 </div>
 <div class="container-fluid m-0 p-0 bg-white justify-content-center" style="width: 100%; display: flex;">
-    <div class="row py-5 mb-5" style="width: 50%;">
-        <div id="pdf-container"></div>
+    <div class="row py-5 mb-5">
+        <div id="pdf-container" class="col-12 p-0"></div>
     </div>
 </div>
 
@@ -61,6 +61,7 @@
             var context = canvas.getContext('2d');
             canvas.height = viewport.height;
             canvas.width = viewport.width;
+            canvas.classList.add('img-fluid');
             var renderContext = {
                 canvasContext: context,
                 viewport: viewport

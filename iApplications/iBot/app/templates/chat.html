@@ -19,19 +19,52 @@
                 JiM
             </div>
             <div class="alert alert-light">
-                {{chat['bot_message']}}
+                <div>{{chat['bot_message']}}</div>
+                <div>
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        {% for doc in docs %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapse{{loop.index}}" aria-expanded="false"
+                                    aria-controls="flush-collapseOne">
+                                    Source Page #{{loop.index}}
+                                </button>
+                            </h2>
+                            <div id="flush-collapse{{loop.index}}" class="accordion-collapse collapse"
+                                data-bs-parent="#accordionFlushExample">
+                                <div class="accordion-body">{{doc.page_content}}</div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        <!-- <div class="accordion-item">
+                          <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                              Source Page #2
+                            </button>
+                          </h2>
+                          <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine this being filled with some actual content.</div>
+                          </div>
+                        </div> -->
+                    </div>
+                </div>
+
             </div>
             {% endfor %}
             {% endif %}
         </div>
         <div class="fixed-bottom">
-            <form class="container mx-5 px-5" action="{{url_for('openai.ai_response')}}" method="post">
-                <div class="d-inline-block position-relative mb-5 w-100">
-                    <textarea type="" class="form-control d-inline-block pe-5" name="user_message" id="userMessage"
-                        placeholder="Type your message..." aria-label="Type your message..."
-                        aria-describedby="button-addon2" tabindex="0"></textarea>
-                    <input type="submit" value="Send"
-                        class="btn btn-primary btn-sm position-absolute mt-3 m-2 top-0 end-0" id="submit">
+            <form class="container mx-5 px-5" action="{{url_for('openai.rag')}}" method="post">
+                <div class="mb-5">
+                    <div class="d-inline-block position-relative w-100">
+                        <textarea type="" class="form-control d-inline-block pe-5" name="user_message" id="userMessage"
+                            placeholder="Ask anything from Annual Master Circular..." aria-label="Type your message..."
+                            aria-describedby="button-addon2" tabindex="0"></textarea>
+                        <input type="submit" value="Send"
+                            class="btn btn-primary btn-sm position-absolute mt-3 m-2 top-0 end-0" id="submit">
+                    </div>
+                    <div class="fs-8 mn-5 text-center text-secondary">"JiM" can make mistakes. Consider checking important information.</div>
                 </div>
             </form>
         </div>
@@ -60,20 +93,23 @@
             {% endif %}
         </div>
         <div class="fixed-bottom">
-            <form class="container" action="/ibot/" method="post">
-                <div class="d-inline-block position-relative mb-2 w-100">
-                    <textarea type="" class="form-control d-inline-block pe-5" name="user_message" id="userMessage"
-                        placeholder="Type your message..." aria-label="Type your message..."
-                        aria-describedby="button-addon2"></textarea>
-                    <input type="submit" value="Send"
-                        class="btn btn-primary btn-sm position-absolute mt-3 m-2 top-0 end-0" id="submitButton">
-                    <div class="btn btn-primary btn-sm position-absolute mt-3 m-2 top-0 end-0 px-4 visually-hidden"
-                        id="loader">
-                        <div class='spinner-border text-light' style="height:20px; width:20px;" role='status'>
-                            <span class='visually-hidden'>Loading...</span>
+            <form class="container" action="/ibot/rag" method="post">
+                <div class="mb-2">
+                    <div class="d-inline-block position-relative w-100">
+                        <textarea type="" class="form-control d-inline-block pe-5" name="user_message" id="userMessage"
+                            placeholder="Ask anything from AMC..." aria-label="Type your message..."
+                            aria-describedby="button-addon2"></textarea>
+                        <input type="submit" value="Send"
+                            class="btn btn-primary btn-sm position-absolute mt-3 m-2 top-0 end-0" id="submitButton">
+                        <div class="btn btn-primary btn-sm position-absolute mt-3 m-2 top-0 end-0 px-4 visually-hidden"
+                            id="loader">
+                            <div class='spinner-border text-light' style="height:15px; width:15px;" role='status'>
+                                <span class='visually-hidden'>Loading...</span>
+                            </div>
                         </div>
+                        <div class="fs-8 mn-5 text-center text-secondary">"JiM" can make mistakes.</div>
                     </div>
-                </div>
+                </div>                
             </form>
         </div>
     </div>
@@ -81,9 +117,8 @@
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Your code goes here
         userMessage = document.getElementById('userMessage')
-        userMessage.focus();
+        userMessage.focus();    
         chatMessages.scrollTop = chatMessages.scrollHeight;
         messageDivs = document.getElementsByClassName('alert alert-light');
         if (messageDivs.length > 0) {
@@ -94,12 +129,12 @@
             typeText(messageDiv, bot_message, 10, 0);
         }
 
-
-
         document.getElementById('submitButton').addEventListener('click', function () {
             // event.preventDefault();
-            document.getElementById('submitButton').classList.add('visually-hidden');
+            // document.getElementById('spinner').classList.remove('visually-hidden');
             document.getElementById('loader').classList.remove('visually-hidden');
+            document.getElementById('submitButton').classList.add('visually-hidden');
+            // createLoader();
         });
 
         userMessage.addEventListener('change', function () {
@@ -115,37 +150,8 @@
             }
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-        // function typeText(item, text, delay, i) {
-        //     item.append(text.charAt(i))
-        //         .delay(delay)
-        //         .promise()
-        //         .done(function () {
-        //             if (i < text.length) {
-        //                 i++;
-        //                 typeText(item, text, delay, i);
-        //             }
-        //         });
-        // }
+       
     });
-    // TYPE SIMULATION TEXT
-    //     function typeText(item, text, delay, i) {
-    //     $(item).append(text.charAt(i))
-    //         .delay(delay)
-    //         .promise()
-    //         .done(function() {
-    //           if(i<text.length) {
-    //             i++;
-    //             typeText(item, text, delay, i);
-    //           }
-    //     });
-    // }
-
-    // var text = 'This is bit longer text. This will be typed at the speed of 100 or less';
-    // var item = $("div");
-
-    // $(document).on('click', 'button', function(){
-    //   item.empty();
-    //   typeText(item, text, 30, 0);
-    // });
 </script>
+<!-- https://codepen.io/AnoNewb/pen/JwypRN -->
 {% endblock %}

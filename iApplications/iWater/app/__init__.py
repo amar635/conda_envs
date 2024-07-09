@@ -11,6 +11,8 @@ from iWater.app.db import db
 from iWater.app.routes.auth import blp as UserBlueprint
 from iWater.app.routes.controllers import blp as controllerBlueprint
 from iWater.app.routes.pwa import blp as pwaBlueprint
+from iWater.app.routes.waterbody_routes import blp as wbBlueprint
+from iWater.app.routes.wb_api import blp as wbApiBlueprint
 
 
 
@@ -45,6 +47,8 @@ def create_app():
     api.register_blueprint(UserBlueprint, url_prefix='/api')
     api.register_blueprint(pwaBlueprint)
     api.register_blueprint(controllerBlueprint)
+    api.register_blueprint(wbBlueprint, url_prefix='/wb')
+    api.register_blueprint(wbApiBlueprint, url_prefix='/wb/api')
 
 
     return app
