@@ -382,6 +382,8 @@ class Water_bodies(db.Model):
             with db.session() as session:
                 result = session.query(
                         func.count(cls.id).label('value'),
+                        func.sum(cls.water_spread_area).label('spread_area'),
+                        func.sum(cls.storage_capacity).label('storage'),
                         WB_master.name.label('name')
                         ).join(WB_master, cls.wb_type_id == WB_master.code)\
                         .group_by(WB_master.code, WB_master.name).all()
@@ -389,6 +391,8 @@ class Water_bodies(db.Model):
         with db.session() as session:
             query = session.query(
                     func.count(cls.id).label('value'),
+                    func.sum(cls.water_spread_area).label('spread_area'),
+                    func.sum(cls.storage_capacity).label('storage'),
                     WB_master.name.label('name')
                     ).join(WB_master, cls.wb_type_id == WB_master.code)
             
