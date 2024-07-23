@@ -32,6 +32,7 @@ def get_dashboard_data():
     primary_data = json.dumps(Water_bodies.get_count_and_sum(payload))
     # get chart data for top five
     top_five = Water_bodies.get_top_five(payload)
+    top_all = Water_bodies.get_top_five(json_data=payload,is_top_five=False)
     barhchart_x_data=[]
     barhchart_y_data = []
     html_table = []
@@ -39,7 +40,11 @@ def get_dashboard_data():
         for index,row in enumerate(top_five):             
                 barhchart_y_data.append(row['name'])  
                 barhchart_x_data.append(row['wb_count'])
-                html_table.append({"S.No.":index+1,"Name":row['name'], "Count": row['wb_count'], "Storage": row['storage'], "Area": row['spread_area']})   
+                html_table.append({"S.No.":index+1,"Name":row['name'], "Count": row['wb_count'], "Storage": row['storage'], "Area": row['spread_area']})  
+    top_all_table = []
+    if top_all is not None:
+        for index,row in enumerate(top_all):             
+                top_all_table.append({"S.No.":index+1,"Name":row['name'], "Count": row['wb_count'], "Storage": row['storage'], "Area": row['spread_area']})   
     # get chart data for wb types
     wb_type_data = json.dumps(Water_bodies.get_wb_type(payload))
     # get table data
@@ -49,6 +54,7 @@ def get_dashboard_data():
     return jsonify({"primary_data": primary_data, 
                       "wb_type_data":wb_type_data,
                       "top_five": html_table,
+                      "top_all": top_all_table,
                       "barhchart_y_data":barhchart_y_data,
                       "barhchart_x_data":barhchart_x_data})
 

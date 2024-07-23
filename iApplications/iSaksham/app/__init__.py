@@ -7,7 +7,8 @@ from iSaksham.app.routes.admin import blp as AuthBlueprint  # Importing blueprin
 from flask_login import LoginManager, current_user  # Importing LoginManager and current_user for user authentication
 from iSaksham.app.models.feedback import Feedback  # Importing Feedback model
 from iSaksham.app.models.user import User  # Importing User model
-
+from iSaksham.app.models.chapters import Chapters
+from iSaksham.app.models.modules import Modules
 # File path to store visit count
 current_directory = os.getcwd()
 VISIT_COUNT_FILE = current_directory + '/iSaksham/app/static/visit_count.txt'
@@ -41,15 +42,13 @@ def create_app():
     # app.config["OPENAPI_URL_PREFIX"] = "/"
     # app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     # app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DUMMY_DATABASE_URL')  # Replace with your actual database URI
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://xgmkxzsp:CsB1HfTbEfktRnrL-0hcByzS7iyh1qkL@rain.db.elephantsql.com/xgmkxzsp'  # Replace with your actual database URI
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['PROPAGATE_EXCEPTIONS'] = True
-    app.config['ELASTICMAIL_API_KEY'] = os.getenv('ELASTICMAIL_API_KEY')
-    app.config['ELASTICMAIL_API_URL'] = os.getenv('ELASTICMAIL_API_URL')
 
     db.init_app(app)  # Initializing the database with the Flask app
-    migrations_directory = current_directory + '/iSaksham/migrations'
-    migrate = Migrate(app, db, directory=migrations_directory)  # Initializing Flask-Migrate with the Flask app
+    # migrations_directory = current_directory + '/iSaksham/migrations'
+    migrate = Migrate(app, db)  # Initializing Flask-Migrate with the Flask app
     app.register_blueprint(HomeBlueprint)  # Registering home blueprint with the Flask app
     app.register_blueprint(AuthBlueprint)  # Registering authentication blueprint with the Flask app
 
@@ -79,7 +78,8 @@ def create_app():
         else:
             name = ""
 
-        average_rating = Feedback.get_average()
+        #average_rating = Feedback.get_average()
+        average_rating = 0
         if not average_rating:
             average_rating = 0
 

@@ -3,18 +3,18 @@
 
 }
 
-/* .dot{
-    width: 5px;
-    height: 5px;
-    content: "";
-    border-radius: 50%;
-    color: black;
-} */
+
 
 .vertical {
     background-color: #ccc;
     width: 0.5px ;
     height: 220px;
+    position: absolute;
+}
+.vertical-mobile {
+    background-color: #ccc;
+    width: 0.5px ;
+    height: 100px;
     position: absolute;
 }
 

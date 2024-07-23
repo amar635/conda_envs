@@ -176,7 +176,7 @@ class Water_bodies(db.Model):
     """
     # get top five state/districts/block/village waterbodies
     @classmethod
-    def get_top_five(cls, json_data):
+    def get_top_five(cls, json_data,is_top_five=True):
         """Fetches top 5 regions with most water bodies based on provided criteria.
 
         Args:
@@ -231,7 +231,11 @@ class Water_bodies(db.Model):
                     query = query.filter(filter_column == filters)
                     # query = query.filter_by(**filters)
 
-                query = query.group_by(selected_column, selected_name_column).order_by(func.count(cls.id).desc()).limit(5)
+                query = query.group_by(selected_column, selected_name_column).order_by(func.count(cls.id).desc())
+                if is_top_five:
+                    query = query.limit(5)
+                else: 
+                    query = query
                 result = query.all()
 
             if result:

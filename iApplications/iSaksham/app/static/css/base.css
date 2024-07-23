@@ -38,6 +38,15 @@
     bottom: 0;
 
 }
+#footer-mobile {
+
+    height: fit-content;
+    background-color: #202121;
+    color: white;
+    padding: 10px;
+    bottom: 0;
+
+}
 
 /* Your custom styles here */
 .loading-icon {
@@ -178,9 +187,22 @@
     text-align: center;
     /* Align text center */
 }
+html, body {
+    overflow-x: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+}
+
+.fs-6{
+    font-size: 1rem;
+}
 
 .fs-7{
-    font-size: 0.7rem;
+    font-size: 0.8rem;
 }
 
 .fs-8{

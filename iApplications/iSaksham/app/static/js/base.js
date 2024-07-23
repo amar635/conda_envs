@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (shouldDisplaySplashScreen()) {
 
         // Extend timeout for testing
-        // setTimeout(hideSplashScreen, 5000); 
+        setTimeout(hideSplashScreen, 5000); 
 
     } else {
 
@@ -98,3 +98,6 @@ function topFunction() {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
+
+const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))

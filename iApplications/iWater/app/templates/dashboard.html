@@ -215,12 +215,12 @@
           <div class="card">
             <div class="card-body">
               <div class="d-flex justify-content-between">
-                <div class="card-title fs-4">Waterbody Types <span class="fw-lighter text-muted">| Distribution</span>
+                <div class="card-title fs-4">Distribution <span class="fw-lighter text-muted">| <span id="spanDistribution">Count</span> </span>
                 </div>
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i
                       class="fa-solid fa-ellipsis"></i></a>
-                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                  <ul id="wbDistribution_dropdown" class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                     <li class="dropdown-header text-start">
                       <h6>Filter</h6>
                     </li>
@@ -253,18 +253,18 @@
         <div class="card">
           <div class="card-body">
             <div class="d-flex justify-content-between">
-              <div class="card-title fs-4">Top 5 Districts <span class="fw-lighter text-muted">| Waterbody Count</span>
+              <div class="card-title fs-4">Top 5  <span class="fw-lighter text-muted">| Sorted By - <span id="spanTableSorted">Count</span></span>
               </div>
               <div class="filter">
                 <a class="icon" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i
                     class="fa-solid fa-ellipsis"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
                   <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
+                    <h6>Sort</h6>
                   </li>
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
+                  <li><a class="dropdown-item" href="#">Count</a></li>
+                  <li><a class="dropdown-item" href="#">Storage</a></li>
+                  <li><a class="dropdown-item" href="#">Area</a></li>
                 </ul>
               </div>
             </div>
@@ -275,7 +275,7 @@
       <div class="col-12 mt-3">
         <div class="card-body">
           <div class="d-flex justify-content-between">
-            <div class="card-title fs-4">Top 5 States <span class="fw-lighter text-muted">| Storage</span></div>
+            <div class="card-title fs-4">3 Dimensional <span class="fw-lighter text-muted">| Count-Area-Storage</span></div>
             <div class="filter">
               <a class="icon" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i
                   class="fa-solid fa-ellipsis"></i></a>
@@ -296,7 +296,7 @@
   </div>
 </div>
 </div>
-<input type="hidden" name="wbDistribution" value="">
+<input type="hidden" id="wbDistribution" name="wbDistribution">
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <script>
@@ -399,82 +399,127 @@
   }
   
   // Bubble Chart
-  function load_bubbleChart() {
+  function load_bubbleChart(bubbleChart_data) {
     var bubbleChartDom = document.getElementById('bubbleChart');
     var bubbleChart = echarts.init(bubbleChartDom);
     var option_bubble;
 
     const data_bubble = [
-      [
-        [3136.13, 4759, 53637530, "Balaghat"],
-        [134.14, 3915, 76224640, "Katni"],
-        [1632.97, 3802, 36332980, "Shahdol"],
-        [4143.90, 3677, 59180150, "Betul"],
-        [5147.19, 3317, 71275800, "Seoni"],
-        [95.71, 3173, 42288290, "Vidisha"],
-        [2687.71, 3144, 77277450, "Dhar"],
-        [1074.72, 2879, 20436180, "Anuppur"],
-        [890.19, 2694, 38289150, "Panna"],
-        [1447.86, 2674, 306891690, "Mandla"],
-        [4127.75, 2590, 232672730, "Dewas"],
-        [63233.17, 2485, 48348460, "Sehore"],
-        [1074.26, 2282, 65245990, "Umaria"],
-        [5420.17, 2137, 128063220, "Chhatarpur"],
-        [3.41, 2130, 212997020, "Ashoknagar"],
-        [35833.11, 2046, 20245290, "Singrauli"],
-        [8100.84, 1924, 47142700, "Satna"],
-        [46903.33, 1777, 49259330, "Rohtas"],
-        [12034.71, 1649, 40606490, "Ujjain"],
-        [212.08, 1646, 12107210, "Bhind"]
-      ]
+      bubbleChart_data
+      // [
+      //   [3136.13, 4759, 53637530, "Balaghat"],
+      //   [134.14, 3915, 76224640, "Katni"],
+      //   [1632.97, 3802, 36332980, "Shahdol"],
+      //   [4143.90, 3677, 59180150, "Betul"],
+      //   [5147.19, 3317, 71275800, "Seoni"],
+      //   [95.71, 3173, 42288290, "Vidisha"],
+      //   [2687.71, 3144, 77277450, "Dhar"],
+      //   [1074.72, 2879, 20436180, "Anuppur"],
+      //   [890.19, 2694, 38289150, "Panna"],
+      //   [1447.86, 2674, 306891690, "Mandla"],
+      //   [4127.75, 2590, 232672730, "Dewas"],
+      //   [63233.17, 2485, 48348460, "Sehore"],
+      //   [1074.26, 2282, 65245990, "Umaria"],
+      //   [5420.17, 2137, 128063220, "Chhatarpur"],
+      //   [3.41, 2130, 212997020, "Ashoknagar"],
+      //   [35833.11, 2046, 20245290, "Singrauli"],
+      //   [8100.84, 1924, 47142700, "Satna"],
+      //   [46903.33, 1777, 49259330, "Rohtas"],
+      //   [12034.71, 1649, 40606490, "Ujjain"],
+      //   [212.08, 1646, 12107210, "Bhind"]
+      // ]
     ];
     option_bubble = {
-      xAxis: {
-        splitLine: { show: false }
+  // backgroundColor: new echarts.graphic.RadialGradient(0.3, 0.3, 0.8, [
+  //   {
+  //     offset: 0,
+  //     color: '#f7f8fa'
+  //   },
+  //   {
+  //     offset: 1,
+  //     color: '#cdd0d5'
+  //   }
+  // ]),
+  title: {
+    text: 'Waterbodies Bubble Chart',
+    left: '5%',
+    top: '3%',
+    show: false
+  },
+  legend: {
+    right: '10%',
+    top: '3%'
+  },
+  // grid: {
+  //   left: '8%',
+  //   top: '10%'
+  // },
+  xAxis: {
+    splitLine: {
+      lineStyle: {
+        type: 'dashed'
       },
-      yAxis: {
-        splitLine: { show: false },
-        scale: true
+      show: false,
+    },
+    name: 'Spread Area',
+    nameLocation: 'center',
+    nameTextStyle: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      lineHeight: 40,
+    },
+  },
+  yAxis: {
+    splitLine: {
+      lineStyle: {
+        type: 'dashed'
       },
-      grid: {
-        left: 40,
-        right: 130
+      show: false, 
+    },
+    scale: true,
+    name: 'Count',
+    nameLocation: 'middle',
+    nameTextStyle: {
+      fontSize: 14,
+      fontWeight: 'bold',
+      lineHeight: 40,
+    },
+  },
+  series: [
+    {
+      data: data_bubble[0],
+      type: 'scatter',
+      symbolSize: function (data) {
+        return Math.sqrt(data[2]) / 5e2;
       },
-      series: [
-        {
-          name: '1990',
-          data: data_bubble[0],
-          type: 'scatter',
-          symbolSize: function (data) {
-            return Math.sqrt(data[2]) / 5e2;
+      emphasis: {
+        focus: 'series',
+        label: {
+          show: true,
+          formatter: function (param) {
+            return param.data[3];
           },
-          emphasis: {
-            focus: 'self'
-          },
-          labelLayout: function () {
-            return {
-              x: bubbleChart.getWidth() - 100,
-              moveOverlap: 'shiftY'
-            };
-          },
-          labelLine: {
-            show: false,
-            length2: 5,
-            lineStyle: {
-              color: '#bbb'
-            }
-          },
-          label: {
-            show: false,
-            formatter: function (param) {
-              return param.data[3];
-            },
-            position: 'top',
-            minMargin: 2
-          }
+          position: 'top'
         }
-      ]
-    };
+      },
+      itemStyle: {
+        shadowBlur: 10,
+        shadowColor: 'rgba(120, 36, 50, 0.5)',
+        shadowOffsetY: 5,
+        color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [
+          {
+            offset: 0,
+            color: 'rgb(251, 118, 123)'
+          },
+          {
+            offset: 1,
+            color: 'rgb(204, 46, 72)'
+          }
+        ])
+      }
+    }
+  ]
+};
 
     option_bubble && bubbleChart.setOption(option_bubble);
   }
@@ -520,7 +565,7 @@
           dropdown_element.disabled = false;
           break;
         case "form_data":
-
+          break;
         case "submit":
           dd_type = "";
         default:
@@ -647,17 +692,20 @@
       document.getElementById('wbCount').innerHTML = primary_data['wb_count'];
       document.getElementById('wbStorage').innerHTML = primary_data['storage'];
       document.getElementById('wbSpreadArea').innerHTML = primary_data['spread_area'];
-      document.getElementById('wbDistribution').value = JSON.parse(response_data['wb_type_data']);
+      document.getElementById('wbDistribution').value = JSON.stringify(response_data['wb_type_data']);
       donutchart_data = JSON.parse(response_data['wb_type_data']);
       barhchart_x_data = response_data['barhchart_x_data'];
-      barhchart_y_data = response_data['barhchart_y_data'];
-      load_donutchart(donutchart_data);
-      load_barhchart(barhchart_x_data, barhchart_y_data);
-      load_bubbleChart();
+      barhchart_y_data = response_data['barhchart_y_data'];      
       table_data = response_data['top_five'];
       table_container = document.getElementById('tableContainer');
       table_container.innerHTML = '';
       table_container.appendChild(arrayToTable(table_data));
+      // table_container = document.getElementById('tableContainer');
+      // tableToJson(table_container);
+      bubbleChart_data = tableToBubbleChartData(response_data['top_all']);
+      load_donutchart(donutchart_data);
+      load_barhchart(barhchart_x_data, barhchart_y_data);
+      load_bubbleChart(bubbleChart_data);
     }
 
     function arrayToTable(data) {
@@ -823,6 +871,39 @@
       });
     });
 
+    document.getElementById('wbDistribution_dropdown').childNodes.forEach(item => {
+      item.addEventListener('click', (event) => {
+        switch_doughnutdata(event.target.textContent.trim());
+      });
+    });
+    
+    function switch_doughnutdata(filter){
+      doughnut_data = document.getElementById('wbDistribution').value;
+      doughnut_data = JSON.parse(JSON.parse(doughnut_data));
+      display_text = document.getElementById('spanDistribution');
+      doughnutData = []
+      switch(filter){
+        case 'Count':
+          doughnut_data.forEach(element => {
+            doughnutData.push({'value': element.value, 'name':element.name})
+          });
+          break;
+        case 'Storage':
+          doughnut_data.forEach(element => {
+            doughnutData.push({'value': element.storage, 'name':element.name})
+          });
+          break;
+        case 'Area':
+          doughnut_data.forEach(element => {
+            doughnutData.push({'value': element.spread_area, 'name':element.name})
+          });
+          break;
+        default:
+          break;
+      }
+      display_text.innerText = filter;
+      load_donutchart(doughnutData);
+    }
 
     function tableToJson(table) {
       const data = [];
@@ -849,6 +930,14 @@
       return data;
     }
  
+    function tableToBubbleChartData(data){
+        return data.map(item => [
+            Number(item.Area)/1000, // Convert Area to number
+            Number(item.Count)/1000, // Convert Count to number
+            Number(item.Storage)*1000, // Convert Storage to number
+            item.Name // Name remains a string
+        ]);
+    };
  // Function to filter and sort data based on the filter
     function filter_data(filter) {
       table_data = tableToJson(document.getElementById('tableContainer'));
