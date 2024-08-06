@@ -10,6 +10,7 @@ from iLand import app as Land
 from iCarbon import app as Carbon
 from iSaksham import app as Saksham
 from eSaksham import app as eSaksham
+from iWork import app as Work
 
 application = DispatcherMiddleware(Core, {
     '/iwater': Water,
@@ -19,7 +20,8 @@ application = DispatcherMiddleware(Core, {
     '/iland': Land,
     '/icarbon':Carbon,
     '/isaksham':Saksham,
-    '/esaksham':eSaksham
+    '/esaksham':eSaksham,
+    '/iwork':Work
 })
 
 # application = iCore

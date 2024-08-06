@@ -1,0 +1,1 @@
+flask --app iWork db revision --autogenerate -m 'grant permissions'

@@ -1,0 +1,273 @@
+{% extends 'base.html' %}
+{% block title %} Inputs {% endblock %}
+{% block content %}
+
+<div class="container mt-3">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <nav class="ms-2 fs-8" style="--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% for breadcrumb in breadcrumbs %}
+                    <li class="breadcrumb-item {% if loop.index == breadcrumbs|length %}text-primary{% endif %}">{{ breadcrumb['name'] }}</li>
+                    {% endfor %}
+                </ol>
+            </nav>
+            <div class="card">
+                <div class="card-header">
+                    <div class="text-center">
+                        <h3 class="m-0">Asset Entries</h3>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <div class="text-danger fs-8"><i class="fa-solid fa-circle-exclamation"></i> Pending: <span class="fw-semibold">{{assets | length}}</span> </div>
+                        <div class="text-success fs-8"><i class="fa-solid fa-circle-check"></i> Completed: <span class="fw-semibold">{{completed}}</span></div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{url_for('.data')}}" method="post">
+                        <div class="mb-1">
+                            <label for="selectAssetID" class="form-label fs-7">Select Asset ID</label>
+                            <select class="form-select form-select-sm" id="selectAssetID" name="selectAssetID"
+                                aria-label="Select Asset ID">
+                                <option selected>--Select Asset ID--</option>
+                                {% for asset in assets %}
+                                <option value="{{asset['id']}}">{{asset['asset_id']}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-4 text-center d-flex align-items-center justify-content-center">
+                              <div class="image-container">
+                                <img id="imgAsset" src="https://clipground.com/images/image-placeholder-clipart-1.png" alt="Asset picture" class="image">
+                              </div>
+                            </div>
+                            <div class="col-8">
+                              <div class="mb-1">
+                                <label for="txtWorkCode" class="form-label fs-7 mb-0">Work Code</label>
+                                <input type="text" class="form-control form-control-sm fs-7" id="txtWorkCode" name="txtWorkCode" placeholder="Select Asset ID to view" disabled>
+                              </div>
+                              <div class="mb-1">
+                                <label for="txtAssetCost" class="form-label fs-7 mb-0">Asset Cost</label>
+                                <input type="text" class="form-control form-control-sm fs-7" id="txtAssetCost" name="txtAssetCost" placeholder="Select Asset ID to view" disabled>
+                              </div>
+                            </div>
+                          </div>                       
+                        <div class="mb-1">
+                            <label for="txtWorkType" class="form-label fs-7 mb-0">Work Type</label>
+                            <input type="text" class="form-control form-control-sm fs-7" id="txtWorkType"
+                                name="txtWorkType" placeholder="Select Asset ID to view" disabled>
+                        </div>
+                        <div class="mb-1">
+                            <label for="txtWorkName" class="form-label fs-7 mb-0">Work Name</label>
+                            <input type="text" class="form-control form-control-sm fs-7" id="txtWorkName"
+                                name="txtWorkName" placeholder="Select Asset ID to view" disabled>
+                        </div>
+                        <div class="mb-1">
+                            <label for="categories" class="form-label fs-7 mb-0 me-2">Select Category</label>
+                            {% for category in categories %}
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="categories" id="category_{{ category['id'] }}" value="{{ category['id'] }}">
+                                <label class="form-check-label" for="category_{{ category['id'] }}">{{ category['name'] }}</label>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mb-1">
+                            <label for="selectProposedStatus" class="form-label fs-7">Select Permissible Work</label>
+                            <select class="form-select form-select-sm" id="selectProposedStatus" name="selectProposedStatus"
+                                aria-label="Select Asset ID">
+                                {{permissible_works}}
+                                <option selected>--Select Permissible Work--</option>
+                                {% for permissible_work in permissible_works %}
+                                <option value="{{permissible_work['id']}}">{{permissible_work['proposed_status']}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div id="inputContainer">
+                            <span class="fs-7 fw-lighter">Select Proposed Status to view Input TextBoxes</span>
+                            
+                        </div>
+                        <!-- <div class="mb-1">
+                            <label for="txtInput1" class="form-label fs-7">Input 1 
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
+                                data-bs-placement="right" data-bs-html="true" 
+                                data-bs-title="<em>Tooltip</em> <u>with</u> <b>HTML</b>"></i>
+                            </label>
+                            <input type="text" class="form-control form-control-sm" id="txtInput1" name="input1" placeholder="Lenght for pond">
+                        </div>
+                        <div class="mb-1">
+                            <label for="txtInput2" class="form-label fs-7">Input 2
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
+                                data-bs-placement="right" data-bs-html="true" 
+                                data-bs-title="<em>Tooltip</em> <u>with</u> <b>HTML</b>"></i>
+                            </label>
+                            <input type="text" class="form-control form-control-sm" id="txtInput2" name="input2" placeholder="Enter Breadth of pond">
+                        </div>
+                        <div class="mb-1">
+                            <label for="txtInput3" class="form-label fs-7">Input 3
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
+                                data-bs-placement="right" data-bs-html="true" 
+                                data-bs-title="<em>Tooltip</em> <u>with</u> <b>HTML</b>"></i>
+                            </label>
+                            <input type="text" class="form-control form-control-sm" id="txtInput3" name="input3" placeholder="Depth of pond">
+                        </div> -->
+                        <div class="text-center mt-1">
+                            <input type="submit" class="btn btn-primary btn-sm" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        // Variables & Constants
+        const dd_asset_id = document.getElementById('selectAssetID');
+        var txt_work_code = document.getElementById('txtWorkCode');
+        var txt_work_type = document.getElementById('txtWorkType');
+        var txt_asset_cost = document.getElementById('txtAssetCost');
+        var img_asset = document.getElementById('imgAsset');
+        var dd_permissible_works = document.getElementById('selectProposedStatus');
+        var rb_categories = document.getElementById('categories')
+
+        // EVENTS
+        dd_asset_id.addEventListener('change',function (){
+            url_extension = 'assets';
+            let payload = { "select_id": this.value };
+            data = fetch_data(url_extension, payload).then(data=>{
+               fill_data(data); 
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });            
+        });
+
+        document.querySelectorAll('input[name="categories"]').forEach(function(radio) {
+            radio.addEventListener('click', function() {
+                let url_extension = 'proposed_status';
+                let payload = {
+                    "select_id": this.value
+                };
+                // Find the associated label
+                const label_name = document.querySelector(`label[for="${this.id}"]`);
+                if (label_name) {
+                    console.log('Selected label:', label_name.innerHTML);
+                }
+                fetch_data(url_extension, payload).then(data => {
+                    fill_dd_proposed_status(data, label_name.innerHTML);
+                }).catch(error => {
+                    console.error('Error fetching data:', error);
+                });
+            });
+        });
+
+        dd_permissible_works.addEventListener('change',function (){
+            url_extension = 'input_parameters';
+            let payload = { "select_id": this.value };
+            data = fetch_data(url_extension, payload).then(data=>{
+                add_input_elements(data);
+            }).catch(error => {
+                console.error('Error fetching data:', error);
+            });            
+        });
+
+        // FUNCTIONS
+        function fill_data(asset_data){
+            txt_work_code.value = asset_data['work_code'];
+            txt_work_type.value = asset_data['work_type'];
+            txt_asset_cost.value = asset_data['asset_cost'];
+            img_asset.src=asset_data['photo_url'];
+        }
+
+        function createOption(option_value, option_text) {
+            option = document.createElement('option')
+            option.value = option_value;
+            option.text = option_text;
+            return option;
+            }
+
+        function fill_dd_proposed_status(data, label_name){
+            dd_permissible_works.innerHTML = "";
+            optionText = `--Select Category ${label_name} Works--`
+            dd_permissible_works.append(createOption("-1", optionText));
+            for (let ndx = 0; ndx < data.length; ndx++) {
+                var item = data[ndx];
+                dd_permissible_works.append(createOption(item['id'], item['proposed_status']));
+            }
+        }
+
+        function add_input_elements(inputData) {
+            // Container where the inputs will be added
+            var container = document.getElementById("inputContainer");
+            container.innerHTML = "";
+
+            for (let data of inputData) {
+                // Destructuring data
+                // let { id, tooltip_description, input_label } = data;
+
+                // Create the input div
+                var inputDiv = document.createElement("div");
+                inputDiv.className = "mb-1";
+                inputDiv.innerHTML = `
+                    <label for="txtInput${data['id']}" class="form-label fs-7">${data['input_parameter_name']} 
+                        <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
+                        data-bs-placement="right" data-bs-html="true" 
+                        data-bs-title="${data['input_parameter_description']}"></i>
+                    </label>
+                    <input type="text" class="form-control form-control-sm" id="txtInput${data['id']}"
+                     name="input${data['id']}" placeholder="${data['input_parameter_description']}">
+                `;
+
+                // Append the input div to the container
+                container.appendChild(inputDiv);
+            }
+
+            // Initialize tooltips after adding elements
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        }
+        // --FETCH API CALLS--
+        async function fetch_data(url_extension, payload) {
+            const api_url = "/iwork/"
+            const response = await fetch(api_url + url_extension, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            return await response.json();
+        }
+
+        // function fetch_data(url_extension, payload) {
+        //     api_url = "/iwork/"
+        //     fetchOptions = {
+        //         method: "POST",
+        //         headers: {
+        //         "Content-Type": "application/json;charset=UTF-8"
+        //         },
+        //         body: JSON.stringify(payload)
+        //     }
+        //     fetch(api_url + url_extension, fetchOptions)
+        //         .then(response => {
+        //         if (!response.ok) {
+        //             throw new Error("Network response was not ok");
+        //         }
+        //         return response.json();
+        //         })
+        //         // .then(data => {
+        //         // return data;
+        //         // })
+        //         // .catch(error => {
+        //         // console.error("Error fetching data:", error);
+        //         // });
+        //     }
+    });
+</script>
+{% endblock %}

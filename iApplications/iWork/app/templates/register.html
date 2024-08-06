@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %} Register {% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <nav  class="ms-2 fs-7" style="--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="#">Home</a></li>
+                  <li class="breadcrumb-item active" aria-current="page">Register</li>
+                </ol>
+              </nav>
+            <div class="card">
+                <div class="card-header">
+                    <div class="text-center">
+                        <h3>Register</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form action="{{url_for('.register')}}" method="post">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
+                        </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="email" class="form-control" id="username" name="username" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="confirm password">
+                    </div>
+                    <div class="text-center">
+                        <input type="submit" class="btn btn-primary" value="Register">
+                    </div>
+                    <div class="text-center">
+                        <a href="{{url_for('.login')}}" class="text-primary fs-8 fw-light">Click here to Login</a>
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
