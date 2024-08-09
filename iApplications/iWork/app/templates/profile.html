@@ -92,6 +92,7 @@
             submit_button.classList.remove('disabled');
         });
 
+        submit_button.addEventListener('click',()=> toggleSpinner());
         // --FUNCTIONS--
         function createOption(option_value, option_text) {
             option = document.createElement('option')
@@ -149,6 +150,7 @@
 
         // --FETCH API CALLS--
         function get_dd_data(dd_type, payload) {
+            toggleSpinner();
             api_url = "/iwork/"
             fetchOptions = {
                 method: "POST",
@@ -161,14 +163,17 @@
                 .then(response => {
                 if (!response.ok) {
                     throw new Error("Network response was not ok");
+                    toggleSpinner();                    
                 }
                 return response.json();
-                })
-                .then(data => {
+                }
+                ).then(data => {
                 fill_dropdown(data, dd_type);
-                })
-                .catch(error => {
+                toggleSpinner();
+                }
+            ).catch(error => {
                 console.error("Error fetching data:", error);
+                toggleSpinner();
                 });
             }
     });

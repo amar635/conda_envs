@@ -1,7 +1,7 @@
 from iWork.app.db import db
 
 class InputParameter(db.Model):
-    __tablename__ = "input_parameters_master"
+    __tablename__ = "input_parameters"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
@@ -9,7 +9,7 @@ class InputParameter(db.Model):
 
     def __init__(self, name, description):
         self.name = name,
-        self.descrition = description
+        self.description = description
 
     def json(self):
         return {

@@ -1,21 +1,18 @@
 from iWork.app.db import db
 
-class MasterWorkType(db.Model):
-    ''' 
-    These are the 39 work types under MGNREGA with effect from 01 April 2024
-    '''
-    __tablename__ = 'work_types_master'
+class ActivityType(db.Model):
+    __tablename__ = 'nrega_activity_types'
 
     id = db.Column(db.Integer, primary_key= True)
-    work_type=db.Column(db.String(200),nullable=False)
-   
-    def __init__(self,work_type):
-        self.work_type=work_type
+    activity_type=db.Column(db.String(150),nullable=False)
     
+    def __init__(self,activity_type):
+        self.activity_type=activity_type
+        
     def json(self):
         return {
             'id': self.id,
-            'work_type' : self.work_type   
+            'activity_type' : self.activity_type,    
         }
     
     @classmethod
@@ -36,7 +33,7 @@ class MasterWorkType(db.Model):
     
     @classmethod
     def get_all(cls):
-        query=cls.query.order_by(cls.work_type)
+        query=cls.query.order_by(cls.activity_type)
         return query
 
     def save_to_db(self):
@@ -44,7 +41,7 @@ class MasterWorkType(db.Model):
         db.session.commit()
 
     def delete_from_db(_id):
-        participant = MasterWorkType.query.filter_by(id=_id).first()
+        participant = ActivityType.query.filter_by(id=_id).first()
         db.session.delete(participant)
         db.session.commit()
 
@@ -52,5 +49,5 @@ class MasterWorkType(db.Model):
         db.session.commit()
 
     def update_db(data,_id):
-        user = MasterWorkType.query.filter_by(id=_id).update(data)
+        user = ActivityType.query.filter_by(id=_id).update(data)
         db.session.commit()

@@ -11,18 +11,18 @@ def login():
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
-
-        user = User.query.filter_by(username=username).first()       
-        if user:
-            db_username = user.username
-            db_pass = user.password
-            hash_check = pbkdf2_sha256.verify(password,db_pass)        
-            if db_username == username and hash_check:
-                login_user(user)
-                return redirect(url_for('routes.profile'))
-        else:
-            flash('Please Check your login credentials and try again !! ')
-            return redirect(url_for('auth.login'))
+        return redirect(url_for('routes.profile'))
+        # user = User.query.filter_by(username=username).first()       
+        # if user:
+        #     db_username = user.username
+        #     db_pass = user.password
+        #     hash_check = pbkdf2_sha256.verify(password,db_pass)        
+        #     if db_username == username and hash_check:
+        #         login_user(user)
+        #         return redirect(url_for('routes.profile'))
+        # else:
+        #     flash('Please Check your login credentials and try again !! ')
+        #     return redirect(url_for('auth.login'))
         
     return render_template('login.html')
 

@@ -1,7 +1,7 @@
 from iWork.app.db import db
 
 class Category(db.Model):
-    __tablename__ = 'categories_master'
+    __tablename__ = 'nrega_categories'
 
     id = db.Column(db.Integer, primary_key= True)
     name=db.Column(db.String(200),nullable=False)

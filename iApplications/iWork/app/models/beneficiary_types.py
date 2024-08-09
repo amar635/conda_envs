@@ -1,18 +1,18 @@
 from iWork.app.db import db
 
-class Activity(db.Model):
-    __tablename__ = 'activities_master'
+class BeneficiaryType(db.Model):
+    __tablename__ = 'nrega_beneficiary_types'
 
     id = db.Column(db.Integer, primary_key= True)
-    activity_type=db.Column(db.String(150),nullable=False)
-    
-    def __init__(self,activity_type):
-        self.activity_type=activity_type
-        
+    beneficiary_type=db.Column(db.String(80),nullable=False)
+
+    def __init__(self,beneficiary_type):
+        self.beneficiary_type=beneficiary_type
+  
     def json(self):
         return {
             'id': self.id,
-            'activity_type' : self.activity_type,    
+            'beneficiary_type' : self.beneficiary_type         
         }
     
     @classmethod
@@ -33,7 +33,7 @@ class Activity(db.Model):
     
     @classmethod
     def get_all(cls):
-        query=cls.query.order_by(cls.activity_type)
+        query=cls.query.order_by(cls.beneficiary_type)
         return query
 
     def save_to_db(self):
@@ -41,7 +41,7 @@ class Activity(db.Model):
         db.session.commit()
 
     def delete_from_db(_id):
-        participant = Activity.query.filter_by(id=_id).first()
+        participant = BeneficiaryType.query.filter_by(id=_id).first()
         db.session.delete(participant)
         db.session.commit()
 
@@ -49,5 +49,5 @@ class Activity(db.Model):
         db.session.commit()
 
     def update_db(data,_id):
-        user = Activity.query.filter_by(id=_id).update(data)
+        user = BeneficiaryType.query.filter_by(id=_id).update(data)
         db.session.commit()

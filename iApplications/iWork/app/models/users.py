@@ -2,7 +2,7 @@ from flask_login import UserMixin
 from iWork.app.db import db
 
 class User(UserMixin, db.Model):
-    __tablename__ = 'tbl_users'
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(80), nullable=False)

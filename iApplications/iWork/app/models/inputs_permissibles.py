@@ -1,18 +1,18 @@
 from iWork.app.db import db
-from iWork.app.models.input_parameters import InputParameter
-from iWork.app.models.proposed_status import ProposedStatus
-class InputProposedStatus(db.Model):
+from iWork.app.models import InputParameter, PermissibleWork
+
+class InputAndPermissible(db.Model):
     ''' 
     table to map two tables - Input parameters table with Proposed Status (also referred as work type sometimes) table
     '''
-    __tablename__ = "input_proposed_status"
+    __tablename__ = "inputs_and_permissibles"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    input_id = db.Column(db.ForeignKey('input_parameters_master.id'), nullable=False)
-    proposed_status_id = db.Column(db.ForeignKey('proposed_status_master.id'), nullable=False)
+    input_parameter_id = db.Column(db.ForeignKey('input_parameters.id'), nullable=False)
+    permissible_work_id = db.Column(db.ForeignKey('nrega_permissible_works.id'), nullable=False)
 
     input = db.relationship("InputParameter")
-    proposed_status = db.relationship("ProposedStatus")
+    permissible_work = db.relationship("PermissibleWork")
 
     def __init__(self, name, description):
         self.name = name,
@@ -25,17 +25,17 @@ class InputProposedStatus(db.Model):
         }
 
     @classmethod
-    def get_parameters_by_proposed_status_id(cls, proposed_status_id):
+    def get_parameters_by_permissible_work_id(cls, permissible_work_id):
         results = db.session.query(
             cls.id.label("id"),
             InputParameter.id.label('input_parameter_id'),
             InputParameter.name.label('input_parameter_name'),
             InputParameter.description.label('input_parameter_description'),
-            ProposedStatus.id.label('proposed_status_id'),
-            ProposedStatus.proposed_status.label('proposed_status')
-        ).join(InputParameter, InputParameter.id == cls.input_id
-        ).join(ProposedStatus, ProposedStatus.id == cls.proposed_status_id
-        ).filter(ProposedStatus.id == proposed_status_id).all()
+            PermissibleWork.id.label('permissible_work_id'),
+            PermissibleWork.permissible_work.label('permissible_work')
+        ).join(InputParameter, InputParameter.id == cls.input_parameter_id
+        ).join(PermissibleWork, PermissibleWork.id == cls.permissible_work_id
+        ).filter(PermissibleWork.id == permissible_work_id).all()
 
         if results:
             parameters = [
@@ -43,8 +43,8 @@ class InputProposedStatus(db.Model):
                     'id': result.input_parameter_id,
                     'input_parameter_name': result.input_parameter_name,
                     'input_parameter_description': result.input_parameter_description,
-                    'proposed_status_id': result.proposed_status_id,
-                    'proposed_status': result.proposed_status
+                    'permissible_work_id': result.permissible_work_id,
+                    'permissible_work': result.permissible_work
                 }
                 for result in results
             ]

@@ -1,11 +1,11 @@
 from iWork.app.db import db
 
 class MajorHead(db.Model):
-    __tablename__ = 'major_heads_master'
+    __tablename__ = 'nrega_major_heads'
 
     id = db.Column(db.Integer, primary_key= True)
     major_head=db.Column(db.String(150),nullable=False)
-    category_id = db.Column(db.ForeignKey('categories_master.id'), nullable=False)
+    category_id = db.Column(db.ForeignKey('nrega_categories.id'), nullable=False)
 
     category = db.relationship('Category')
    
@@ -46,13 +46,13 @@ class MajorHead(db.Model):
         db.session.commit()
 
     def delete_from_db(_id):
-        participant = MajorHead.query.filter_by(id=_id).first()
-        db.session.delete(participant)
+        major_head = MajorHead.query.filter_by(id=_id).first()
+        db.session.delete(major_head)
         db.session.commit()
 
     def commit_db():
         db.session.commit()
 
     def update_db(data,_id):
-        user = MajorHead.query.filter_by(id=_id).update(data)
+        major_head = MajorHead.query.filter_by(id=_id).update(data)
         db.session.commit()

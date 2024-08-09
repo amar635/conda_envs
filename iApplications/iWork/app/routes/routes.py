@@ -1,19 +1,14 @@
 from flask import Blueprint, json, redirect, render_template, request, session, url_for
 
-from iWork.app.models import State,  District, Block, Panchayat
-from iWork.app.models.works import Work
-from iWork.app.models.assets_data import AssetData
-from iWork.app.models.categories import Category
-from iWork.app.models.input_parameters import InputParameter
-from iWork.app.models.input_proposed_status import InputProposedStatus
-from iWork.app.models.proposed_status import ProposedStatus
+from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, Category, CompletedWork, Panchayat, FieldData
+from iWork.app.models.work_types import WorkType
 
 
 blp = Blueprint("routes", "routes")
 
 @blp.route("/profile", methods=['POST','GET'])
 def profile():
-    states = Work.get_states()
+    states = CompletedWork.get_states()
     if request.method == 'POST':
         state_id = request.form.get('selectState')
         district_id = request.form.get('selectDistrict')
@@ -30,9 +25,7 @@ def get_districts():
     json_data = request.json
     if json_data is not None:
         state_id = int(json_data['select_id'])
-        state_districts = Work.get_districts_by_state_id(state_id)
-        # districts_dict = [district.json() for district in state_districts]
-        # json_data = json.dumps(districts_dict)
+        state_districts = CompletedWork.get_districts_by_state_id(state_id)
     return state_districts
 
 @blp.route("/blocks", methods=['POST'])
@@ -40,9 +33,7 @@ def get_blocks():
     json_data = request.json
     if json_data is not None:
         district_id = json_data['select_id']
-        district_blocks = Work.get_blocks_by_district_id(district_id)
-        # blocks_dict = [block.json() for block in district_blocks]
-        # json_data = json.dumps(blocks_dict)
+        district_blocks = CompletedWork.get_blocks_by_district_id(district_id)
     return district_blocks
 
 @blp.route("/panchayats", methods=['POST'])
@@ -50,66 +41,50 @@ def get_panchayats():
     json_data = request.json
     if json_data is not None:
         block_id = json_data['select_id']
-        block_panchayats = Work.get_panchayats_by_block_id(block_id)
-        # panchayats_dict = [panchayat.json() for panchayat in block_panchayats]
-        # json_data = json.dumps(panchayats_dict)
+        block_panchayats = CompletedWork.get_panchayats_by_block_id(block_id)
     return block_panchayats
 
 @blp.route("/data", methods=['POST','GET'])
 def data():
     if session['payload']:
         payload = session['payload']
-        breadcrumbs_value = Panchayat.get_panchayat_block_district_state(payload['panchayat_id'])
-        breadcrumbs = [
-            {'id':breadcrumbs_value['state_id'],'name':breadcrumbs_value['state_name'].title()},
-            {'id':breadcrumbs_value['district_id'],'name':breadcrumbs_value['district_name'].title()},
-            {'id':breadcrumbs_value['block_id'],'name':breadcrumbs_value['block_name'].title()},
-            {'id':breadcrumbs_value['panchayat_id'],'name':breadcrumbs_value['panchayat_name'].title()}
-        ]
     else:
         return redirect(url_for('.profile'))
     panchayat_id = payload['panchayat_id']
+    breadcrumbs_value = Panchayat.get_panchayat_block_district_state(panchayat_id)
+    breadcrumbs = [
+        {'id':breadcrumbs_value['state_id'],'name':breadcrumbs_value['state_name'].title()},
+        {'id':breadcrumbs_value['district_id'],'name':breadcrumbs_value['district_name'].title()},
+        {'id':breadcrumbs_value['block_id'],'name':breadcrumbs_value['block_name'].title()},
+        {'id':breadcrumbs_value['panchayat_id'],'name':breadcrumbs_value['panchayat_name'].title()}
+    ]
     if request.method == 'POST':
-        asset_id = request.form.get('selectAssetID')
-        category_id = request.form.get('categories')
-        proposed_status_id = request.form.get('selectProposedStatus')
-        asset_datalist = []
+        completed_work_id = request.form.get('selectWorkCode')
+        permissible_work_id = request.form.get('selectPermissibleWork')
         for key, value in request.form.items():
-            if key.startswith('input'):
+            if key.lower().startswith('input'):
                 if value:
-                    asset_data ={'asset_id':asset_id,
-                                 'proposed_status_id':proposed_status_id, 
-                                 'input_id':int(key[len("input"):]), 
-                                 'input_value':value,
-                                 'panchayat_id':panchayat_id}
-                    asset_datalist.append(asset_data)
-        for asset in asset_datalist:
-            new_asset_data = AssetData(
-                input_value=asset['input_value'],
-                asset_id=asset['asset_id'],
-                proposed_status_id=asset['proposed_status_id'],
-                input_id=asset['input_id'],
-                panchayat_id = asset['panchayat_id']
-            )
-            AssetData.save_to_db(new_asset_data)
+                    field_data = FieldData(input_value=value, completed_work_id=completed_work_id, 
+                       permissible_work_id=permissible_work_id, input_id=int(key[len("input"):]), 
+                       panchayat_id=panchayat_id)
+                    field_data.save_to_db()
         return redirect(url_for('.data'))
     else:
-        assets = Work.get_assets_by_panchayat_id(panchayat_id)
-        if len(assets)==0:
-            return redirect(url_for('.view_assets'))
-        assets_data = AssetData.get_assets_by_panchayat(panchayat_id)
-        if assets_data==None:
-            completed = 0
-        else:
-            completed = len(assets_data)
         categories = Category.get_categories_by_id()
-        permissible_works = ProposedStatus.get_proposed_status_by_category()    
+        completed_works = CompletedWork.get_works_by_panchayat_id(panchayat_id)
+        if len(completed_works)==0:
+            return redirect(url_for('.view_assets'))
+        field_data = FieldData.get_completed_work_id_by_panchayat(panchayat_id)
+        if field_data:
+            completed = len(field_data)
+        else:
+            completed = 0
+        # permissible_works = PermissibleWork.get_proposed_status_by_category()    
         return render_template('data.html', 
-                           breadcrumbs=breadcrumbs, 
-                           assets=assets, 
-                           permissible_works = permissible_works,
-                           categories=categories,
-                           completed=completed)
+                        breadcrumbs=breadcrumbs, 
+                        completed_works=completed_works, 
+                        completed=completed,
+                        categories=categories)
 
 @blp.route('/view_assets')
 def view_assets():
@@ -125,8 +100,8 @@ def view_assets():
         {'id':breadcrumbs_value['block_id'],'name':breadcrumbs_value['block_name'].title()},
         {'id':breadcrumbs_value['panchayat_id'],'name':breadcrumbs_value['panchayat_name'].title()}
     ]
-    assets_data = AssetData.get_asset_data_by_panchayat(panchayat_id)
-    return render_template('view_assets.html', assets_data=assets_data, breadcrumbs=breadcrumbs)
+    field_data = FieldData.get_field_data_by_panchayat(panchayat_id)
+    return render_template('view_assets.html', breadcrumbs=breadcrumbs, field_data=field_data)
 
 @blp.route('/update_asset/<int:id>')
 def update_asset(id):
@@ -141,26 +116,32 @@ def update_asset(id):
         ]
     else:
         return redirect(url_for('.profile'))
-    assets_data = AssetData.get_asset_data_by_id(id)
+    # assets_data = AssetData.get_asset_data_by_id(id)
     return render_template('update_asset.html', breadcrumbs=breadcrumbs)
 
-@blp.route("/proposed_status", methods=["POST"])
-def proposed_status_by_category():
+@blp.route("/permissible_works", methods=["POST"])
+def permissible_work_by_category():
     json_data = request.json
-    permissible_works = ProposedStatus.get_proposed_status_by_category(category_id=json_data['select_id'])
+    permissible_works = PermissibleWork.get_permissible_work_by_work_type(json_data['select_id'])
     return permissible_works
+
+@blp.route("/work_types", methods=["POST"])
+def work_types_by_category():
+    json_data = request.json
+    work_types = WorkType.get_work_types_by_category(json_data['select_id'])
+    return work_types
 
 @blp.route("/input_parameters", methods=["POST"])
 def input_parameters():
     json_data = request.json
-    input_parameters = InputProposedStatus.get_parameters_by_proposed_status_id(proposed_status_id=json_data['select_id'])
+    input_parameters = InputAndPermissible.get_parameters_by_permissible_work_id(permissible_work_id=json_data['select_id'])
     return input_parameters
 
 @blp.route("/success")
 def success_page():
     return render_template('success.html')
 
-@blp.route("/splash_screen")
+@blp.route("/")
 def splash_screen():
     return render_template('splash_screen.html')
 
@@ -168,5 +149,5 @@ def splash_screen():
 def assets():
     json_data = request.json
     nrega_assets_id = json_data['select_id']
-    asset = Work.get_assets_by_id(nrega_assets_id)
+    asset = CompletedWork.get_assets_by_id(nrega_assets_id)
     return asset
