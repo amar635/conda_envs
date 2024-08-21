@@ -1,6 +1,7 @@
+from collections import defaultdict
 from iWork.app.db import db
-from iWork.app.models.completed_works import CompletedWork
-from iWork.app.models.permissible_works import PermissibleWork
+from iWork.app.models import CompletedWork, PermissibleWork, InputParameter
+
 
 class FieldData(db.Model):
     __tablename__ = 'field_data'
@@ -47,19 +48,39 @@ class FieldData(db.Model):
         else:
             return None
     
-    # @classmethod
+    @classmethod
     def get_field_data_by_panchayat(cls, panchayat_id):
         results = db.session.query(
             cls.id.label('id'),
-            CompletedWork.code,
+            InputParameter.name,
+            cls.input_value,
+            CompletedWork.code.label('work_code'),
             PermissibleWork.permissible_work
         ).join(CompletedWork, CompletedWork.id ==cls.completed_work_id
         ).join(PermissibleWork, PermissibleWork.id == cls.permissible_work_id            
+        ).join(InputParameter, InputParameter.id == cls.input_id
         ).filter(cls.panchayat_id==panchayat_id).all()
         if results:
-            json_data = [{ 'id':result.id,'code':result.code,'permissble_work':result.permissible_work} for result in results]
+            json_data = [{ 'id':result.id,
+                          'code':result.work_code,
+                          'permissible_work':result.permissible_work,
+                          'parameter': result.name,
+                          'input_value': result.input_value
+                          } for result in results]
             json_data = sorted(json_data, key=lambda x: x['code'])
-            return json_data
+
+            grouped_data = defaultdict(list)
+            for row in json_data:
+                key = (row['code'], row['permissible_work'])                
+                grouped_data[key].append({'id': row['id'], 'parameter': row['parameter'], 'input_value':row['input_value']})
+            
+            result = [{
+                    'code': code,
+                    'permissible_work':permissible_work, 
+                    'field_data': fields
+                    } for (code, permissible_work), fields in grouped_data.items()]
+
+            return result
         else:
             return None
         

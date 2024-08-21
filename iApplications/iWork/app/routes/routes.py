@@ -1,4 +1,5 @@
 from flask import Blueprint, json, redirect, render_template, request, session, url_for
+from flask_login import login_required
 
 from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, Category, CompletedWork, Panchayat, FieldData
 from iWork.app.models.work_types import WorkType
@@ -7,6 +8,7 @@ from iWork.app.models.work_types import WorkType
 blp = Blueprint("routes", "routes")
 
 @blp.route("/profile", methods=['POST','GET'])
+@login_required
 def profile():
     states = CompletedWork.get_states()
     if request.method == 'POST':
@@ -21,6 +23,7 @@ def profile():
         return render_template('profile.html', states = states)
 
 @blp.route("/districts", methods=['POST'])
+@login_required
 def get_districts():
     json_data = request.json
     if json_data is not None:
@@ -29,6 +32,7 @@ def get_districts():
     return state_districts
 
 @blp.route("/blocks", methods=['POST'])
+@login_required
 def get_blocks():
     json_data = request.json
     if json_data is not None:
@@ -37,6 +41,7 @@ def get_blocks():
     return district_blocks
 
 @blp.route("/panchayats", methods=['POST'])
+@login_required
 def get_panchayats():
     json_data = request.json
     if json_data is not None:
@@ -45,6 +50,7 @@ def get_panchayats():
     return block_panchayats
 
 @blp.route("/data", methods=['POST','GET'])
+@login_required
 def data():
     if session['payload']:
         payload = session['payload']
@@ -87,6 +93,7 @@ def data():
                         categories=categories)
 
 @blp.route('/view_assets')
+@login_required
 def view_assets():
     if session['payload']:
         payload = session['payload']
@@ -100,10 +107,11 @@ def view_assets():
         {'id':breadcrumbs_value['block_id'],'name':breadcrumbs_value['block_name'].title()},
         {'id':breadcrumbs_value['panchayat_id'],'name':breadcrumbs_value['panchayat_name'].title()}
     ]
-    field_data = FieldData.get_field_data_by_panchayat(panchayat_id)
+    field_data = FieldData.get_field_data_by_panchayat(panchayat_id=panchayat_id)
     return render_template('view_assets.html', breadcrumbs=breadcrumbs, field_data=field_data)
 
 @blp.route('/update_asset/<int:id>')
+@login_required
 def update_asset(id):
     if session['payload']:
         payload = session['payload']
@@ -120,24 +128,28 @@ def update_asset(id):
     return render_template('update_asset.html', breadcrumbs=breadcrumbs)
 
 @blp.route("/permissible_works", methods=["POST"])
+@login_required
 def permissible_work_by_category():
     json_data = request.json
     permissible_works = PermissibleWork.get_permissible_work_by_work_type(json_data['select_id'])
     return permissible_works
 
 @blp.route("/work_types", methods=["POST"])
+@login_required
 def work_types_by_category():
     json_data = request.json
     work_types = WorkType.get_work_types_by_category(json_data['select_id'])
     return work_types
 
 @blp.route("/input_parameters", methods=["POST"])
+@login_required
 def input_parameters():
     json_data = request.json
     input_parameters = InputAndPermissible.get_parameters_by_permissible_work_id(permissible_work_id=json_data['select_id'])
     return input_parameters
 
 @blp.route("/success")
+@login_required
 def success_page():
     return render_template('success.html')
 
@@ -146,6 +158,7 @@ def splash_screen():
     return render_template('splash_screen.html')
 
 @blp.route("/assets", methods=['POST'])
+@login_required
 def assets():
     json_data = request.json
     nrega_assets_id = json_data['select_id']

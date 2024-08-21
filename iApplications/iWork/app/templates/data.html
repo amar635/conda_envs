@@ -13,6 +13,21 @@
                     {% endfor %}
                 </ol>
             </nav>
+            <div class="container mb-2 d-flex justify-content-center align-items-center">
+                <div class="progresses">
+                    <div class="steps completed">
+                        <span><i class="fa fa-check"></i></span>
+                    </div>                
+                    <span class="line completed"></span>                
+                    <div class="steps completed">
+                        <span class="font-weight-bold">2</span>
+                    </div>
+                    <span class="line pending"></span>
+                    <div class="steps pending">
+                        <span class="font-weight-bold">3</span>
+                    </div>    
+                </div>  
+            </div>
             <div class="card">
                 <div class="card-header">
                     <div class="text-center">
@@ -171,6 +186,10 @@
     });
 
     submit_button.addEventListener('click', () => toggleSpinner());
+
+    window.addEventListener("unload", function () {
+        toggleSpinner();
+    });
 
     // FUNCTIONS
     function createOption(option_value, option_text) {

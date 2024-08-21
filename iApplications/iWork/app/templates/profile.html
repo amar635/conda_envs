@@ -10,10 +10,25 @@
                     <li class="breadcrumb-item text-primary" aria-current="page">Profile</li>
                 </ol>
             </nav>
+            <div class="container mb-2 d-flex justify-content-center align-items-center">
+                <div class="progresses">
+                    <div class="steps completed">
+                        <span class="font-weight-bold">1</span>
+                    </div>                
+                    <span class="line pending"></span>                
+                    <div class="steps pending">
+                        <span class="font-weight-bold">2</span>
+                    </div>
+                    <span class="line pending"></span>
+                    <div class="steps pending">
+                        <span class="font-weight-bold">3</span>
+                    </div>    
+                </div>  
+            </div>
             <div class="card">
                 <div class="card-header">
                     <div class="text-center">
-                        <h3>State/District/Block/Panchayat</h3>
+                        <h3>Select Panchayat</h3>
                     </div>
                 </div>
                 <div class="card-body">
@@ -93,6 +108,10 @@
         });
 
         submit_button.addEventListener('click',()=> toggleSpinner());
+
+        window.addEventListener("beforeunload", () => toggleSpinner());
+
+        
         // --FUNCTIONS--
         function createOption(option_value, option_text) {
             option = document.createElement('option')

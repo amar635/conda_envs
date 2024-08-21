@@ -11,18 +11,18 @@ def login():
     if request.method == "POST":
         username = request.form.get('username')
         password = request.form.get('password')
-        return redirect(url_for('routes.profile'))
-        # user = User.query.filter_by(username=username).first()       
-        # if user:
-        #     db_username = user.username
-        #     db_pass = user.password
-        #     hash_check = pbkdf2_sha256.verify(password,db_pass)        
-        #     if db_username == username and hash_check:
-        #         login_user(user)
-        #         return redirect(url_for('routes.profile'))
-        # else:
-        #     flash('Please Check your login credentials and try again !! ')
-        #     return redirect(url_for('auth.login'))
+        # return redirect(url_for('routes.profile'))
+        user = User.query.filter_by(username=username).first()       
+        if user:
+            db_username = user.username
+            db_pass = user.password
+            hash_check = pbkdf2_sha256.verify(password,db_pass)        
+            if db_username == username and hash_check:
+                login_user(user)
+                return redirect(url_for('routes.profile'))
+        else:
+            flash('Please Check your login credentials and try again !! ')
+            return redirect(url_for('auth.login'))
         
     return render_template('login.html')
 
@@ -57,20 +57,16 @@ def logout():
 @blp.route('/change_password/<id>',methods=['GET','POST'])
 @login_required
 def change_password(id):
-
-    if request.method == "POST":
-            
+    if request.method == "POST":            
         current_pwd = request.form.get('curr_pwd')
         new_pwd = pbkdf2_sha256.hash(request.form.get('new_pwd'))
-
         user = User.query.filter_by(id=id).first()       
-        if user:
-        
+        if user:        
             db_pass = user.password
             hash_check = pbkdf2_sha256.verify(current_pwd,db_pass)        
             if hash_check:
                 data = {"password":new_pwd}
-                User.update_db(data,id)   
+                User.update_db(data,id)  
 
                 return redirect(url_for('route.profile'))
             
