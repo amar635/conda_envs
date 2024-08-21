@@ -3,9 +3,9 @@
 {% block content %}
 {{super()}}
 <div class="row">
-  <div class="col-2 border-end border-dark">
+  <div class="col-lg-2 col-md-12 border-end border-dark">
     <div class="container">
-      <div class="card shadow-sm mt-3" id="ddForm">
+      <div class="card shadow-sm mt-3 mb-2" id="ddForm">
         <div class="card-header text-center fw-semibold py-1 fs-7">Select State/District/Block/Village</div>
         <div class="card-body">
           <div class="mt-2">
@@ -48,7 +48,7 @@
           </button>
         </div>
       </div>
-      <div class="alert alert-warning mt-3" role="alert">
+      <!-- <div class="alert alert-warning mt-3" role="alert">
 
         <p class="fs-7"><svg xmlns="http://www.w3.org/2000/svg"
             class="bi bi-exclamation-triangle-fill flex-shrink-0 me-2" viewBox="0 0 16 16" height="16" role="img"
@@ -63,7 +63,7 @@
         <p class="fs-7"><span class="fw-bold">To consolidate at district level</span> - leave the dropdowns to
           <em>select village</em> and <em>select block.</em>. Select District and click Submit to continue.
         </p>
-      </div>
+      </div> -->
     </div>
   </div>
   <!--
@@ -79,11 +79,11 @@
             ORDER BY wb_count desc
             LIMIT 5
   -->
-  <div class="col-10">
+  <div class="col-lg-10 col-md-12">
     <div class="container mt-3">
       <div class="row gx-5">
-        <div class="col">
-          <div class="card">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="card mb-2">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div class="card-title fs-4">Count <span class="fw-lighter text-muted">| <span id="spanCount">in Units</span></span></div>
@@ -107,16 +107,15 @@
                   <i class="fa-solid fa-water"></i>
                 </div>
                 <div class="ps-3">
-                  <div class="display-6" id="wbCount"></div>
-                  <small class="text-success fw-bold" id="wbCountPercent">12%</small> <small
-                    class="text-muted ps-1">increase</small>
+                  <div class="display-6" id="wbCount"></div>                  
+                  <small id="wbCountPercent"></small>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="card">
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <div class="card mb-2">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div class="card-title fs-4">Storage <span class="fw-lighter text-muted">| <span id="spanStorage">in Hectare Mtrs</span></span></div>
@@ -141,15 +140,14 @@
                 </div>
                 <div class="ps-3">
                   <div class="display-6" id="wbStorage"></div>
-                  <small class="text-success fw-bold" id="wbStoragePercent">12%</small> <small
-                    class="text-muted ps-1">increase</small>
+                  <small id="wbStoragePercent"></small>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col">
-          <div class="card">
+        <div class="col-lg-4 col-md-12">
+          <div class="card mb-2">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div class="card-title fs-4">Area <span class="fw-lighter text-muted">| <span id="spanArea">in Hectares</span></span></div>
@@ -174,8 +172,7 @@
                 </div>
                 <div class="ps-3">
                   <div class="display-6" id="wbSpreadArea"></div>
-                  <small class="text-success fw-bold" id="wbSpreadAreaPercent">12%</small> <small
-                    class="text-muted ps-1">increase</small>
+                  <small id="wbSpreadAreaPercent"></small>
                 </div>
               </div>
             </div>
@@ -183,11 +180,11 @@
         </div>
       </div>
       <div class="row gx-5 mt-3">
-        <div class="col-7">
-          <div class="card">
+        <div class="col-lg-7 col-md-12">
+          <div class="card mb-2">
             <div class="card-body">
               <div class="d-flex justify-content-between">
-                <div class="card-title fs-4">Top 5 States <span class="fw-lighter text-muted">| <span id="topFilter">Count</span></span></div>
+                <div class="card-title fs-4">Top 5 <span class="fw-lighter text-muted">| <span id="topFilter">Count</span></span></div>
                 <div class="filter">
                   <a class="icon" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i
                       class="fa-solid fa-ellipsis"></i></a>
@@ -211,8 +208,8 @@
           group by wb_master.name, wb_master.code
           order by wb_master.code;
         -->
-        <div class="col-5">
-          <div class="card">
+        <div class="col-lg-5 col-md-12">
+          <div class="card mb-2">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <div class="card-title fs-4">Distribution <span class="fw-lighter text-muted">| <span id="spanDistribution">Count</span> </span>
@@ -235,7 +232,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 mt-3">
+      <div class="col-lg-12 mt-3">
         <!--
             SELECT states.name state_name,
             districts.name district_name, count(water_bodies.id) as wb_count, 
@@ -250,10 +247,10 @@
             ORDER BY wb_count desc
             LIMIT 5
           -->
-        <div class="card">
+        <div class="card mb-2">
           <div class="card-body">
             <div class="d-flex justify-content-between">
-              <div class="card-title fs-4">Top 5  <span class="fw-lighter text-muted">| Sorted By - <span id="spanTableSorted">Count</span></span>
+              <div class="card-title fs-4">Tabular Data  <span class="fw-lighter text-muted">| Sorted By - <span id="spanTableSorted">Count</span></span>
               </div>
               <div class="filter">
                 <a class="icon" href="#" data-bs-toggle="dropdown" aria-expanded="false"><i
@@ -272,7 +269,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 mt-3">
+      <div class="col-lg-12 mt-3">
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div class="card-title fs-4">3 Dimensional <span class="fw-lighter text-muted">| Count-Area-Storage</span></div>
@@ -296,7 +293,8 @@
   </div>
 </div>
 </div>
-<input type="hidden" id="wbDistribution" name="wbDistribution">
+<input type="hidden" id="wbDistribution" name="wbDistribution" value="{{primary_data}}">
+<input type="hidden" id="primaryData" name="primaryData">
 
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
 <script>
@@ -603,15 +601,18 @@
       fetch(api_url + dd_type, fetchOptions)
         .then(response => {
           if (!response.ok) {
+            deactivateLoader();
             throw new Error("Network response was not ok");
           }
           return response.json();
         })
         .then(data => {
           fill_dropdown(data, dd_type);
+          deactivateLoader();
         })
         .catch(error => {
           console.error("Error fetching data:", error);
+          deactivateLoader();
         });
     }
 
@@ -620,7 +621,7 @@
       dd_districts.setAttribute('disabled', 'disabled');
       dd_blocks.setAttribute('disabled', 'disabled');
       dd_villages.setAttribute('disabled', 'disabled')
-      submit_button.classList.add('disabled');
+      submit_button.classList.remove('disabled');
       var payload = { "select_id": this.value }
       get_dd_data("districts", payload)
     });
@@ -674,6 +675,10 @@
       const reader = response.body;
       if (response.ok) {
         const data = await response.json(); // Parse the response as JSON
+        national_data = document.getElementById('primaryData').value
+        if (national_data==""){
+          document.getElementById('primaryData').value = JSON.stringify(data['primary_data']);
+        }
         fill_data(data);
         try {
           deactivateLoader();
@@ -689,9 +694,11 @@
 
     function fill_data(response_data) {
       primary_data = JSON.parse(response_data['primary_data']);
-      document.getElementById('wbCount').innerHTML = primary_data['wb_count'];
-      document.getElementById('wbStorage').innerHTML = primary_data['storage'];
-      document.getElementById('wbSpreadArea').innerHTML = primary_data['spread_area'];
+      set_wb_count(primary_data['wb_count']);
+      set_wb_storage(primary_data['storage']);
+      set_wb_spread_area(primary_data['spread_area']);
+      // document.getElementById('wbStorage').innerHTML = primary_data['storage'];
+      // document.getElementById('wbSpreadArea').innerHTML = primary_data['spread_area'];
       document.getElementById('wbDistribution').value = JSON.stringify(response_data['wb_type_data']);
       donutchart_data = JSON.parse(response_data['wb_type_data']);
       barhchart_x_data = response_data['barhchart_x_data'];
@@ -707,6 +714,39 @@
       load_barhchart(barhchart_x_data, barhchart_y_data);
       load_bubbleChart(bubbleChart_data);
     }
+
+    function set_wb_count(wb_count) {
+        primary_data_wb_count = wb_count
+        document.getElementById('wbCount').innerHTML = primary_data_wb_count;
+        national_data_wb_count = JSON.parse(JSON.parse(document.getElementById('primaryData').value));
+        percent_wb_count = (parseFloat(primary_data_wb_count) / parseFloat(national_data_wb_count['wb_count']))*100
+        document.getElementById('wbCountPercent').innerHTML = `
+        <span class="text-success fw-bold">${parseInt(percent_wb_count)}%</span> <span
+                    class="text-muted ps-1">of Country</span>
+        `
+      }
+
+    function set_wb_storage(wb_storage) {
+        primary_data_wb_storage = wb_storage;
+        document.getElementById('wbStorage').innerHTML = primary_data_wb_storage;
+        national_data = JSON.parse(JSON.parse(document.getElementById('primaryData').value));
+        percent_wb_storage = (parseFloat(primary_data_wb_storage) / parseFloat(national_data['storage']))*100
+        document.getElementById('wbStoragePercent').innerHTML = `
+        <span class="text-success fw-bold">${parseInt(percent_wb_storage)}%</span> <span
+                    class="text-muted ps-1">of Country</span>
+        `
+      }
+    
+    function set_wb_spread_area(wb_spread_area) {
+        primary_data_spread_area = wb_spread_area;
+        document.getElementById('wbSpreadArea').innerHTML = primary_data_spread_area;
+        national_data = JSON.parse(JSON.parse(document.getElementById('primaryData').value));
+        percent_spread_area = (parseFloat(primary_data_spread_area) / parseFloat(national_data['spread_area']))*100
+        document.getElementById('wbSpreadAreaPercent').innerHTML = `
+        <span class="text-success fw-bold">${parseInt(percent_spread_area)}%</span> <span
+                    class="text-muted ps-1">of Country</span>
+        `
+      }
 
     function arrayToTable(data) {
       // Create the table element

@@ -111,3 +111,10 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
+
+
+# AWS LIGHTSAIL UPLOAD iWORK COMMANDS:
+# docker build -t apps-container .
+# aws lightsail push-container-image --service-name cdms-application --label apps-container --image apps-container
+# aws lightsail create-container-service-deployment --service-name cdms-application --containers file://containers.json --public-endpoint file://public-endpoint.json
