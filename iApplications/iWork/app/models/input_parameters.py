@@ -8,18 +8,24 @@ class InputParameter(db.Model):
     label= db.Column(db.String(80)) # label for the input paramter
     unit = db.Column(db.String(80)) # unit of measurement 
     description = db.Column(db.String(300)) # details description of input parameter for (i) tooltip
+    type = db.Column(db.String(100)) # whether dropdown, textbox or datalist
+    constraint = db.Column(db.String(100))
 
-    def __init__(self, name, label, unit, description):
+    def __init__(self, name, label, unit, description, type_, constraint):
         self.name = name,
         self.label = label,
         self.unit = unit,
         self.description = description
+        self.type = type_
+        self.constraint = constraint
 
     def json(self):
         return {
             'name': self.name,
             'label' : self.label,
             'unit' : self.unit,
-            'description': self.description
+            'description': self.description,
+            'type': self.type,
+            'constraint': self.constraint
         }
   

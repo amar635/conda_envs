@@ -31,6 +31,8 @@ class InputAndPermissible(db.Model):
             InputParameter.id.label('input_parameter_id'),
             InputParameter.name.label('input_parameter_name'),
             InputParameter.description.label('input_parameter_description'),
+            InputParameter.label.label('input_parameter_label'),
+            InputParameter.unit.label('input_parameter_unit'),
             PermissibleWork.id.label('permissible_work_id'),
             PermissibleWork.permissible_work.label('permissible_work')
         ).join(InputParameter, InputParameter.id == cls.input_parameter_id
@@ -43,6 +45,8 @@ class InputAndPermissible(db.Model):
                     'id': result.input_parameter_id,
                     'input_parameter_name': result.input_parameter_name,
                     'input_parameter_description': result.input_parameter_description,
+                    'input_parameter_label':result.input_parameter_label,
+                    'input_parameter_unit':result.input_parameter_unit,
                     'permissible_work_id': result.permissible_work_id,
                     'permissible_work': result.permissible_work
                 }

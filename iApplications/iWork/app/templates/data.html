@@ -235,14 +235,14 @@
             const inputDiv = document.createElement("div");
             inputDiv.className = "mb-1";
             inputDiv.innerHTML = `
-                <label for="txtInput${data['id']}" class="form-label fs-7">
-                    ${data['input_parameter_name'].toLowerCase().replace(/\b\w/g, char => char.toUpperCase())} 
+                <label for="txtInput${data['input_parameter_id'] + '(in ' + data['input_parameter_unit'] + ')'}" class="form-label fs-7">
+                    ${data['input_parameter_label'].toLowerCase().replace(/\b\w/g, char => char.toUpperCase())} 
                     <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
                     data-bs-placement="right" data-bs-html="true" 
                     data-bs-title="${data['input_parameter_description']}"></i>
                 </label>
-                <input type="text" class="form-control form-control-sm" id="txtInput${data['id']}"
-                 name="input${data['id']}" placeholder="${data['input_parameter_description']}">
+                <input type="text" class="form-control form-control-sm" id="txtInput${data['input_parameter_id']}"
+                 name="input${data['input_parameter_id']}" placeholder="${data['input_parameter_name']}">
             `;
             container.appendChild(inputDiv);
         });
