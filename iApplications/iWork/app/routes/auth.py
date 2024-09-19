@@ -2,7 +2,7 @@ from flask import Blueprint, flash, redirect, render_template, request, session,
 from flask_login import login_required, login_user, logout_user
 from passlib.hash import pbkdf2_sha256
 
-from iWork.app.models import User
+from iWork.app.models import User, State
 
 blp = Blueprint("auth", "auth")
 
@@ -29,8 +29,10 @@ def login():
 
 @blp.route('/register',methods=["POST","GET"])
 def register():
+    states = State.get_states()
     if request.method == "POST":
         username = request.form.get('username')
+        state_id = request.form.get('selectState')
         name = request.form.get('name')
         password = pbkdf2_sha256.hash(request.form.get('password'))
 
@@ -39,16 +41,17 @@ def register():
             flash('Email address already exists')
             return redirect(url_for('auth.register'))
 
-        user = User(name,username,password)
+        user = User(name, username, password, state_id)
         user.save_to_db()
         return redirect(url_for('auth.login'))
-
-    return render_template('register.html')
+      
+    return render_template('register.html', states=states)
 
 @blp.route('/logout')
 @login_required
 def logout():    
     logout_user()
+    session.clear()
     session['logged_out']=True
     return redirect(url_for('.login'))
 

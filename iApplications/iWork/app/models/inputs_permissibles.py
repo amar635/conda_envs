@@ -42,7 +42,7 @@ class InputAndPermissible(db.Model):
         if results:
             parameters = [
                 {
-                    'id': result.input_parameter_id,
+                    'input_parameter_id': result.input_parameter_id,
                     'input_parameter_name': result.input_parameter_name,
                     'input_parameter_description': result.input_parameter_description,
                     'input_parameter_label':result.input_parameter_label,

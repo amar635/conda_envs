@@ -23,25 +23,34 @@
                             <label for="name" class="form-label">Full Name</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Enter your name">
                         </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="email" class="form-control" id="username" name="username" placeholder="name@example.com">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="password" name="password" placeholder="password">
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="confirm password">
-                    </div>
-                    <div class="text-center">
-                        <input type="submit" class="btn btn-primary" value="Register">
-                    </div>
-                    <div class="text-center">
-                        <a href="{{url_for('.login')}}" class="text-primary fs-8 fw-light">Click here to Login</a>
-                    </div>
-                </form>
+                        <div class="mb-3">
+                            <label for="selectState" class="form-label">State</label>
+                            <select class="form-select" id="selectState" name="selectState" aria-label="Select State" required>
+                                <option selected>--Select State--</option>
+                                {% for state_name in states %}
+                                <option value="{{state_name['id']}}">{{state_name['name']}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username (email)</label>
+                            <input type="email" class="form-control" id="username" name="username" placeholder="your@email.com">
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" placeholder="password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="confirm password">
+                        </div>
+                        <div class="text-center">
+                            <input type="submit" class="btn btn-primary" value="Register">
+                        </div>
+                        <div class="text-center">
+                            <a href="{{url_for('.login')}}" class="text-primary fs-8 fw-light">Click here to Login</a>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>

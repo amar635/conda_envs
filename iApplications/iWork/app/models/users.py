@@ -8,18 +8,23 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(80), nullable=False)
     username = db.Column(db.String(80), nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    state_id = db.Column(db.ForeignKey('nrega_states.id'), nullable=False)
 
-    def __init__(self,name,username,password):
+    state = db.relationship('State')
+
+    def __init__(self, name, username, password, state_id):
         self.password=password
         self.name=name
         self.username=username
+        self.state_id = state_id
 
     def json(self):
         return {
             'id': self.id,
             'name': self.name,
             'username': self.username,
-            'password': self.password
+            'password': self.password,
+            'state_id': self.state_id
         }
 
 

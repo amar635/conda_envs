@@ -36,12 +36,13 @@
                     <div class="d-flex justify-content-between">
                         <div class="text-danger fs-8"><i class="fa-solid fa-circle-exclamation"></i> Pending: <span
                                 class="fw-semibold">{{completed_works | length}}</span> </div>
+                        <div class="text-dark fs-8">(FY 2022-2023)</div>
                         <div class="text-success fs-8"><i class="fa-solid fa-circle-check"></i> Completed: <span
                                 class="fw-semibold">{{completed}}</span></div>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{url_for('.data')}}" method="post">
+                    <form action="{{url_for('.data')}}" method="post" >
                         <div class="mb-1">
                             <label for="selectWorkCode" class="form-label fs-7">Select Work Code</label>
                             <select class="form-select form-select-sm" id="selectWorkCode" name="selectWorkCode"
@@ -55,8 +56,8 @@
                         <div id="workCodeContainer" class="visually-hidden">
                             <div class="mb-1">
                                 <label for="txtWorkName" class="form-label fs-7 mb-0">Work Name</label>
-                                <input type="text" class="form-control form-control-sm fs-7" id="txtWorkName"
-                                    name="txtWorkName" placeholder="Select Asset ID to view" disabled>
+                                <label type="text" class="form-control form-control-sm fs-7 text-wrap" id="txtWorkName"
+                                    name="txtWorkName" placeholder="Select Asset ID to view" disabled style="background:#e9ecef"></label>
                             </div>
                             <div class="mb-1">
                                 <label for="txtAmountSpent" class="form-label fs-7 mb-0">Amount Spent</label>
@@ -108,7 +109,7 @@
 
                             </div>
                             <div class="text-center my-2">
-                                <input type="submit" class="btn btn-primary btn-sm" value="Submit" id="submitButton">
+                                <input type="submit" class="btn btn-primary btn-sm" value="Submit" id="submitButton" disabled>
                             </div>
                         </div>
                     </form>
@@ -117,6 +118,8 @@
         </div>
     </div>
 </div>
+
+
 {% endblock %}
 {% block scripts %}
 <script>
@@ -132,7 +135,15 @@
     const rb_categories = document.getElementById('categories');
     const dd_work_type = document.getElementById('selectWorkType');
     const submit_button = document.getElementById('submitButton');
+    const form = document.getElementsByTagName('form')[0];
+    // if (toastTrigger) {
+    //     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastDiv)
+    //     toastTrigger.addEventListener('click', () => {
+    //         toastBootstrap.show()
+    //     })
+    // }
 
+    
     work_code_container.classList.add('visually-hidden');
 
     // EVENTS    
@@ -144,7 +155,7 @@
         
         fetchData('work_types', { 'select_id': rowData.category_id })
             .then(data => {
-                txt_work_name.value = rowData.name || '';
+                txt_work_name.innerText = rowData.name || '';
                 txt_amount_spent.value = rowData.amount_spent || '';
                 if (radioButton) {
                     radioButton.checked = true;
@@ -179,6 +190,8 @@
         });
     });
 
+    
+
     dd_permissible_works.addEventListener('change', function () {
         fetchData('input_parameters', { "select_id": this.value })
             .then(data => addInputElements(data))
@@ -197,6 +210,20 @@
         option.value = option_value;
         option.text = option_text;
         return option;
+    }
+// Function to check if all required fields are filled
+    function checkFormCompletion() {
+        const formFields = form.querySelectorAll("input[required]");
+        let allFilled = true;
+
+        formFields.forEach(function(input) {
+            if (!input.value.trim()) {
+            allFilled = false;
+            }
+        });
+
+        // Enable or disable the submit button based on form completion
+        submit_button.disabled = !allFilled;
     }
 
     function disable_dd_permissible_work(params) {
@@ -235,16 +262,21 @@
             const inputDiv = document.createElement("div");
             inputDiv.className = "mb-1";
             inputDiv.innerHTML = `
-                <label for="txtInput${data['input_parameter_id'] + '(in ' + data['input_parameter_unit'] + ')'}" class="form-label fs-7">
-                    ${data['input_parameter_label'].toLowerCase().replace(/\b\w/g, char => char.toUpperCase())} 
+                <label for="txtInput${data['input_parameter_id']}" class="form-label fs-7">
+                    ${data['input_parameter_label'].toLowerCase().replace(/\b\w/g, char => char.toUpperCase()) + '(in ' + data['input_parameter_unit'] + ')'} 
                     <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
                     data-bs-placement="right" data-bs-html="true" 
                     data-bs-title="${data['input_parameter_description']}"></i>
                 </label>
                 <input type="text" class="form-control form-control-sm" id="txtInput${data['input_parameter_id']}"
-                 name="input${data['input_parameter_id']}" placeholder="${data['input_parameter_name']}">
+                 name="input${data['input_parameter_id']}" placeholder="${data['input_parameter_name']}" required>
             `;
             container.appendChild(inputDiv);
+        });
+        // Attach event listeners to input fields
+        const requiredFields = form.querySelectorAll("input[required]");
+        requiredFields.forEach(function(input) {
+        input.addEventListener("input", checkFormCompletion);
         });
 
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
@@ -277,3 +309,9 @@
 });
 </script>
 {% endblock %}
+<!-- 
+Sets the sequence for the "field_data" table.
+SELECT SETVAL(
+    (SELECT PG_GET_SERIAL_SEQUENCE('"field_data"', 'id')),
+    (SELECT (MAX(id) + 1) FROM "public"."field_data"),
+    FALSE); -->

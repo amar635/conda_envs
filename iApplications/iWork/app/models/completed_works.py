@@ -56,7 +56,7 @@ class CompletedWork(db.Model):
     @classmethod
     def get_works_by_panchayat_id(cls, panchayat_id):
         from iWork.app.models import FieldData
-        # Subquery to get asset_ids from assets_data where panchayat_id = 2427
+        # Subquery to get asset_ids from assets_data where panchayat_id = panchayat_id
         subquery = db.session.query(FieldData.completed_work_id).distinct().filter(FieldData.panchayat_id == panchayat_id).subquery()
         # Explicitly convert the subquery to a select() construct
         subquery_select = select(subquery)

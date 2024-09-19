@@ -1,4 +1,5 @@
 from collections import defaultdict
+from datetime import datetime
 from iWork.app.db import db
 from iWork.app.models import CompletedWork, PermissibleWork, InputParameter
 
@@ -12,18 +13,23 @@ class FieldData(db.Model):
     permissible_work_id = db.Column(db.ForeignKey('nrega_permissible_works.id'), nullable=False)
     input_id = db.Column(db.ForeignKey('input_parameters.id'), nullable=False)
     panchayat_id = db.Column(db.ForeignKey('nrega_panchayats.id'), nullable=False)
+    created_on = db.Column(db.String(20))
+    created_by_id = db.Column(db.ForeignKey('users.id'))
 
+    created_by = db.relationship('User')
     permissible_work = db.relationship('PermissibleWork')
     completed_work = db.relationship('CompletedWork')
     input_parameter = db.relationship('InputParameter')
     panchayat = db.relationship('Panchayat')
 
-    def __init__(self, input_value, completed_work_id, permissible_work_id, input_id, panchayat_id):
+    def __init__(self, input_value, completed_work_id, permissible_work_id, input_id, panchayat_id, created_by_id, created_on=datetime.now()):
         self.input_id = input_id
         self.input_value = input_value
         self.completed_work_id = completed_work_id
         self.permissible_work_id = permissible_work_id
         self.panchayat_id = panchayat_id
+        self.created_on = created_on
+        self.created_by_id = created_by_id
 
     def json(self):
         return {
@@ -32,7 +38,9 @@ class FieldData(db.Model):
             'input_value': self.input_value,
             'completed_work_id': self.completed_work_id,
             'permissible_work_id': self.permissible_work_id,
-            'panchayat_id': self.panchayat_id
+            'panchayat_id': self.panchayat_id,
+            'created_on': self.created_on,
+            'created_by': self.created_by
         }
     
     # @classmethod

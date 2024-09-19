@@ -50,68 +50,56 @@
   {% endblock %}
   <div class="fixed-bottom">
     <nav class="navbar bg-secondary text-white">
-      <div class="container">
-          <a class="nav-item" href="{{url_for('.profile')}}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-            class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z">              
-            </path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-            <span>Home</span>
-          </a>
-          
-          <a class="nav-item" href="{{url_for('.data')}}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-            class="feather feather-activity">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
-            <span>Activity</span>
-          </a>
-          
-          <a class="nav-item" href="{{url_for('.view_assets')}}">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-            class="feather feather-message-square"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg><span>Messages</span>
-          </a>
-          
-          <a class="nav-item" href="{{url_for('.update_asset', id=1)}}">
-            <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-              <!-- Draw the head -->
-              <circle cx="12" cy="5" r="2" stroke="currentColor" fill="none" stroke-width="1"/>
-              
-              <!-- Draw the bowl -->
-              <ellipse cx="12" cy="3" rx="3" ry="1" stroke="currentColor" fill="none" stroke-width="1"/>
-              
-              <!-- Draw the body -->
-              <rect x="10" y="7" width="4" height="6" stroke="currentColor" fill="none" stroke-width="1"/>
-              
-              <!-- Draw the arms -->
-              <line x1="10" y1="8" x2="7" y2="12" stroke="currentColor" stroke-width="1"/>
-              <line x1="14" y1="8" x2="17" y2="12" stroke="currentColor" stroke-width="1"/>
-              
-              <!-- Draw the saree -->
-              <polygon points="10,7 6,15 18,15 14,7" stroke="currentColor" fill="none" stroke-width="1"/>
-              
-              <!-- Draw the legs -->
-              <line x1="11" y1="13" x2="11" y2="18" stroke="currentColor" stroke-width="1"/>
-              <line x1="13" y1="13" x2="13" y2="18" stroke="currentColor" stroke-width="1"/>
-            </svg>
-            <!-- <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
-            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-            class="feather feather-settings"><circle cx="12" cy="12" r="3"></circle>
-            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> -->
-            <span>Settings</span>
-          </a>
+      <div class="container justify-content-between">
+        <a href="{{url_for('.profile')}}" class="nav-item">
+          <div class="container bg-transparent border border-0 text-center text-white">
+            <div><i class="fa-solid fa-house"></i></div>
+            <div class="fs-7 fw-lighter">home</div>
+          </div>
+        </a>
+        <a href="{{url_for('.view_assets')}}" class="nav-item">
+          <div class="container bg-transparent border border-0 text-center text-white">
+            <div><i class="fa-regular fa-eye"></i></div>
+            <div class="fs-7 fw-lighter">view</div>
+          </div>
+        </a>
+        <a href="{{url_for('.update_asset')}}" class="nav-item">
+          <div class="container bg-transparent border border-0 text-center text-white">
+            <div><i class="fa-solid fa-pen"></i></div>
+            <div class="fs-7 fw-lighter">edit</div>
+          </div>
+        </a>
+        <a href="{{url_for('auth.logout')}}" class="nav-item">
+          <div class="container bg-transparent border border-0 text-center text-white">
+            <div><i class="fa-regular fa-user"></i></div>
+            <div class="fs-7 fw-lighter">logout</div>
+          </div>
+        </a>
       </div>
     </nav>
   </div>
   <div class="mb-5"></div>
+  <div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <span class="border border-1 border-dark rounded p-1 me-2"><i class="fa-solid fa-person-digging"></i></span>
+        <strong class="me-auto">iWork says...</strong>
+        <small></small>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="flashMesssageDiv">
+        {{flash_message}}
+      </div>
+    </div>
+  </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
     const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    const toastDiv = document.getElementById('liveToast');
+    const flash_message = document.getElementById('flashMesssageDiv').innerText
     // const toastTrigger = document.getElementById('liveToastBtn')
-    const toastLiveExample = document.getElementById('liveToast')
+    // const toastLiveExample = document.getElementById('liveToast')
 
 
     function toggleSpinner() {
@@ -119,12 +107,16 @@
             spinner.style.display = (spinner.style.display === 'none' || spinner.style.display === '') ? 'block' : 'none';
         }
 
-    function showToast() {
-      const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
-      toastTrigger.addEventListener('click', () => {
-        toastBootstrap.show()
-      })
+    if (flash_message.trim() !== 'false' && flash_message.trim() !== '') {
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastDiv);
+        toastBootstrap.show();
     }
+    // function showToast() {
+    //   const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample)
+    //   toastTrigger.addEventListener('click', () => {
+    //     toastBootstrap.show()
+    //   })
+    // }
   </script>
   {% block scripts %}
 
