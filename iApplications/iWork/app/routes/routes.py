@@ -205,4 +205,4 @@ def assets():
     json_data = request.json
     nrega_assets_id = json_data['select_id']
     asset = CompletedWork.get_assets_by_id(nrega_assets_id)
-    return asset
+    return asset 
