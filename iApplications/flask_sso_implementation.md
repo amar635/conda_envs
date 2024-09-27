@@ -59,7 +59,7 @@ from flask import Flask, redirect, url_for
 from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 from models.user import db, User
-
+ 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['JWT_SECRET_KEY'] = 'your_jwt_secret_key'

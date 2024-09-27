@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 from flask_migrate import Migrate
 from iWork.app.db import db
@@ -21,6 +22,9 @@ def create_app():
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
     login_manager.init_app(app)
+
+    jwt = JWTManager(app)
+
     @login_manager.user_loader
     def load_user(user_id):
         return User.query.get(int(user_id))

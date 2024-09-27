@@ -1,7 +1,7 @@
 from collections import defaultdict
 from datetime import datetime
 from iWork.app.db import db
-from iWork.app.models import CompletedWork, PermissibleWork, InputParameter
+from iWork.app.models import CompletedWork, PermissibleWork, InputParameter, State, District, Block, Panchayat
 
 
 class FieldData(db.Model):
@@ -92,16 +92,40 @@ class FieldData(db.Model):
         else:
             return None
         
-    # @classmethod
-    # def get_asset_data_by_id(cls, asset_id):
-    #     return None
-        # results = db.session.query(
+    @classmethod
+    def get_field_data(cls):
+        results = db.session.query(
+            cls.input_id.label('parameter_id'),
+            cls.input_value.label('parameter_value'),
+            InputParameter.name.label('parameter_name'),
+            PermissibleWork.id.label('persmissible_work_id'),
+            PermissibleWork.permissible_work.label('permissible_work'),
+            CompletedWork.id.label('completed_work_id'),
+            CompletedWork.name.label('work_name'),
+            CompletedWork.code.label('work_code'),
+            CompletedWork.amount_spent.label('work_amount'),
+            State.name.label('state_name')
+        ).join(CompletedWork, CompletedWork.id==cls.completed_work_id
+        ).join(PermissibleWork, PermissibleWork.id==cls.permissible_work_id
+        ).join(InputParameter, InputParameter.id == cls.input_id
+        ).join(Panchayat, Panchayat.id==cls.panchayat_id 
+        ).join(Block, Block.id==Panchayat.block_id
+        ).join(District, District.id==Block.district_id
+        ).join(State, State.id==District.state_id)
 
-        # ).join(Asset,
-
-        # ).join(
-
-        # ).filter()
+        json_data = [{
+            'parameter_id': result.parameter_id, 
+            'parameter_value':result.parameter_value,
+            'parameter_name':result.parameter_name,
+            'persmissible_work_id':result.persmissible_work_id,
+            'permissible_work': result.permissible_work,
+            'completed_work_id': result.completed_work_id,
+            'work_name': result.work_name,
+            'work_code':result.work_code,
+            'work_amount':result.work_amount,
+            'state_name': result.state_name
+                        } for result in results]
+        return json_data
 
     def save_to_db(self):
         db.session.add(self)

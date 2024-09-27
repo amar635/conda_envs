@@ -42,34 +42,54 @@
         <div class="d-flex align-items-center justify-content-center">
           <img src="https://www.iwmi.cgiar.org/wp-content/uploads/2019/10/iwmi-logo-2019-square-1024-single-color-1.png"
             alt="IWMI" height="24">
+            <a class="btn btn-outline-secondary btn-sm ms-2" data-bs-toggle="offcanvas" data-bs-target="#offCanvasMenu" aria-controls="offCanvasMenu">
+              <i class="fa-solid fa-bars"></i>
+            </a>
         </div>
       </div>
     </div>
   </nav>
+
+<div class="offcanvas offcanvas-start w-75" data-bs-scroll="true" tabindex="-1" id="offCanvasMenu" aria-labelledby="offCanvasMenuLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offCanvasMenuLabel">Menu</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="list-group">
+      <a href="{{url_for('routes.all_parameters')}}" class="list-group-item list-group-item-action {% if request.path == url_for('routes.all_parameters') %}active{% endif %}" aria-current="true">
+        View All Parameters
+      </a>
+      <a href="{{url_for('routes.parameters')}}" class="list-group-item list-group-item-action {% if request.path == url_for('routes.parameters') %}active{% endif %}">Update Parameter</a>
+      <a href="{{url_for('routes.field_data')}}" class="list-group-item list-group-item-action {% if request.path == url_for('routes.field_data') %}active{% endif %}">View Field Data</a>
+      <a href="{{url_for('auth.logout')}}" class="list-group-item list-group-item-action {% if request.path == url_for('auth.logout') %}active{% endif %}">Logout</a>
+    </div>
+  </div>
+</div>
   {% block content %}
   {% endblock %}
   <div class="fixed-bottom">
-    <nav class="navbar bg-secondary text-white">
+    <nav class="navbar bg-secondary text-white p-0">
       <div class="container justify-content-between">
-        <a href="{{url_for('.profile')}}" class="nav-item">
+        <a href="{{url_for('.profile')}}" class="nav-item p-2">
           <div class="container bg-transparent border border-0 text-center text-white">
             <div><i class="fa-solid fa-house"></i></div>
             <div class="fs-7 fw-lighter">home</div>
           </div>
         </a>
-        <a href="{{url_for('.view_assets')}}" class="nav-item">
+        <a href="#" class="nav-item p-2">
           <div class="container bg-transparent border border-0 text-center text-white">
             <div><i class="fa-regular fa-eye"></i></div>
-            <div class="fs-7 fw-lighter">view</div>
+            <div class="fs-7 fw-lighter">Link</div>
           </div>
         </a>
-        <a href="{{url_for('.update_asset')}}" class="nav-item">
+        <a href="#" class="nav-item p-2">
           <div class="container bg-transparent border border-0 text-center text-white">
             <div><i class="fa-solid fa-pen"></i></div>
-            <div class="fs-7 fw-lighter">edit</div>
+            <div class="fs-7 fw-lighter">Link</div>
           </div>
         </a>
-        <a href="{{url_for('auth.logout')}}" class="nav-item">
+        <a href="{{url_for('auth.logout')}}" class="nav-item p-2">
           <div class="container bg-transparent border border-0 text-center text-white">
             <div><i class="fa-regular fa-user"></i></div>
             <div class="fs-7 fw-lighter">logout</div>

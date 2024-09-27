@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %} All Parameters {% endblock %}
+{% block content %}
+<div class="d-lg-none text-center">
+    <div class="container mt-5">
+        <em class="fw-lighter fs-6 mt-5">View is available only on larger screens</em>
+    </div>
+</div>
+<div class="d-none d-lg-block">
+    <div class="container my-5">
+        <div class="alert alert-secondary text-center">
+            <h4>ALL DISTINCT INPUT PARAMETERS</h4>
+        </div>
+        <table class="table table-bordered table-sm">
+            <thead class="text-center">
+                <tr>
+                    <th>S. No.</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Label</th>
+                    <th>Unit</th>
+                    <th>Type</th>
+                    <th>Constraint</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for parameter in input_parameters %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{parameter.name}}</td>
+                    <td>{{parameter['description']}}</td>
+                    <td>{{parameter['label']}}</td>
+                    <td>{{parameter['unit']}}</td>
+                    <td>{{parameter['element_type']}}</td>
+                    <td>{{parameter['constraint']}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

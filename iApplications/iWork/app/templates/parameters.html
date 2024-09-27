@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %} View Parameters {% endblock %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-5">
+            <div class="card">
+                <div class="card-header">
+                    <div class="text-center">
+                        <h3>View Parameters</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label for="selectPermissibleWork" class="form-label fs-7">Select Permissible Work</label>
+                        <select class="form-select form-select-sm" id="selectPermissibleWork"
+                            name="selectPermissibleWork" aria-label="Select Asset ID">
+                            <option selected disabled>--Select Permissible Work--</option>
+                            {% for row in permissible_works %}
+                            <option value="{{row.id}}">{{row.permissible_work}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="inputContainer">
+                        <!-- Input Textbox come here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dd_permissible_work = document.getElementById('selectPermissibleWork');
+        const input_container = document.getElementById('inputContainer');
+        async function fetch_data(url_extension, payload) {
+            const api_url = '/iwork/'
+            try {
+                const response = await fetch(api_url + url_extension, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                throw error;
+            } finally {
+                // toggleSpinner();
+            }
+        }
+
+        dd_permissible_work.addEventListener('change', function () {
+            url = 'parameters';
+            payload = { 'permissible_work_id': dd_permissible_work.value };
+
+            fetch_data(url, payload)
+                .then(data => {
+                    add_input_elements(data);
+                    // fillDdWorkType(data, label_name.innerHTML);
+                    // disable_dd_permissible_work;
+                }).catch(error => console.error('Error fetching data:', error));
+        });
+
+        function add_input_elements(input_data) {
+            input_container.innerHTML = '';
+            input_data.forEach(data => {
+                inner_html = `
+                <div class="d-flex justify-content-between">
+                    <label for="txtInput${data['id']}" class="form-label fs-7">
+                        ${data['label'].toLowerCase().replace(/\b\w/g, char => char.toUpperCase()) + '(in ' + data['unit'] + ')'} 
+                        <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
+                        data-bs-placement="right" data-bs-html="true" 
+                        data-bs-title="${data['description']}"></i>
+                    </label>
+                    <a href="/iwork/update_parameter/${data['id']}" class="link-offset-2 link-underline link-underline-opacity-0 fs-7 me-2">Edit</a>
+                </div>                    
+                    <input type="text" class="form-control form-control-sm" id="txtInput${data['id']}"
+                    name="input${data['id']}" placeholder="${data['name']}" required>
+                `;
+                const inputDiv = document.createElement("div");
+                inputDiv.className = "mb-1";
+                inputDiv.innerHTML = inner_html;
+                input_container.appendChild(inputDiv);
+            });
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+            [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+        }
+    });
+</script>
+{% endblock %}

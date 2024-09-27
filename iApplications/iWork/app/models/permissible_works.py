@@ -79,7 +79,7 @@ class PermissibleWork(db.Model):
     
     @classmethod
     def get_all(cls):
-        query=cls.query.order_by(cls.name)
+        query=cls.query.order_by(cls.permissible_work)
         return query
 
     def save_to_db(self):

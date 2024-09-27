@@ -363,3 +363,15 @@
   --bg-200: #f1f1f1;
   --bg-300: #c8c8c8;
 }
+/* REMOVE UP-DOWN ARROW (SPINNERS) for input type='number'*/
+/* For Chrome, Safari, Edge, and Opera (WebKit browsers) */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* For Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}

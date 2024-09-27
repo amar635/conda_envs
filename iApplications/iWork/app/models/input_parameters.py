@@ -21,6 +21,7 @@ class InputParameter(db.Model):
 
     def json(self):
         return {
+            'id': self.id,
             'name': self.name,
             'label' : self.label,
             'unit' : self.unit,
@@ -28,4 +29,39 @@ class InputParameter(db.Model):
             'element_type': self.element_type,
             'constraint': self.constraint
         }
-  
+    @classmethod
+    def get_parameter_by_id(cls, _id):
+        result = cls.query.filter_by(id=_id).first()
+        if result:
+            return result.json()
+        else:
+            return None
+        
+    @classmethod
+    def get_all_parameters(cls):
+        results = cls.query.order_by(cls.id).all()
+        if results:
+            results = [result.json() for result in results]
+        else:
+            results = None
+        return results
+    
+    @classmethod
+    def update_db(cls, data, _id):
+        try:
+        # Retrieve the object first
+            parameter = cls.query.get(_id)
+            if not parameter:
+                return False  # Return False if no record with that ID
+
+            # Update the fields in the object
+            for key, value in data.items():
+                setattr(parameter, key, value)
+
+            db.session.commit()
+            return True  # Success
+
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            print(f"Error updating record: {e}")
+            return False

@@ -20,3 +20,7 @@ def home():
         {'name': 'Work', 'route':'iwork','image_url':url_for('static', filename='assets/images/work.png')}
     ]
     return render_template('index.html', appList = appList)
+
+@blp.route('/favicon.ico')
+def favicon():
+    return url_for('static', filename='assets/favicon.ico') 

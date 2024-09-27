@@ -107,6 +107,26 @@ class CompletedWork(db.Model):
     #     return json_data
 
     @classmethod
+    def get_completed_work_by_id(cls, id):
+        query = db.session.query(
+                    cls.id.label('id'),
+                    cls.code.label('code'),
+                    cls.name.label('name'),
+                    cls.amount_spent.label('amount_spent'),
+                    cls.category_id.label('category_id'),
+                    cls.panchayat_id.label('panchayat_id')
+                    ).filter(
+                        cls.id == id
+        )
+        results = query.first()
+        json_data = {'id': results[0], 
+                     'code': results[1], 
+                     'name': results[2], 
+                     'amount_spent': results[3], 
+                     'category_id': results[4], 
+                     'panchayat_id': results[5]}  
+        return json_data 
+    @classmethod
     def get_states(cls):
         query = db.session.query(
                     cls.panchayat_id.label('panchayat_id'),
