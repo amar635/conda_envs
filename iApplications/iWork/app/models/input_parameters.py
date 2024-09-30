@@ -38,13 +38,15 @@ class InputParameter(db.Model):
             return None
         
     @classmethod
-    def get_all_parameters(cls):
-        results = cls.query.order_by(cls.id).all()
-        if results:
-            results = [result.json() for result in results]
-        else:
-            results = None
-        return results
+    def get_all_parameters(cls, page, per_page):
+        results = cls.query.order_by(cls.id)
+        # if results:
+        #     results = [result.json() for result in results]
+        # else:
+        #     results = None
+        pagination = results.paginate(page=page, per_page=per_page, error_out=False)
+        return pagination
+        # return results
     
     @classmethod
     def update_db(cls, data, _id):
@@ -59,6 +61,27 @@ class InputParameter(db.Model):
                 setattr(parameter, key, value)
 
             db.session.commit()
+            return True  # Success
+
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            print(f"Error updating record: {e}")
+            return False
+        
+    @classmethod
+    def delete_db(cls, data, _id):
+        try:
+        # Retrieve the object first
+            parameter = cls.query.get(_id)
+            if not parameter:
+                return False  # Return False if no record with that ID
+
+            # Update the fields in the object
+            for key, value in data.items():
+                setattr(parameter, key, value)
+
+            db.session.delete(parameter)
+            # db.session.commit()
             return True  # Success
 
         except Exception as e:

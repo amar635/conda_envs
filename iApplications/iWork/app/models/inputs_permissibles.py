@@ -8,6 +8,7 @@ class InputAndPermissible(db.Model):
     __tablename__ = "inputs_and_permissibles"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    parameter_order = db.Column(db.Integer, nullable=True)
     input_parameter_id = db.Column(db.ForeignKey('input_parameters.id'), nullable=False)
     permissible_work_id = db.Column(db.ForeignKey('nrega_permissible_works.id'), nullable=False)
 
@@ -28,6 +29,7 @@ class InputAndPermissible(db.Model):
     def get_parameters_by_permissible_work_id(cls, permissible_work_id):
         results = db.session.query(
             cls.id.label("id"),
+            cls.parameter_order.label('parameter_order'),
             InputParameter.id.label('input_parameter_id'),
             InputParameter.name.label('input_parameter_name'),
             InputParameter.description.label('input_parameter_description'),
@@ -43,7 +45,9 @@ class InputAndPermissible(db.Model):
         if results:
             parameters = [
                 {
+                    'input_permissible_id': result.id,
                     'id': result.input_parameter_id,
+                    'parameter_order': result.parameter_order,
                     'name': result.input_parameter_name,
                     'description': result.input_parameter_description,
                     'label':result.input_parameter_label,
@@ -57,3 +61,24 @@ class InputAndPermissible(db.Model):
             return parameters
         else:
             return None
+           
+    @classmethod
+    def update_db(cls, parameter_order, input_permissible_id):
+        try:
+        # Retrieve the object first
+            input_permissible = cls.query.get(input_permissible_id)
+            if not input_permissible:
+                return False  # Return False if no record with that ID
+
+            # Update the fields in the object
+            input_permissible.parameter_order = parameter_order
+            # for key, value in data.items():
+            #     setattr(input_permissible, key, value)
+
+            db.session.commit()
+            return True  # Success
+
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            print(f"Error updating record: {e}")
+            return False

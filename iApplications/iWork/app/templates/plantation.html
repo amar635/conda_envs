@@ -37,41 +37,47 @@
                 <form method="post" action="{{url_for('.plantation')}}" class="card-body">
                     <div class="alert alert-light" style="background:#e9ecef">
                         <input type="hidden" name="completed_work_id" value="{{completed_work.id}}">
-                        <input type="hidden" name="permissible_work_id" value="{{input_parameters[0].permissible_work_id}}">
-                        <label for="txtWorkCode" class="fw-bold fs-7">Work Code</label>
-                        <label type="text" class="fs-7 text-wrap" id="txtWorkCode"
-                            name="txtWorkCode" disabled >
-                            {{ completed_work.code }}</label>
-                            <label for="txtWorkName" class="fw-bold fs-7 mb-0">Work Name</label>
-                        <label type="text" class="fs-7 text-wrap" id="txtWorkName"
-                            name="txtWorkName" disabled style="background:#e9ecef">
-                            {{ completed_work.name }}</label>
-                        <label for="txtPermissibleWork" class="fw-bold fs-7 mb-0">Permissible Work</label>
-                        <label type="text" class="fs-7 text-wrap" id="txtPermissibleWork"
-                            name="txtPermissibleWork" disabled style="background:#e9ecef">
-                            {{ input_parameters[0].permissible_work }}</label>
+                        <input type="hidden" name="permissible_work_id"
+                            value="{{input_parameters[0].permissible_work_id}}">
+                        <div>
+                            <label for="txtWorkCode" class="fw-bold fs-7">Work Code</label>
+                            <label type="text" class="fs-7 text-wrap" id="txtWorkCode" name="txtWorkCode" disabled>
+                                {{ completed_work.code }}</label>
+                        </div>
+                        <div>
+                            <label for="txtWorkName" class="fw-bold fs-7 mb-0">Work Name</label><label type="text"
+                                class="fs-7 text-wrap" id="txtWorkName" name="txtWorkName" disabled
+                                style="background:#e9ecef">
+                                {{ completed_work.name }}</label>
+                        </div>
+                        <div>
+                            <label for="txtPermissibleWork" class="fw-bold fs-7 mb-0">Permissible Work</label>
+                            <label type="text" class="fs-7 text-wrap" id="txtPermissibleWork" name="txtPermissibleWork"
+                                disabled style="background:#e9ecef">
+                                {{ input_parameters[0].permissible_work }}</label>
+                        </div>
                         <input type="hidden" id="plantsArray" name="plants_array" value="[]">
                     </div>
-                    <div class="mb-1">                        
+                    <div class="mb-1">
                         <label for="txt" class="form-label fs-7">
-                            Plantation Area ( in ha)                          
-                            <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
-                            data-bs-placement="right" data-bs-html="true" 
-                            data-bs-title="Area covered by the plantation activity"></i>
+                            Plantation Area ( in ha)
+                            <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                data-bs-placement="right" data-bs-html="true"
+                                data-bs-title="Area covered by the plantation activity"></i>
                         </label>
                         <input type="text" class="form-control form-control-sm" id="txtPlantationArea"
-                         name="plantation_area" placeholder="Area in hectares" required>
+                            name="plantation_area" placeholder="Area in hectares" required>
                     </div>
                     <div class="row">
                         <div class="col-7">
                             <label for="selectPlantType" class="form-label fs-7">
-                                Select Plant Type 
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
-                                data-bs-placement="right" data-bs-html="true" 
-                                data-bs-title="Select the plant type from the list"></i>
+                                Select Plant Type
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-html="true"
+                                    data-bs-title="Select the plant type from the list"></i>
                             </label>
-                             <select class="form-select form-select-sm" id="selectPlantType" 
-                             name="selectPlantType" aria-label="Select Plant Type">
+                            <select class="form-select form-select-sm" id="selectPlantType" name="selectPlantType"
+                                aria-label="Select Plant Type">
                                 <option selected disabled>--Select Plant Type--</option>
                                 <option value="Aam">Aam</option>
                                 <option value="Acacia">Acacia</option>
@@ -145,25 +151,25 @@
                         </div>
                         <div class="col-5">
                             <label for="txt" class="form-label fs-7">
-                                Numbers                          
-                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip" 
-                                data-bs-placement="right" data-bs-html="true" 
-                                data-bs-title="Number of Plants in this plant type"></i>
+                                Numbers
+                                <i class="fa-solid fa-circle-info text-primary" data-bs-toggle="tooltip"
+                                    data-bs-placement="right" data-bs-html="true"
+                                    data-bs-title="Number of Plants in this plant type"></i>
                             </label>
                             <input type="text" class="form-control form-control-sm" id="txtNumberPlant"
-                             name="txtNumberPlant" placeholder="count in numbers">
+                                name="txtNumberPlant" placeholder="count in numbers">
                         </div>
                     </div>
                     <div class="text-end my-2">
                         <button class="btn btn-dark btn-sm" id="addButton" disabled>Add</button>
                     </div>
                     <div id="tableContainer">
-                        
+
                     </div>
                     <div class="text-center my-2">
                         <a href="{{url_for('.data')}}" class="btn btn-outline-secondary btn-sm me-2">Cancel</a>
                         <input type="submit" class="btn btn-primary btn-sm" value="Submit" id="submitButton" disabled>
-                    </div>                   
+                    </div>
                 </form>
             </div>
         </div>
@@ -172,7 +178,7 @@
 {% endblock %}
 {% block scripts %}
 <script>
-    document.addEventListener("DOMContentLoaded", function (){
+    document.addEventListener("DOMContentLoaded", function () {
         // CONSTANTS
         const add_button = document.getElementById('addButton');
         const dd_plant_type = document.getElementById('selectPlantType');
@@ -184,12 +190,12 @@
         let table_array = []
         // FUNCTIONS
         function toggleAddButton(params) {
-                if (dd_plant_type.selectedIndex > 0 && txt_number_plant_type.value.trim() !== ''){
-                    add_button.removeAttribute('disabled');
-                } else {
-                    add_button.setAttribute('disabled', 'disabled');
-                }
+            if (dd_plant_type.selectedIndex > 0 && txt_number_plant_type.value.trim() !== '') {
+                add_button.removeAttribute('disabled');
+            } else {
+                add_button.setAttribute('disabled', 'disabled');
             }
+        }
 
         dd_plant_type.addEventListener("change", () => toggleAddButton());
 
@@ -197,27 +203,27 @@
 
         submit_button.addEventListener('change', () => toggleSpinner());
 
-        add_button.addEventListener("click", function(){
+        add_button.addEventListener("click", function () {
             table_container = document.getElementById('tableContainer');
             plant_type = dd_plant_type.value
             number_plant_type = txt_number_plant_type.value.trim()
-            if (table_array.length === 0 ){
-                table_array.push({'serial':0, 'plant_type': plant_type, 'numbers':number_plant_type})
+            if (table_array.length === 0) {
+                table_array.push({ 'serial': 0, 'plant_type': plant_type, 'numbers': number_plant_type })
             }
-            else { 
+            else {
                 const existingPlant = table_array.find(item => item.plant_type === plant_type);
-                if(existingPlant){
+                if (existingPlant) {
                     existingPlant.numbers = number_plant_type;
                 } else {
-                    table_array.push({'serial':0, 'plant_type': plant_type, 'numbers':number_plant_type})
+                    table_array.push({ 'serial': 0, 'plant_type': plant_type, 'numbers': number_plant_type })
                 }
             }
-            function renderTable() {                
+            function renderTable() {
                 table_container.innerHTML = '';
                 hidden_plants_array.value = JSON.stringify(table_array);
-                if(table_array.length > 0){
+                if (table_array.length > 0) {
                     var table = document.createElement('table');
-                    table.classList.add('table','table-bordered','table-sm', 'fs-7');
+                    table.classList.add('table', 'table-bordered', 'table-sm', 'fs-7');
                     var head = document.createElement('thead');
                     head.classList.add('text-center', 'table-light');
                     var headerRow = document.createElement('tr');
@@ -232,25 +238,25 @@
                     var body = document.createElement('tbody');
                     let total = 0;
                     for (var i = 0; i < table_array.length; i++) {
-                        
+
                         var row = document.createElement('tr');
-                        table_array[i].serial=i+1;
-                        
+                        table_array[i].serial = i + 1;
+
                         var td = document.createElement('td');
                         td.classList.add('text-center')
                         td.appendChild(document.createTextNode(table_array[i].serial));
                         row.appendChild(td);
-                        
+
                         var td = document.createElement('td');
                         td.classList.add('w-50')
                         td.appendChild(document.createTextNode(table_array[i].plant_type));
                         row.appendChild(td);
-                        
+
                         var td = document.createElement('td');
                         td.classList.add('text-center')
                         td.appendChild(document.createTextNode(table_array[i].numbers));
                         row.appendChild(td);
-                        
+
                         // Add the delete column with an icon
                         var td = document.createElement('td');
                         td.classList.add('text-center', 'text-danger');
@@ -259,20 +265,20 @@
                         deleteIcon.style.cursor = 'pointer';
 
                         // Event listener to delete the row
-                        deleteIcon.addEventListener('click', (function(index) {
-                            return function(){
+                        deleteIcon.addEventListener('click', (function (index) {
+                            return function () {
                                 // Remove the current item from the array
                                 table_array.splice(index, 1); // Removes the item at index i
                                 // if (table_array.length <= 1) table_array=[];
                                 // Re-render the table after deletion
                                 renderTable();
                                 checkFormCompletion();
-                            }                            
+                            }
                         })(i));
                         td.appendChild(deleteIcon);
                         row.appendChild(td);
 
-                        total = total + Number(table_array[i].numbers);                
+                        total = total + Number(table_array[i].numbers);
                         body.appendChild(row)// Add the row to the table
                     }
                     table.appendChild(body);
@@ -293,37 +299,37 @@
                     table.appendChild(footer);
                     table_container.appendChild(table);
                 }
-                
+
             }
 
             renderTable();
             checkFormCompletion();
             dd_plant_type.selectedIndex = 0;
-            txt_number_plant_type.value='';
-            add_button.setAttribute('disabled','disabled');
+            txt_number_plant_type.value = '';
+            add_button.setAttribute('disabled', 'disabled');
         })
 
         function checkFormCompletion() {
             const formFields = form.querySelectorAll("input[required]");
             let allFilled = true;
 
-            formFields.forEach(function(input) {
+            formFields.forEach(function (input) {
                 if (!input.value.trim()) {
-                allFilled = false;
+                    allFilled = false;
                 }
             });
-            if(JSON.parse(hidden_plants_array.value).length>0) {allFilled = true} else {allFilled = false}; 
+            if (JSON.parse(hidden_plants_array.value).length > 0) { allFilled = true } else { allFilled = false };
             // Enable or disable the submit button based on form completion
             submit_button.disabled = !allFilled;
         }
 
         // Attach event listeners to input fields
         const requiredFields = form.querySelectorAll("input[required]");
-        requiredFields.forEach(function(input) {
+        requiredFields.forEach(function (input) {
             input.addEventListener("input", checkFormCompletion);
-            });
+        });
         // VARIABLES
 
     })
 </script>
-{% endblock  %}
+{% endblock %}

@@ -119,13 +119,16 @@ class CompletedWork(db.Model):
                         cls.id == id
         )
         results = query.first()
-        json_data = {'id': results[0], 
-                     'code': results[1], 
-                     'name': results[2], 
-                     'amount_spent': results[3], 
-                     'category_id': results[4], 
-                     'panchayat_id': results[5]}  
-        return json_data 
+        if results: 
+            json_data = {'id': results[0], 
+                        'code': results[1], 
+                        'name': results[2], 
+                        'amount_spent': results[3], 
+                        'category_id': results[4], 
+                        'panchayat_id': results[5]}  
+            return json_data 
+        else:
+            return None
     @classmethod
     def get_states(cls):
         query = db.session.query(

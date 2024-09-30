@@ -93,8 +93,8 @@ class FieldData(db.Model):
             return None
         
     @classmethod
-    def get_field_data(cls):
-        results = db.session.query(
+    def get_field_data(cls, page=1, per_page=10):
+        query = db.session.query(
             cls.input_id.label('parameter_id'),
             cls.input_value.label('parameter_value'),
             InputParameter.name.label('parameter_name'),
@@ -111,21 +111,25 @@ class FieldData(db.Model):
         ).join(Panchayat, Panchayat.id==cls.panchayat_id 
         ).join(Block, Block.id==Panchayat.block_id
         ).join(District, District.id==Block.district_id
-        ).join(State, State.id==District.state_id)
+        ).join(State, State.id==District.state_id
+        )
+        pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+        # pagination = db.paginate(results, )
+        return pagination
 
-        json_data = [{
-            'parameter_id': result.parameter_id, 
-            'parameter_value':result.parameter_value,
-            'parameter_name':result.parameter_name,
-            'persmissible_work_id':result.persmissible_work_id,
-            'permissible_work': result.permissible_work,
-            'completed_work_id': result.completed_work_id,
-            'work_name': result.work_name,
-            'work_code':result.work_code,
-            'work_amount':result.work_amount,
-            'state_name': result.state_name
-                        } for result in results]
-        return json_data
+        # json_data = [{
+        #     'parameter_id': result.parameter_id, 
+        #     'parameter_value':result.parameter_value,
+        #     'parameter_name':result.parameter_name,
+        #     'persmissible_work_id':result.persmissible_work_id,
+        #     'permissible_work': result.permissible_work,
+        #     'completed_work_id': result.completed_work_id,
+        #     'work_name': result.work_name,
+        #     'work_code':result.work_code,
+        #     'work_amount':result.work_amount,
+        #     'state_name': result.state_name
+        #                 } for result in results]
+        # return json_data
 
     def save_to_db(self):
         db.session.add(self)
