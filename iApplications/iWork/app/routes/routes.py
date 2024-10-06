@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, g, get_flashed_messages, json, make_response, redirect, render_template, request, session, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
-from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, Category, CompletedWork, Panchayat, FieldData, State, WorkType, User
+from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, Category, CompletedWork, Panchayat, FieldData, State, WorkType, User, Feedback
 
 
 blp = Blueprint("routes", "routes")
@@ -229,6 +229,26 @@ def other_works():
                            completed_work=completed_work, 
                            input_parameters=input_parameters)
 
+
+@blp.route("/feedback", methods=['POST','GET'])
+def feedback():
+    if request.method=='POST':
+        feedback = request.form.get('feedback')
+        topic = request.form.get('topic')
+        created_by_id = current_user.id
+        created_on = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        success = Feedback(topic=topic, feedback=feedback, created_by_id=created_by_id, created_on=created_on).save_to_db()
+        if success:
+            flash('Feedback submitted successfully!', 'success')
+        else:
+            flash('Something went wrong!', 'error')
+        return redirect(url_for('.profile')) 
+    return render_template('feedback.html')
+
+@blp.route('/help')
+def help():
+    return render_template('help_manual.html') 
+
 @blp.route('/recharge_pit')
 def recharge_pit():
     if 'payload' in session:
@@ -239,18 +259,8 @@ def recharge_pit():
     breadcrumbs = get_breadcrumbs(panchayat_id)
     return render_template('recharge_pit.html', breadcrumbs=breadcrumbs)
 
-@blp.route('/field_data',defaults={'page_number': 1})
-@blp.route('/field_data/<int:page_number>')
-def field_data(page_number):
-    field_data = FieldData.get_field_data(page=page_number, per_page=10)
-    return render_template('field_data.html', field_data=field_data.items, pagination=field_data )
 
 
-@blp.route('/all_parameters',defaults={'page_number': 1})
-@blp.route('/all_parameters/<int:page_number>')
-def all_parameters(page_number):
-    input_parameters = InputParameter.get_all_parameters(page=page_number, per_page=10)
-    return render_template('all_parameters.html', input_parameters=input_parameters.items, pagination=input_parameters)
 @blp.route('/canal')
 def canal():
     if 'payload' in session:
@@ -260,6 +270,7 @@ def canal():
     panchayat_id = payload['panchayat_id']
     breadcrumbs = get_breadcrumbs(panchayat_id)
     return render_template('canal.html', breadcrumbs=breadcrumbs)
+
 @blp.route('/view_assets')
 @login_required
 def view_assets():
@@ -271,66 +282,6 @@ def view_assets():
     breadcrumbs = get_breadcrumbs(panchayat_id)
     field_data = FieldData.get_field_data_by_panchayat(panchayat_id=panchayat_id)
     return render_template('view_assets.html', breadcrumbs=breadcrumbs, field_data=field_data)
-
-
-
-@blp.route('/parameters', methods=['POST', 'GET'])
-def parameters():
-    if request.method=='POST':
-        permissible_work_id = request.json
-        input_parameters = InputAndPermissible.get_parameters_by_permissible_work_id(permissible_work_id=permissible_work_id['permissible_work_id'])
-        return input_parameters
-    else:
-        permissible_works = PermissibleWork.get_all()
-        return render_template('parameters.html', permissible_works=permissible_works)
-
-@blp.route('/update_parameter/<int:parameter_id>', methods=['POST','GET'])
-def update_parameter(parameter_id):
-    input_parameter = InputParameter.get_parameter_by_id(parameter_id)
-    if request.method=='POST':
-        for key,value in input_parameter.items():
-            if key!='id':
-                input_parameter[key] = request.form.get(key)
-        input_parameter['id'] = parameter_id
-        result = InputParameter.update_db(input_parameter, parameter_id)
-        if result:
-            flash('Record updated successfully')
-            return redirect(url_for('.parameters'))
-        else:
-            return {'message': 'There was an error'}
-    else:        
-        return render_template('edit_parameter.html', input_parameter=input_parameter)
-
-@blp.route('/delete_parameter/<int:parameter_id>', methods=['POST','GET'])
-def delete_parameter(parameter_id):
-    input_parameter = InputParameter.get_parameter_by_id(parameter_id)
-    if request.method=='POST':
-        for key,value in input_parameter.items():
-            if key!='id':
-                input_parameter[key] = request.form.get(key)
-        input_parameter['id'] = parameter_id
-        result = InputParameter.delete_db(input_parameter, parameter_id)
-        if result:
-            flash('Record deleted successfully')
-            return redirect(url_for('.parameters'))
-        else:
-            return {'message': 'There was an error'}
-    else:
-        input_parameter = InputParameter.get_parameter_by_id(parameter_id)
-        return render_template('delete_parameter.html', input_parameter=input_parameter)
-    
-@blp.route('/set_order', methods=['POST'])
-def set_order():
-    json_data = request.json
-    # json_array = json.loads(json_data)
-    for element in json_data:
-        input_permissible_id = element['input_id'].split('_')[1]
-        parameter_order = element['input_value']
-        success = InputAndPermissible.update_db(parameter_order,input_permissible_id)
-    if success:
-        return {'message': 'Record updated successfully'}
-    if success:
-        return {'message': 'There was an error'}
     
 @blp.route('/update_asset')
 @login_required

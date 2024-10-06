@@ -26,6 +26,10 @@ class InputAndPermissible(db.Model):
         }
 
     @classmethod
+    def get_by_id(cls, _id):
+        return cls.query.filter_by(id=_id).first()
+
+    @classmethod
     def get_parameters_by_permissible_work_id(cls, permissible_work_id):
         results = db.session.query(
             cls.id.label("id"),
@@ -81,4 +85,18 @@ class InputAndPermissible(db.Model):
         except Exception as e:
             db.session.rollback()  # Rollback in case of error
             print(f"Error updating record: {e}")
+            return False
+        
+    @classmethod
+    def delete_db(cls, input_permissible_id):
+        try:
+            input_permissible = cls.query.get(input_permissible_id)
+            if not input_permissible:
+                return False
+            db.session.delete(input_permissible)
+            # db.session.commit()
+            return True
+        except Exception as e:
+            db.session.rollback()  # Rollback in case of error
+            print(f"Error deleting record: {e}")
             return False

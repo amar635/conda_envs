@@ -13,3 +13,4 @@ from iWork.app.models.users import User
 from iWork.app.models.input_parameters import InputParameter
 from iWork.app.models.inputs_permissibles import InputAndPermissible
 from iWork.app.models.field_data import FieldData
+from iWork.app.models.feedback import Feedback

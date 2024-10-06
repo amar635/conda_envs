@@ -81,7 +81,7 @@ class InputParameter(db.Model):
                 setattr(parameter, key, value)
 
             db.session.delete(parameter)
-            # db.session.commit()
+            db.session.commit()
             return True  # Success
 
         except Exception as e:

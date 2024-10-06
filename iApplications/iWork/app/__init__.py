@@ -7,6 +7,7 @@ from iWork.app.db import db
 from iWork.app.models import User
 from iWork.app.routes.routes import blp as routeBlueprint
 from iWork.app.routes.auth import blp as authBlueprint
+from iWork.app.routes.admin import blp as adminBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -31,4 +32,6 @@ def create_app():
     
     app.register_blueprint(routeBlueprint)
     app.register_blueprint(authBlueprint)
+    app.register_blueprint(adminBlueprint)
+
     return app

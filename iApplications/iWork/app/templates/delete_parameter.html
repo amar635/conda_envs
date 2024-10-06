@@ -10,7 +10,7 @@
                         <h3>Delete Parameter</h3>
                     </div>
                 </div>
-                <form class="card-body" method="post" action="{{url_for('.delete_parameter', parameter_id=input_parameter.id) }}">
+                <form class="card-body" method="post" action="{{url_for('.delete_parameter', input_permissible_id=input_permissible.id) }}">
                     {% for key, value in input_parameter.items() %}
                         {% if key != 'id' %}
                         <fieldset class="mb-1" disabled>

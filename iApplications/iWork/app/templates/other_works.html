@@ -65,12 +65,38 @@
                                 data-bs-placement="right" data-bs-html="true" 
                                 data-bs-title="{{parameter.description}}"></i>
                             </label>
-                            <input type="{% if parameter.element_type.lower() == 'number' or parameter.element_type.lower() == 'float' %}number{% else %}text{% endif %}" 
+                            {% if parameter.element_type.lower() == 'number'  %}
+                            <input type="number" 
                                 class="form-control form-control-sm" 
                                 id="txtInput{{ parameter.id }}" 
                                 name="input{{ parameter.id }}" 
                                 placeholder="{{ parameter.name }}" 
+                                pattern="^[0-9]+$"
+                                data-error="The input must be a whole number"
                                 required>
+                                <div><!--error message--></div>
+                            {% elif parameter.element_type.lower() == 'float' %}
+                            <input type="number" 
+                                class="form-control form-control-sm" 
+                                id="txtInput{{ parameter.id }}" 
+                                name="input{{ parameter.id }}" 
+                                placeholder="{{ parameter.name }}" 
+                                pattern="^\d+(\.\d{1,2})?$"
+                                step="0.01"
+                                data-error="The input must be a number or decimal upto two digits"
+                                required>
+                                <div><!--error message--></div>
+                            {% else  %}
+                            <input type="text" 
+                                class="form-control form-control-sm" 
+                                id="txtInput{{ parameter.id }}" 
+                                name="input{{ parameter.id }}" 
+                                placeholder="{{ parameter.name }}" 
+                                pattern="[a-zA-Z0-9]+"
+                                data-error="The input must be text value"
+                                required>
+                                <div><!--error message--></div>
+                            {% endif %}
 
                         </div>
                         {% endfor %}                     
@@ -111,6 +137,50 @@
     requiredFields.forEach(function(input) {
         input.addEventListener("input", checkFormCompletion);
         });
+    });
+
+    const inputFields = document.querySelectorAll('.form-control');
+    // Add event listener to input fields
+    inputFields.forEach((input) => {
+    input.addEventListener('input', () => {
+        const pattern = input.getAttribute('pattern');
+        const value = input.value;
+        const error = input.getAttribute('data-error');
+
+        // Check if input value matches pattern
+        if (pattern && !new RegExp(pattern).test(value)) {
+        // Display error message
+        input.nextElementSibling.textContent = error;
+        if (input.nextElementSibling.classList.contains('valid-feedback')){
+            input.nextElementSibling.classList.remove('valid-feedback')
+        }
+        if (input.classList.contains('is-valid')){
+            input.classList.add('is-valid')
+        }
+        if (!input.nextElementSibling.classList.contains('invalid-feedback')){
+            input.nextElementSibling.classList.add('invalid-feedback')
+        }
+        if (!input.classList.contains('is-invalid')){
+            input.classList.add('is-invalid')
+        }
+        
+        } else {
+        // Clear error message
+            if (input.nextElementSibling.classList.contains('invalid-feedback')){
+                input.nextElementSibling.classList.remove('invalid-feedback');
+            }
+            if (input.classList.contains('is-invalid')){
+                input.classList.remove('is-invalid');
+            }
+            if (!input.nextElementSibling.classList.contains('valid-feedback')){
+                input.nextElementSibling.classList.add('valid-feedback');
+            }
+            if (!input.classList.contains('is-valid')){
+                input.classList.add('is-valid');
+            }
+            input.nextElementSibling.textContent = 'Looks fine!';
+        }
+    });
     });
 </script>
 {% endblock %}
