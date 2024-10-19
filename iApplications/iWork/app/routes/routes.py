@@ -2,6 +2,7 @@ from flask import Blueprint, flash, g, get_flashed_messages, json, make_response
 from flask_login import login_required, current_user
 from datetime import datetime
 from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, Category, CompletedWork, Panchayat, FieldData, State, WorkType, User, Feedback
+from iWork.app.models.plant_types import PlantType
 
 
 blp = Blueprint("routes", "routes")
@@ -134,50 +135,65 @@ def plantation():
     else:
         return redirect(url_for('.profile'))
     if request.method == 'POST':
-        permissible_work_id = request.form.get('permissible_work_id')
-        completed_work_id = request.form.get('completed_work_id')
-        plantation_area = request.form.get('plantation_area')
-        plants_array = request.form.get('plants_array')
-        plants_array = json.loads(plants_array) # convert to json array
-        number_of_plants = 0
-        plant_counts = ""
-        plants = ""
-        for plant in plants_array:
-            if plant:
-                number_of_plants = number_of_plants + int(plant['numbers'])
-                plants = plants + plant['plant_type'] + ','
-                plant_counts = plant_counts + plant['numbers'] + ","
-        created_by_id = current_user.id
-        created_on = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
-        input_parameters = InputAndPermissible.get_parameters_by_permissible_work_id(permissible_work_id=permissible_work_id)
-        for parameter in input_parameters:
-            if 'plantation area' in parameter['label'].lower():
-                input_value = plantation_area
-            elif 'plants number' in parameter['label'].lower():
-                input_value = number_of_plants
-            elif 'plant type' in parameter['label'].lower():
-                input_value = plants[:-1]
-            elif 'plants/trees number' in parameter['label'].lower():
-                input_value = plant_counts[:-1]
-            field_data = FieldData(panchayat_id=panchayat_id, 
-                                   completed_work_id=completed_work_id,
-                                   permissible_work_id=permissible_work_id,
-                                   input_value = input_value,
-                                   input_id = parameter['id'],
-                                   created_by_id=created_by_id,
-                                   created_on=created_on)
-            field_data.save_to_db()
-        completed_works = CompletedWork.get_works_by_panchayat_id(panchayat_id)
-        if len(completed_works)==0:
-            return render_template('success.html')
-        else:
-            flash('Data submitted successfully!', 'success')
+        try:
+            permissible_work_id = request.form.get('permissible_work_id')
+            completed_work_id = request.form.get('completed_work_id')
+            plantation_area = request.form.get('plantation_area')
+            plants_array = request.form.get('plants_array')
+            plants_array = json.loads(plants_array) # convert to json array
+            number_of_plants = 0
+            plant_counts = ""
+            plants = ""
+            for plant in plants_array:
+                if plant:
+                    number_of_plants = number_of_plants + int(plant['numbers'])
+                    plants = plants + plant['plant_type'] + ','
+                    plant_counts = plant_counts + plant['numbers'] + ","
+            created_by_id = current_user.id
+            created_on = datetime.now().strftime("%Y-%m-%d %H:%M:%S") 
+            input_parameters = InputAndPermissible.get_parameters_by_permissible_work_id(permissible_work_id=permissible_work_id)
+            if input_parameters:
+                for parameter in input_parameters:
+                    if 'plantation area' in parameter['label'].lower():
+                        input_value = plantation_area
+                    elif 'plants number' in parameter['label'].lower():
+                        input_value = number_of_plants
+                    elif 'plant type' in parameter['label'].lower():
+                        input_value = plants[:-1]
+                    elif 'plants/trees number' in parameter['label'].lower():
+                        input_value = plant_counts[:-1]
+                    field_data = FieldData(panchayat_id=panchayat_id, 
+                                        completed_work_id=completed_work_id,
+                                        permissible_work_id=permissible_work_id,
+                                        input_value = input_value,
+                                        input_id = parameter['id'],
+                                        created_by_id=created_by_id,
+                                        created_on=created_on)
+                    field_data.save_to_db()
+                completed_works = CompletedWork.get_works_by_panchayat_id(panchayat_id)
+                if len(completed_works)==0:
+                    return render_template('success.html')
+                else:
+                    flash('Data submitted successfully!', 'success')
+                    return redirect(url_for('.data'))
+            else:
+                debug_paramters = {'panchayat_id': panchayat_id, 'permissibl_work_id': permissible_work_id, 
+                'completed_work_id':completed_work_id, 'plantation_area':plantation_area, 
+                'plants_array': plants_array}
+                print(f'[DEBUG]: {debug_paramters}')
+                flash('There was an error!', 'error')
+                return redirect(url_for('.data'))
+        except Exception as e:
+            print(f'[DEBUG]:{e}')
+            flash('There was an error!', 'error')
             return redirect(url_for('.data'))
+        
     if completed_work_id:
         completed_work = CompletedWork.get_completed_work_by_id(id=completed_work_id)
     if permissible_work_id:
         input_parameters = InputAndPermissible.get_parameters_by_permissible_work_id(permissible_work_id=permissible_work_id)
-    return render_template('plantation.html', input_parameters=input_parameters, completed_work=completed_work, breadcrumbs=breadcrumbs)
+    plant_types = PlantType.get_all()
+    return render_template('plantation.html', input_parameters=input_parameters, completed_work=completed_work, breadcrumbs=breadcrumbs, plant_types=plant_types)
 
 @blp.route('/others', methods=['POST','GET'])
 def other_works():
@@ -249,6 +265,11 @@ def feedback():
 def help():
     return render_template('help_manual.html') 
 
+@blp.route('/find')
+def find():
+    permissible_works = PermissibleWork.get_permissible_work_with_categories()
+    return render_template('find.html', permissible_works=permissible_works)
+
 @blp.route('/recharge_pit')
 def recharge_pit():
     if 'payload' in session:
@@ -300,7 +321,9 @@ def update_asset():
 @login_required
 def permissible_work_by_category():
     json_data = request.json
-    permissible_works = PermissibleWork.get_permissible_work_by_work_type(json_data['select_id'])
+    work_type_id = json_data['select_id']
+    category_id = json_data['category_id']
+    permissible_works = PermissibleWork.get_permissible_work_by_work_type(work_type_id=work_type_id, category_id=category_id)
     return permissible_works
 
 @blp.route("/work_types", methods=["POST"])

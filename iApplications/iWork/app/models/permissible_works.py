@@ -1,7 +1,7 @@
 from iWork.app.db import db
 from iWork.app.models.categories import Category
 from iWork.app.models.major_heads import MajorHead
-from iWork.app.models.work_types import WorkType
+
 
 class PermissibleWork(db.Model):
     __tablename__ = 'nrega_permissible_works'
@@ -12,18 +12,21 @@ class PermissibleWork(db.Model):
     major_head_id = db.Column(db.ForeignKey('nrega_major_heads.id'), nullable=False)
     activity_type_id = db.Column(db.ForeignKey('nrega_activity_types.id'), nullable=False)
     beneficiary_type_id = db.Column(db.ForeignKey('nrega_beneficiary_types.id'), nullable=False)
+    category_id = db.Column(db.ForeignKey('nrega_categories.id'))
 
     work_type = db.relationship('WorkType')
     major_head = db.relationship('MajorHead')
     acitivity_type = db.relationship('ActivityType')
     beneficiary_type = db.relationship('BeneficiaryType')
+    category = db.relationship('Category')
     
-    def __init__(self,permissible_work,work_type_id,beneficiary_type_id,activity_type_id,major_head_id,):
+    def __init__(self,permissible_work,work_type_id,beneficiary_type_id,activity_type_id,major_head_id,category_id):
         self.proposed_status=permissible_work
         self.work_type_id = work_type_id
         self.beneficiary_type_id = beneficiary_type_id
         self.activity_type_id = activity_type_id
         self.major_head_id = major_head_id
+        self.category_id = category_id
     
     def json(self):
         return {
@@ -32,7 +35,8 @@ class PermissibleWork(db.Model):
             'major_head_id' : self.major_head_id,
             'work_type_id': self.work_type_id,
             'activity_type_id' : self.activity_type_id,
-            'beneficiary_type_id' : self.beneficiary_type_id
+            'beneficiary_type_id' : self.beneficiary_type_id,
+            'category': self.category_id
         }
         
     
@@ -66,17 +70,39 @@ class PermissibleWork(db.Model):
             
     
     @classmethod
-    def get_permissible_work_by_work_type(cls, work_type_id):
+    def get_permissible_work_by_work_type(cls, work_type_id, category_id):
+        from iWork.app.models.work_types import WorkType
         results =  db.session.query(
             cls.id.label('id'),
             cls.permissible_work.label('permissible_work')
         ).join(WorkType, WorkType.id == cls.work_type_id 
-        ).filter(cls.work_type_id == work_type_id).all()
+        ).filter(cls.work_type_id == work_type_id, cls.category_id==category_id).all()
         if results:
             return [{'id':result.id, 'permissible_work': result.permissible_work} for result in results]
         else:
             return None
-    
+        
+    @classmethod
+    def get_permissible_work_with_categories(cls):
+        from iWork.app.models.work_types import WorkType
+        query = db.session.query(
+            cls.id.label('permissible_work_id'),
+            cls.permissible_work.label('permissible_work'),
+            WorkType.work_type.label('work_type'),
+            Category.name.label('category')
+        ).join(WorkType, WorkType.id == cls.work_type_id
+        ).join(Category, Category.id == cls.category_id)
+        results = query.all()
+        if results:
+            json_data = [{'permissible_work_id':result.permissible_work_id, 
+                          'permissible_work': result.permissible_work,
+                          'work_type': result.work_type, 
+                          'category': result.category} for result in results]
+            return json_data
+        else:
+            return None
+
+
     @classmethod
     def get_all(cls):
         query=cls.query.order_by(cls.permissible_work)

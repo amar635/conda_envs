@@ -14,3 +14,4 @@ from iWork.app.models.input_parameters import InputParameter
 from iWork.app.models.inputs_permissibles import InputAndPermissible
 from iWork.app.models.field_data import FieldData
 from iWork.app.models.feedback import Feedback
+from iWork.app.models.plant_types import PlantType

@@ -71,26 +71,32 @@
   <div class="fixed-bottom">
     <nav class="navbar bg-secondary text-white p-0">
       <div class="container justify-content-between">
-        <a href="{{url_for('routes.profile')}}" class="nav-item p-2">
-          <div class="container bg-transparent border border-0 text-center text-white">
+        <a href="{{url_for('routes.profile')}}" class="nav-item p-1">
+          <div class="container bg-transparent border border-0 text-center text-white p-1">
             <div><i class="fa-solid fa-house"></i></div>
             <div class="fs-7 fw-lighter">home</div>
           </div>
         </a>
-        <a href="{{url_for('routes.help')}}" class="nav-item p-2">
-          <div class="container bg-transparent border border-0 text-center text-white">
+        <a href="{{url_for('routes.help')}}" class="nav-item p-1">
+          <div class="container bg-transparent border border-0 text-center text-white p-1">
             <div><i class="fa-solid fa-question"></i></div>
             <div class="fs-7 fw-lighter">help</div>
           </div>
         </a>
-        <a href="{{url_for('routes.feedback')}}" class="nav-item p-2">
-          <div class="container bg-transparent border border-0 text-center text-white">
+        <a href="{{url_for('routes.find')}}" class="nav-item p-1">
+          <div class="container bg-transparent border border-0 text-center text-white p-1">
+            <div><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div class="fs-7 fw-lighter">find</div>
+          </div>
+        </a>
+        <a href="{{url_for('routes.feedback')}}" class="nav-item p-1">
+          <div class="container bg-transparent border border-0 text-center text-white p-1">
             <div><i class="fa-solid fa-pen"></i></div>
             <div class="fs-7 fw-lighter">feedback</div>
           </div>
         </a>
-        <a href="{{url_for('auth.logout')}}" class="nav-item p-2">
-          <div class="container bg-transparent border border-0 text-center text-white">
+        <a href="{{url_for('auth.logout')}}" class="nav-item p-1">
+          <div class="container bg-transparent border border-0 text-center text-white p-1">
             <div><i class="fa-regular fa-user"></i></div>
             <div class="fs-7 fw-lighter">logout</div>
           </div>

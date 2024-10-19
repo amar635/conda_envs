@@ -1,6 +1,7 @@
 from iWork.app.db import db
 from iWork.app.models.categories import Category
 from iWork.app.models.major_heads import MajorHead
+from iWork.app.models.permissible_works import PermissibleWork
 
 class WorkType(db.Model):
     ''' 
@@ -27,21 +28,35 @@ class WorkType(db.Model):
     
     @classmethod
     def get_work_types_by_category(cls, category_id):
-        results=db.session.query(
+        # query=db.session.query(
+        #     cls.id,
+        #     cls.work_type,
+        #     cls.major_head_id,
+        #     MajorHead.major_head,
+        #     Category.id.label('category_id'),
+        #     Category.name
+        # ).join(
+        #     PermissibleWork, MajorHead.id==cls.major_head_id
+        # ).join(
+        #     Category, Category.id == MajorHead.category_id
+        # ).filter(Category.id==category_id)
+        query=db.session.query(
             cls.id,
             cls.work_type,
-            cls.major_head_id,
-            MajorHead.major_head,
+            # cls.major_head_id,
+            # MajorHead.major_head,
             Category.id.label('category_id'),
             Category.name
+        ).distinct(cls.id
         ).join(
-            MajorHead, MajorHead.id==cls.major_head_id
+            PermissibleWork, PermissibleWork.work_type_id==cls.id
         ).join(
-            Category, Category.id == MajorHead.category_id
-        ).filter(Category.id==category_id).all()
+            Category, Category.id == PermissibleWork.category_id
+        ).filter(Category.id==category_id)
+        results = query.all()
         if results:
             return [{'id':result.id, 'work_type':result.work_type,
-                     'major_head_id':result.major_head_id, 'major_head':result.major_head, 
+                    #  'major_head_id':result.major_head_id, 'major_head':result.major_head, 
                      'category_id': result.category_id,'category':result.name  
                      } for result in results]
         else:

@@ -79,74 +79,9 @@
                             <select class="form-select form-select-sm" id="selectPlantType" name="selectPlantType"
                                 aria-label="Select Plant Type">
                                 <option selected disabled>--Select Plant Type--</option>
-                                <option value="Aam">Aam</option>
-                                <option value="Acacia">Acacia</option>
-                                <option value="Ailanthus">Ailanthus</option>
-                                <option value="Akhrot">Akhrot</option>
-                                <option value="Amrood">Amrood</option>
-                                <option value="Angu">Angu</option>
-                                <option value="Anwala">Anwala</option>
-                                <option value="Babul">Babul</option>
-                                <option value="Bahera">Bahera</option>
-                                <option value="Bakil">Bakil</option>
-                                <option value="Bamboo">Bamboo</option>
-                                <option value="Banj">Banj</option>
-                                <option value="Bans">Bans</option>
-                                <option value="Ber">Ber</option>
-                                <option value="Bhimal">Bhimal</option>
-                                <option value="Cashew">Cashew</option>
-                                <option value="Chamkharik">Chamkharik</option>
-                                <option value="Cheura">Cheura</option>
-                                <option value="Chir">Chir</option>
-                                <option value="cottontree ">cottontree </option>
-                                <option value="Deodar">Deodar</option>
-                                <option value="Dhauri">Dhauri</option>
-                                <option value="Eucalyptus">Eucalyptus</option>
-                                <option value="Fir">Fir</option>
-                                <option value="Haldu">Haldu</option>
-                                <option value="Harar">Harar</option>
-                                <option value="Imli">Imli</option>
-                                <option value="Jajoba">Jajoba</option>
-                                <option value="Jamun">Jamun</option>
-                                <option value="Jatropha">Jatropha</option>
-                                <option value="Kafal">Kafal</option>
-                                <option value="Kapok ">Kapok </option>
-                                <option value="Karanja">Karanja</option>
-                                <option value="Khair">Khair</option>
-                                <option value="Kharik">Kharik</option>
-                                <option value="Kharsu">Kharsu</option>
-                                <option value="Kokum">Kokum</option>
-                                <option value="Kwiral">Kwiral</option>
-                                <option value="Mahua">Mahua</option>
-                                <option value="MaltaMehal">MaltaMehal</option>
-                                <option value="Maple">Maple</option>
-                                <option value="Moru">Moru</option>
-                                <option value="Neem">Neem</option>
-                                <option value="Nimbu">Nimbu</option>
-                                <option value="Olive">Olive</option>
-                                <option value="Phalyat">Phalyat</option>
-                                <option value="Poplar">Poplar</option>
-                                <option value="Ringal">Ringal</option>
-                                <option value="Robinia">Robinia</option>
-                                <option value="Sain">Sain</option>
-                                <option value="Sal">Sal</option>
-                                <option value="Salix">Salix</option>
-                                <option value="Semul">Semul</option>
-                                <option value="Shahtoot">Shahtoot</option>
-                                <option value="Shisham">Shisham</option>
-                                <option value="Simarouba">Simarouba</option>
-                                <option value="Siris">Siris</option>
-                                <option value="Spruce">Spruce</option>
-                                <option value="Subabul">Subabul</option>
-                                <option value="Surai">Surai</option>
-                                <option value="Teak">Teak</option>
-                                <option value="Tejpatand">Tejpatand</option>
-                                <option value="Timla">Timla</option>
-                                <option value="Tun">Tun</option>
-                                <option value="Tung">Tung</option>
-                                <option value="Utis">Utis</option>
-                                <option value="WildAprikot">WildAprikot</option>
-                                <option value="Other">Other</option>
+                                {% for plant_type in plant_types %}
+                                <option value="{{plant_type.name}}">{{plant_type.name | title}}</option>
+                                {% endfor  %}
                             </select>
                         </div>
                         <div class="col-5">
