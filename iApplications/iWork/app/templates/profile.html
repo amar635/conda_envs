@@ -39,7 +39,7 @@
                                 <option value="" disabled {{ 'selected' if selected_state is none }}>--Select State--</option>
                                 {% for state_name in states %}
                                 <option value="{{ state_name['id'] }}" {% if state_name['id'] == selected_state %}selected{% endif %}>
-                                    {{ state_name['name'] }}
+                                    {{ state_name['name'] | title }}
                                 </option>
                                 {% endfor %}
                             </select>
@@ -49,7 +49,7 @@
                             <select class="form-select" id="selectDistrict" name="selectDistrict" aria-label="Select District" required>
                                 <option selected>--Select District--</option>
                                 {% for district in state_districts %}
-                                <option value="{{district['id']}}">{{district['name']}}</option>
+                                <option value="{{district['id']}}">{{district['name'] | title}}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -121,12 +121,23 @@
         function createOption(option_value, option_text) {
             option = document.createElement('option')
             option.value = option_value;
-            option.text = option_text;
+            option.text = toTitleCase(option_text);
             // if (option.text.includes('Select')){
             //     option.setAttribute('disabled', 'disabled');
             // }
             return option;
             }
+        
+        function toTitleCase(str) {
+            return str
+                .toLowerCase() // Convert the entire string to lowercase
+                .split(' ') // Split the string into an array of words
+                .map(word => {
+                    // Capitalize the first letter and concatenate with the rest of the word
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                })
+                .join(' '); // Join the array back into a string
+        }
         
         function fill_dropdown(data, dd_type) {
             var dropdown_element = "";

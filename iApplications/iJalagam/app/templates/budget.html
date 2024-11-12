@@ -1,0 +1,299 @@
+{% extends 'base.html' %}
+{% block title %} Groundwater {% endblock %}
+{% block content %}
+{% from 'components/macros.html' import menu_link, display_card, menu_white_bg, card_header %}
+<nav style="--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
+    <ol class="breadcrumb fs-7">
+        <li class="breadcrumb-item "><a class=" link-underline link-underline-opacity-0" href="/home"><strong>Home</strong></a></li>
+    {% for breadcrumb in breadcrumbs %}
+      <li class="breadcrumb-item">
+        <a class="link-underline link-underline-opacity-0 {% if loop.index == breadcrumbs | length %} link-dark {% endif %}" href="{{breadcrumb.href}}">{{breadcrumb.name}}</a>
+    </li>
+    {% endfor %}
+    </ol>
+</nav>
+<div class="card rounded-1 shadow mb-3">
+    <div class="card-header">
+        {{card_header(title='Water Budget', subtitle='in Thousand Ha M')}}
+    </div>
+    <div class="card-body">       
+        <div class="row mb-3">
+            {% for item in water_budget %}
+            <div class="col">                
+                <div class="d-flex {% if loop.index % 2 == 0 %} justify-content-start mt-4 {% else %} justify-content-end {% endif %} ">
+                    {% if item.name.lower() == 'demand' %}
+                        {{ display_card(isImage=False, content='fa-solid fa-glass-water', 
+                        label=item.name|title, title='%0.2f'|format(item.consumption/1000|float), subtitle='Th Ha M', background=item.background) }}
+                    {% else %}
+                        {{ display_card(isImage=False, content='fa-solid fa-bottle-water', 
+                        label=item.name|title, title='%0.2f'|format(item.consumption/1000|float), subtitle='Th Ha M', background=item.background)  }}
+                    {% endif %}
+                     {#<!-- {{div_card(name=item.name, population=item.consumption, background=item.background, index=loop.index)}} -->#}
+                </div>
+            </div> 
+            {% endfor %}      
+        </div>   
+    </div>
+</div>
+
+
+<div class="card mb-3 rounded-1 shadow ">
+    <div class="card-header">
+        {{card_header(title='Demand vs Supply', subtitle='(in Thousand Ha M)')}}
+    </div>
+    <div class="card-body">
+        <div class="containerpy-3">
+            <div id="main" style="width: 100%;height:35vh;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-5 rounded-1 shadow ">
+    <div class="card-header">
+        {{card_header(title='Tabular Data', subtitle='Detail Matrix')}}
+    </div>
+    <div class="card-body">
+        <div class="container py-3">
+            <table class="table table-bordered table-sm fs-7 mb-0">
+                <thead class="text-center">
+                    <tr>
+                        <th>Description</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in water_budget %}
+                    <tr>
+                        <td>Total {{row.name | title}}</td>
+                        <td class="text-end">{{'%0.2f'|format(row.consumption|float)}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>        
+    </div>
+</div>
+<input type="hidden" name="chartData" id="chartData" value="{{chart_data}}">
+<nav class="fixed-bottom bg-dark">
+    <div class="d-flex justify-content-evenly aligh-items-center px-3"> 
+
+    {{menu_link(route=url_for('routes.human'), icon='fa-solid fa-chart-line',  name='demand')}}
+    {{menu_white_bg(route=url_for('routes.index'), font_content='fa-solid fa-house')}}
+    <!-- <div class="d-flex align-items-center p-1">
+        <a href="{{url_for('.index')}}" class="link-underline link-underline-opacity-0 bg-primary-emphasis">
+            <div class="card rounded-circle">
+                <div class="text-center"><i class="fa-solid fa-house fs-4 p-2"></i></div>                    
+            </div>
+        </a>
+    </div>  -->
+    {{menu_link(route=url_for('routes.surface'), icon='fa-solid fa-glass-water-droplet',  name='supply')}}
+    </div>
+</nav>
+{% endblock %}      
+{% block scripts %}
+<script>
+    var chartDom = document.getElementById('main');
+    var myChart = echarts.init(chartDom);
+    let chart_data = JSON.parse(document.getElementById('chartData').value);
+    var option;
+    option = {
+        title: {
+            show: false,
+            text: "Demand / Supply",
+            left: 'center',
+            top: 0
+        },
+        grid: [
+            { left: '7%', bottom: '10%', width: '45%', height: '75%' },
+            { right: '7%', bottom: '10%', width: '30%', height: '75%' },
+        ],
+        tooltip: {
+            formatter: 'Group {a}: ({c})'
+        },
+        xAxis: [
+            {
+            gridIndex: 0,
+            type:'category',
+            data: chart_data['demand']['category']
+            },
+            { 
+            gridIndex: 1,
+            type: 'category',
+            data: chart_data['supply']['category']
+            },
+        ],
+        yAxis: [
+            { gridIndex: 0,
+            type: 'value',
+            },
+            { gridIndex: 1,
+            type:'value',
+            },
+        ],
+        series: [
+            {
+            name: 'Demand',
+            type: 'bar',
+            barGap: 0,
+            label:{
+                show:true,
+                formatter:'{b}: {c}',
+                rotate: 90,
+                position: 'insideBottom',
+                verticalAlign: 'middle',
+                align: 'left',
+                color:'#222',
+            },
+            xAxisIndex: 0,
+            yAxisIndex: 0,
+            data: chart_data['demand']['data']
+            },
+            {
+            name: 'Supply',
+            type: 'bar',
+            barGap: 0,
+            label:{
+                show:true,
+                formatter:'{b}: {c}',
+                rotate: 90,
+                position: 'insideBottom',
+                verticalAlign: 'middle',
+                align: 'left',
+            },
+            xAxisIndex: 1,
+            yAxisIndex: 1,
+            data: chart_data['supply']['data']
+            },
+        ]
+        };
+    // option = {
+    //     title: {
+    //         show: false,
+    //         text: 'Water Budget',
+    //         subtext: 'Thousand Ha M',
+    //         left: 'center'
+    //     },
+    //     tooltip: {
+    //         trigger: 'item'
+    //     },
+    //     legend: {
+    //         show: false,
+    //         orient: 'vertical',
+    //         left: 'left'
+    //     },
+    //     series: [
+    //         {
+    //         name: 'Access From',
+    //         type: 'pie',
+    //         radius: '95%',
+    //         label:{
+    //             show:true,
+    //             position:'inside',
+    //         },
+    //         data: chart_data,
+    //         // data: [
+    //         //     { value: 13160, name: 'Demand' },
+    //         //     { value: 11560, name: 'Supply' },
+    //         // ],
+    //         emphasis: {
+    //             itemStyle: {
+    //             shadowBlur: 10,
+    //             shadowOffsetX: 10,
+    //             shadowColor: 'rgba(0, 0, 0, 1)'
+    //             }
+    //         }
+    //         }
+    //     ]
+    //     };
+    // const gaugeData = [
+    // {
+    //     value: chart_data[0]['value'],
+    //     name: chart_data[0]['name'],
+    //     title: {
+    //     offsetCenter: ['0%', '-35%']
+    //     },
+    //     detail: {
+    //     valueAnimation: true,
+    //     offsetCenter: ['0%', '-20%']
+    //     }
+    // },
+    // {
+    //     value: chart_data[1]['value'],
+    //     name: chart_data[1]['name'],
+    //     title: {
+    //     offsetCenter: ['0%', '-5%']
+    //     },
+    //     detail: {
+    //     valueAnimation: true,
+    //     offsetCenter: ['0%', '10%']
+    //     }
+    // },
+    // {
+    //     value: chart_data[2]['value'],
+    //     name: chart_data[2]['name'],
+    //     title: {
+    //     offsetCenter: ['0%', '25%']
+    //     },
+    //     detail: {
+    //     valueAnimation: true,
+    //     offsetCenter: ['0%', '40%']
+    //     }
+    // }
+    // ];
+    // option = {
+    // series: [
+    //         {
+    //         type: 'gauge',
+    //             startAngle: 90,
+    //             endAngle: -270,
+    //             pointer: {
+    //                 show: false
+    //             },
+    //             progress: {
+    //                 show: true,
+    //                 overlap: false,
+    //                 roundCap: true,
+    //                 clip: false,
+    //                 itemStyle: {
+    //                 borderWidth: 1,
+    //                 borderColor: '#464646'
+    //                 }
+    //             },
+    //             axisLine: {
+    //                 lineStyle: {
+    //                 width: 20
+    //                 }
+    //             },
+    //             splitLine: {
+    //                 show: false,
+    //                 distance: 0,
+    //                 length: 10
+    //             },
+    //             axisTick: {
+    //                 show: false
+    //             },
+    //             axisLabel: {
+    //                 show: false,
+    //                 distance: 50
+    //             },
+    //             data: gaugeData,
+    //             title: {
+    //                 fontSize: 10
+    //             },
+    //             detail: {
+    //                 width: 20,
+    //                 height: 3,
+    //                 fontSize: 8,
+    //                 color: 'inherit',
+    //                 borderColor: 'inherit',
+    //                 borderRadius: 10,
+    //                 borderWidth: 1,
+    //                 formatter: '{value}%'
+    //             }
+    //         }
+    //     ]
+    // };
+
+    option && myChart.setOption(option);
+</script>
+{% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, g, get_flashed_messages, json, make_response, redirect, render_template, request, session, url_for
 from flask_login import login_required, current_user
 from datetime import datetime
-from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, Category, CompletedWork, Panchayat, FieldData, State, WorkType, User, Feedback
+from iWork.app.models import InputAndPermissible, PermissibleWork, InputParameter, District, Category, CompletedWork, Panchayat, FieldData, State, WorkType, User, Feedback
 from iWork.app.models.plant_types import PlantType
 
 
@@ -31,17 +31,14 @@ def profile():
             message = messages[0][1]
     states = State.get_states()
     selected_state = current_user.state_id
-    state_districts = CompletedWork.get_districts_by_state_id(selected_state)
+    state_districts = CompletedWork.get_districts_by_completed_work(state_id=selected_state)
     if request.method == 'POST':
-        # state_id = request.form.get('selectState')
-        # district_id = request.form.get('selectDistrict')
-        # block_id = request.form.get('selectBlock')
         panchayat_id = request.form.get('selectPanchayat')
         payload = {'panchayat_id': panchayat_id}        
         session['payload'] = payload
         return redirect(url_for('.data'))
-    else:
-        return render_template('profile.html', states = states, 
+    
+    return render_template('profile.html', states = states, 
                                selected_state = selected_state, 
                                state_districts = state_districts,
                                flash_message = message)

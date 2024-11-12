@@ -1,4 +1,4 @@
-from sqlalchemy import and_, select
+from sqlalchemy import and_, func, select
 from iWork.app.classes.helper_methods import Helper
 from iWork.app.db import db
 from iWork.app.models import Panchayat, WorkType, Block, District, State
@@ -170,46 +170,116 @@ class CompletedWork(db.Model):
         json_data = Helper.remove_duplicates([{'id': result[1], 'name': result[2]} for result in results])
         json_data = sorted(json_data, key=lambda x: x['name'])
         return json_data
-
+    
+    @classmethod
+    def get_districts_by_completed_work(cls, state_id):
+        from iWork.app.models.field_data import FieldData
+        # query = (
+        #     db.session.query(
+        #         District.id.label('district_id'),
+        #         District.name.label('district_name')
+        #     )
+        #     .join(Panchayat, Panchayat.id == cls.panchayat_id)
+        #     .join(Block, Block.id == Panchayat.block_id)
+        #     .join(District, District.id == Block.district_id)
+        #     .join(State, State.id == District.state_id)
+        #     .outerjoin(FieldData, cls.id == FieldData.completed_work_id)  # LEFT JOIN
+        #     .filter(State.id == state_id)  # WHERE clause
+        #     .group_by(District.id, District.name)  # GROUP BY
+        #     .having(func.count(cls.id) > func.count(FieldData.completed_work_id))  # HAVING
+        # )
+        query = (
+            db.session.query(
+                District.id.label('id'),
+                District.name.label('name'),
+                func.count(CompletedWork.id).label('work_count'),
+                func.count(func.distinct(FieldData.completed_work_id)).label('field_count')
+            )
+            .outerjoin(FieldData, CompletedWork.id == FieldData.completed_work_id)
+            .join(Panchayat, Panchayat.id == CompletedWork.panchayat_id)
+            .join(Block, Block.id == Panchayat.block_id)
+            .join(District, District.id == Block.district_id)
+            .join(State, State.id == District.state_id)
+            .filter(State.id == state_id)
+            .group_by(District.id, District.name)
+            .having(func.count(CompletedWork.id) > func.count(func.distinct(FieldData.completed_work_id)))
+        )
+        results = query.all()
+        json_data = Helper.remove_duplicates([{'id': result[0], 'name': result[1]} for result in results])
+        json_data = sorted(json_data, key=lambda x: x['name'])
+        return json_data
+    
     @classmethod
     def get_blocks_by_district_id(cls, district_id):
-        query = db.session.query(
-                    cls.panchayat_id.label('panchayat_id'),
-                    Block.id.label('id'),
-                    Block.name.label('name')
-                    ).join(
-                        Panchayat, cls.panchayat_id == Panchayat.id
-                    ).join(
-                        Block, Panchayat.block_id == Block.id
-                    ).join(
-                        District, Block.district_id == District.id
-                    ).join(
-                        State, District.state_id == State.id
-                    ).filter(District.id == district_id)
-        
+        from iWork.app.models.field_data import FieldData
+        # query = db.session.query(
+        #             cls.panchayat_id.label('panchayat_id'),
+        #             Block.id.label('id'),
+        #             Block.name.label('name')
+        #             ).join(
+        #                 Panchayat, cls.panchayat_id == Panchayat.id
+        #             ).join(
+        #                 Block, Panchayat.block_id == Block.id
+        #             ).join(
+        #                 District, Block.district_id == District.id
+        #             ).join(
+        #                 State, District.state_id == State.id
+        #             ).filter(District.id == district_id)
+        query = (
+            db.session.query(
+                Block.id.label('id'),
+                Block.name.label('name'),
+                func.count(CompletedWork.id).label('work_count'),
+                func.count(func.distinct(FieldData.completed_work_id)).label('field_count')
+            )
+            .outerjoin(FieldData, CompletedWork.id == FieldData.completed_work_id)
+            .join(Panchayat, Panchayat.id == CompletedWork.panchayat_id)
+            .join(Block, Block.id == Panchayat.block_id)
+            .join(District, District.id == Block.district_id)
+            .join(State, State.id == District.state_id)
+            .filter(District.id == district_id)
+            .group_by(Block.id, Block.name)
+            .having(func.count(CompletedWork.id) > func.count(func.distinct(FieldData.completed_work_id)))
+        )
         results = query.all()
-        json_data = Helper.remove_duplicates([{'id': result[1], 'name': result[2]} for result in results])
+        json_data = Helper.remove_duplicates([{'id': result[0], 'name': result[1]} for result in results])
         json_data = sorted(json_data, key=lambda x: x['name'])
         return json_data
 
     @classmethod
     def get_panchayats_by_block_id(cls, block_id):
-        query = db.session.query(
-                    cls.panchayat_id.label('panchayat_id'),
-                    Panchayat.id.label('id'),
-                    Panchayat.name.label('name')
-                    ).join(
-                        Panchayat, cls.panchayat_id == Panchayat.id
-                    ).join(
-                        Block, Panchayat.block_id == Block.id
-                    ).join(
-                        District, Block.district_id == District.id
-                    ).join(
-                        State, District.state_id == State.id
-                    ).filter(Block.id == block_id)
-        
+        from iWork.app.models.field_data import FieldData
+        # query = db.session.query(
+        #             cls.panchayat_id.label('panchayat_id'),
+        #             Panchayat.id.label('id'),
+        #             Panchayat.name.label('name')
+        #             ).join(
+        #                 Panchayat, cls.panchayat_id == Panchayat.id
+        #             ).join(
+        #                 Block, Panchayat.block_id == Block.id
+        #             ).join(
+        #                 District, Block.district_id == District.id
+        #             ).join(
+        #                 State, District.state_id == State.id
+        #             ).filter(Block.id == block_id)
+        query = (
+            db.session.query(
+                Panchayat.id.label('id'),
+                Panchayat.name.label('name'),
+                func.count(CompletedWork.id).label('work_count'),
+                func.count(func.distinct(FieldData.completed_work_id)).label('field_count')
+            )
+            .outerjoin(FieldData, CompletedWork.id == FieldData.completed_work_id)
+            .join(Panchayat, Panchayat.id == CompletedWork.panchayat_id)
+            .join(Block, Block.id == Panchayat.block_id)
+            .join(District, District.id == Block.district_id)
+            .join(State, State.id == District.state_id)
+            .filter(Block.id == block_id)
+            .group_by(Panchayat.id, Panchayat.name )
+            .having(func.count(CompletedWork.id) > func.count(func.distinct(FieldData.completed_work_id)))
+        )
         results = query.all()
-        json_data = Helper.remove_duplicates([{'id': result[1], 'name': result[2]} for result in results])
+        json_data = Helper.remove_duplicates([{'id': result[0], 'name': result[1]} for result in results])
         json_data = sorted(json_data, key=lambda x: x['name'])
         return json_data
     
