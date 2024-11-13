@@ -163,11 +163,15 @@ class WaterBudget:
         groundwater_data = GroundwaterExtraction.get_gw_by_block_id(block_id, district_id)
         ground_supply = groundwater_data['extraction']
         total_supply = surface_supply + ground_supply
+        supply_side = [{'description': 'Harvested Surface Water', 'value':surface_supply},
+        {'description': 'Extracted Ground Water', 'value':ground_supply},
+        {'description': 'Total Supply', 'value':total_supply}]
+
         chart_data = {
             'data':[round(surface_supply/1000,2),round(ground_supply/1000,2)],
             'category':['surface','ground']
             }
-        return total_supply, chart_data
+        return total_supply, chart_data, supply_side
     
     @classmethod
     def get_total_demand(cls, block_id, district_id):
@@ -189,11 +193,15 @@ class WaterBudget:
         crops = CropCensus.get_block_wise_crop(block_id, district_id)
         crop_water_consumption = sum(item['area'] * item['crop_coefficient'] for item in crops)
         total_demand = human_water_consumption + livestock_water_consumption + crop_water_consumption
+        demand_side = [{'description': 'Human', 'value':human_water_consumption},
+        {'description': 'Livestock', 'value':livestock_water_consumption},
+        {'description': 'Crops', 'value':crop_water_consumption},
+        {'description': 'Total Demand', 'value':total_demand}]
         chart_data = {
             'data':[round(human_water_consumption/1000,2),round(livestock_water_consumption/1000,2),round(crop_water_consumption/1000,2)],
             'category':['human','livestock','crops']
             }
-        return total_demand, chart_data
+        return total_demand, chart_data, demand_side
 
     def get_session_payload(block_id, district_id, state_id):
         return Block.get_id_and_name(block_id, district_id, state_id)

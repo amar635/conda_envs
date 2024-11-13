@@ -6,7 +6,7 @@
 //     "configurations": [
 //         {
 //             "name": "Python: Current File",
-//             "type": "python",
+//             "type": "debugpy",
 //             "request": "launch",
 //             "program": "run.py",
 //             "console": "integratedTerminal",
@@ -21,7 +21,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python: Flask",
+            "name": "Python: Current File",
             "type": "debugpy",
             "request": "launch",
             // "module": "flask",
@@ -33,7 +33,7 @@
             "args": [
                 "run",
                 "--reload",
-                "--no-debugger",
+                // "--no-debugger",
                 "--port", "8080"
             ],
             "jinja": true

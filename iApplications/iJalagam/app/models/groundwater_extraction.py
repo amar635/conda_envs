@@ -76,6 +76,17 @@ class GroundwaterExtraction(db.Model):
                 'block_name': result[7],
                 'district_name':result[8]
             }
-            return result
         else:
-            return None
+            result = {
+                'stage_of_extraction':'NA',
+                'rainfall': 0,
+                'recharge': 0,
+                'discharge': 0,
+                'extractable': 0,
+                'extraction': 0,
+                'category': 'NA',
+                'block_name': 'NA',
+                'district_name':'NA'
+            }
+        
+        return result

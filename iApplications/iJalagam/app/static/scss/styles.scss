@@ -43,7 +43,7 @@ $dark:#142527;
 // @import "../bootstrap/scss/forms";
 // @import "../bootstrap/scss/helpers";
 // @import "../bootstrap/scss/utilities";
-// @import "../bootstrap/scss/bootstrap";
+@import "../bootstrap/scss/bootstrap";
 
 // Optional Bootstrap components here
 // @import "../bootstrap/scss/reboot";
@@ -188,3 +188,14 @@ $font-family: 'PT Sans Narrow', sans-serif;
 }
 
 /* END OVERLAY */
+/* PAGE LOAD */
+.fade-in {
+  opacity: 0;
+  transition: opacity 1s ease-in;
+
+  &.loaded {
+      opacity: 1;
+  }
+}
+
+/* END PAGE LOAD */

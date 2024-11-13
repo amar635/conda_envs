@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
-{% block title %} Groundwater {% endblock %}
+{% block title %} Budget {% endblock %}
 {% block content %}
 {% from 'components/macros.html' import menu_link, display_card, menu_white_bg, card_header %}
 <nav style="--bs-breadcrumb-divider: '|';" aria-label="breadcrumb">
     <ol class="breadcrumb fs-7">
-        <li class="breadcrumb-item "><a class=" link-underline link-underline-opacity-0" href="/home"><strong>Home</strong></a></li>
+        <!-- <li class="breadcrumb-item "><a class=" link-underline link-underline-opacity-0" href="/home"><strong>Home</strong></a></li> -->
     {% for breadcrumb in breadcrumbs %}
       <li class="breadcrumb-item">
-        <a class="link-underline link-underline-opacity-0 {% if loop.index == breadcrumbs | length %} link-dark {% endif %}" href="{{breadcrumb.href}}">{{breadcrumb.name}}</a>
+        <a class="link-underline link-underline-opacity-0 {% if loop.index == breadcrumbs | length %} link-dark {% endif %}" href="{{breadcrumb.href}}">
+            {{breadcrumb.name}}
+        </a>
     </li>
     {% endfor %}
     </ol>
@@ -50,22 +52,43 @@
 
 <div class="card mb-5 rounded-1 shadow ">
     <div class="card-header">
-        {{card_header(title='Tabular Data', subtitle='Detail Matrix')}}
+        {{card_header(title='Water Budget', subtitle='Block Level')}}
     </div>
     <div class="card-body">
         <div class="container py-3">
             <table class="table table-bordered table-sm fs-7 mb-0">
                 <thead class="text-center">
-                    <tr>
+                    <tr class="bg-light">
                         <th>Description</th>
                         <th>Value</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for row in water_budget %}
                     <tr>
-                        <td>Total {{row.name | title}}</td>
-                        <td class="text-end">{{'%0.2f'|format(row.consumption|float)}}</td>
+                        <td colspan="2" class="fw-bold bg-danger bg-opacity-50">Demand</td>
+                    </tr>
+                    {% for row in demand_side %}
+                    <tr>
+                        <td>{{row.description | title}}</td>
+                        <td class="text-end">{{'%0.2f'|format(row.value|float)}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2" class="fw-bold bg-success bg-opacity-50">Supply</td>
+                    </tr>
+                    {% for row in supply_side %}
+                    <tr>
+                        <td>{{row.description | title}}</td>
+                        <td class="text-end">{{'%0.2f'|format(row.value|float)}}</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                        <td colspan="2" class="fw-bold bg-info bg-opacity-50 text-center">Water Budget</td>
+                    </tr>
+                    {% for row in budget_side %}
+                    <tr>
+                        <td>{{row.description | title}}</td>
+                        <td class="text-end">{{'%0.2f'|format(row.value|float)}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -95,6 +118,9 @@
     var chartDom = document.getElementById('main');
     var myChart = echarts.init(chartDom);
     let chart_data = JSON.parse(document.getElementById('chartData').value);
+    demand_data = chart_data['demand']['data'];
+    supply_data = chart_data['supply']['data']
+    let max_value = Math.ceil(Math.max(Math.max(...demand_data),Math.max(...supply_data)));
     var option;
     option = {
         title: {
@@ -125,9 +151,13 @@
         yAxis: [
             { gridIndex: 0,
             type: 'value',
+            min: 0,
+            max:max_value,
             },
             { gridIndex: 1,
             type:'value',
+            min: 0,
+            max:max_value,
             },
         ],
         series: [

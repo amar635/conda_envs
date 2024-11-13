@@ -1,12 +1,12 @@
 {# <!--FOOTER MENU-->#}
 {% macro menu_link(route='home', icon='',  name='') %}
 {% if name | lower in request.path  %}
-<a class="p-2 link-underline link-underline-opacity-0 text-primary" href="{{route}}">
+<a class="p-2 link-underline link-underline-opacity-0 text-primary"  href="{{route}}" onclick="toggleSpinner()">
     <div class="text-center"><i class="{{icon}}"></i></div>
     <div class="text-center fs-8">{{name}}</div>
 </a>
 {% else %}
-<a class="p-2 link-underline link-underline-opacity-0 text-white" href="{{route}}">
+<a class="p-2 link-underline link-underline-opacity-0 text-white" href="{{route}}" onclick="toggleSpinner()">
     <div class="text-center"><i class="{{icon}}"></i></div>
     <div class="text-center fs-8">{{name}}</div>
 </a>
@@ -56,14 +56,14 @@
             <div class="text-center"> 
                 <div class="mb-2">           
                     {% if isImage %}
-                        <img src="{{url_for('static', filename='assets/' + content|lower)}}" height="48" alt="{{label}}">
+                        <img src="{{url_for('static', filename='assets/' + content|lower)}}" width="48" alt="{{label}}">
                     {% else %}
                     <div class="display-1">
                         <i class="{{content}}"></i>
                     </div> 
                     {% endif %}  
                 </div>               
-                <div class="fs-7 text-{{background}}-emphasis mt-n5 mb-1">{{label | title}}</div>
+                <div class="fs-7 text-{{background}}-emphasis mt-n5 mb-1">{{label[:8] | title}}</div>
                 <div class="fs-6">
                     {{title}}
                 </div>
@@ -84,7 +84,7 @@
 <!--WHITE_CIRCLE-->
 {% macro menu_white_bg(route='', font_content='fa-solid fa-house') %}
 <div class="d-flex align-items-center p-1">
-    <a href="{{route}}" class="link-underline link-underline-opacity-0 bg-primary-emphasis">
+    <a href="{{route}}" class="link-underline link-underline-opacity-0 bg-primary-emphasis" onclick="toggleSpinner()">
         <div class="card rounded-circle">
             <div class="text-center"><i class="{{font_content}} fs-4 p-2"></i></div>                    
         </div>

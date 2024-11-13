@@ -9,8 +9,18 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='scss/styles.css')}}">
+    <style>
+      .fade-in {
+          opacity: 0;
+          transition: opacity 1s ease-in;
+      }
+
+      .fade-in.loaded {
+          opacity: 1;
+      }
+    </style>
 </head>
-<body class="bg-pattern">
+<body class="fade-in">
     <!--Overlay-->
     <div id="loading-spinner" class="overlay">
       <!--Spinner-->
@@ -19,13 +29,12 @@
         <div id="loading-content"></div>
       </div>
     </div>
-    <nav class="navbar fixed-top bg-primary">
-        <div class="d-flex justify-content-between align-items-center w-100">
-          <a class="navbar-brand text-white ms-2 fw-lighter" href="#">Jalagam</a>
+    <nav class="navbar fixed-top bg-primary justify-content-between align-items-center">
+          <a class="navbar-brand text-white ms-2 fw-lighter" href="{{url_for('routes.index')}}"><i class="fa-solid fa-droplet"></i> Jalagam</a>
+          <h3 class="me-5 text-white my-1 fw-light">{% if breadcrumbs %}{{breadcrumbs[breadcrumbs|length - 1].name}}{% endif %}</h3>
           <a class="text-white me-2" data-bs-toggle="offcanvas" data-bs-target="#offCanvasMenu" aria-controls="offCanvasMenu">
             <i class="fa-solid fa-bars py-2"></i>
           </a>
-        </div>
     </nav>
     <div class="offcanvas offcanvas-start" data-bs-scroll="true" tabindex="-1" id="offCanvasMenu" aria-labelledby="offCanvasMenuLabel">
     <div class="offcanvas-header">
@@ -55,21 +64,42 @@
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
     <script src="{{url_for('static', filename='js/bootstrap.min.js')}}"></script>
     <script>
+    
     function toggleSpinner() {
             const spinner = document.getElementById('loading-spinner');
             spinner.style.display = (spinner.style.display === 'none' || spinner.style.display === '') ? 'block' : 'none';
+          //   setTimeout(function() {
+          //     document.getElementById("loading-spinner").style.display = "none";
+          // }, 5000);
         }
-        window.addEventListener("load", function() {
-        // PAGE IS FULLY LOADED
-        // FADE OUT YOUR OVERLAYING DIV
-          document.getElementById("loading-spinner").style.transition = "opacity 0.5s";
-          document.getElementById("loading-spinner").style.opacity = 0;
-
-          // Wait for the transition to complete before hiding the element
-          setTimeout(function() {
+    document.addEventListener('DOMContentLoaded', ()=>{
+      document.body.classList.add('loaded');
+      // toggleSpinner();
+      // setTimeout(function() {
+      //       document.getElementById("loading-spinner").style.display = "none";
+      //     }, 500);
+      // document.getElementById("loading-spinner").style.display = "block";
+      // setTimeout(function() {
+      //       document.getElementById("loading-spinner").style.display = "none";
+      //     }, 500);
+    });
+    document.addEventListener('beforeunload', ()=>{
+      toggleSpinner();
+      setTimeout(function() {
             document.getElementById("loading-spinner").style.display = "none";
-          }, 500); // Match this duration to the CSS transition time (0.5s)
-        });
+          }, 500);
+      // document.getElementById("loading-spinner").style.display = "block";
+      // setTimeout(function() {
+      //       document.getElementById("loading-spinner").style.display = "none";
+      //     }, 500);
+    });
+
+    // function menu_link(event, route) {
+    //   event.preventDefault();
+    //   toggleSpinner();
+    //   window.location.href = route;
+    //   toggleSpinner();
+    // }
 
     </script>
     {% block scripts %}

@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %} Select Panchayat {% endblock %}
+{% block title %} Select Block {% endblock %}
 {% block content %}
 {% from 'components/macros.html' import select, card_header %}
 <div class="text-center display-1 my-3">
@@ -16,7 +16,7 @@
             {{select('block', 'selectBlock', default_option='Select Block')}}
             {# <!--{{select('panchayat', 'selectPanchayat', default_option='Select Panchayat', id='dd_panchayats')}}--> #}
             <div class="d-grid gap-2 my-5">
-                <input type="submit" value="Submit" class="btn btn-primary shadow">
+                <input type="submit" value="Submit" class="btn btn-primary shadow" id="btnSubmit" name="btnSubmit">
             </div>
         </form>
     </div>
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let dd_states = document.getElementById('selectState');
     let dd_districts = document.getElementById('selectDistrict');
     let dd_blocks = document.getElementById('selectBlock');
+    let btn_submit = document.getElementById('btnSubmit')
 
     dd_states.addEventListener('change', async () => {
         payload = {'state_id': dd_states.value};
@@ -65,6 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 dd_blocks.setAttribute('disabled', 'disabled');
             }           
         });        
+    });
+
+    btn_submit.addEventListener('click', (event) =>{
+        event.preventDefault();
+        toggleSpinner();
+        payload = {'state_id': dd_states.value, 'district_id':dd_districts.value, 'block_id': dd_blocks.value}
+        fetch_data(payload,url_prefix + '/index').then(data=>{
+            window.location.href = data;
+            // toggleSpinner();
+        });
     });
 
     // FUNCTIONS

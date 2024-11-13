@@ -11,7 +11,7 @@
 </nav>
 <div class="card rounded-1 shadow  mb-3">
     <div class="card-header">
-        {{card_header(title='Crops', subtitle='Spread Area (in Thousand Ha)')}}
+        {{card_header(title='Crops', subtitle='Crop Area (in Thousand Ha)')}}
     </div>
     <div class="card-body"> 
         <div class="row mb-3">
@@ -28,7 +28,7 @@
   </div>
 <div class="card mb-3 rounded-1 shadow ">
     <div class="card-header">
-        {{card_header(title='Dominant Crops', subtitle='Water Consumption (in Ha M)')}}
+        {{card_header(title='Dominant Crops', subtitle='Water Consumption (in %)')}}
     </div>
     <div class="card-body">
         <div class="containerpy-3">
@@ -39,7 +39,7 @@
 
 <div class="card mb-5 rounded-1 shadow ">
     <div class="card-header">
-        {{card_header(title='Tabular Data', subtitle='Details (in Thousands)')}}
+        {{card_header(title='Tabular Data', subtitle='Details (in Ha/Ha M)')}}
     </div>
     <div class="card-body">
         <div class="container py-3">
@@ -57,8 +57,8 @@
                     <tr>
                         <td class="text-center">{{loop.index}}</td>
                         <td >{{crop.crop_name}}</td>
-                        <td class="text-end">{{'%0.2f'|format(crop.crop_area/1000|float)}}</td>
-                        <td class="text-end">{{'%0.2f'|format(crop.crop_consumption/1000|float)}}</td>
+                        <td class="text-end">{{'%0.2f'|format(crop.crop_area|float)}}</td>
+                        <td class="text-end">{{'%0.2f'|format(crop.crop_consumption|float)}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
