@@ -1,4 +1,4 @@
-from sqlalchemy import and_
+from sqlalchemy import and_, null
 from iJalagam.app.db import db
 from iJalagam.app.models import District, State
 
@@ -61,7 +61,8 @@ class Block(db.Model):
             State.name.label('state_name'),
         ).join(District, District.id == cls.district_id
         ).join(State, State.id == District.state_id
-        ).filter(and_(Block.id == block_id, District.id==district_id))
+        ).filter(and_(Block.id == block_id, District.id==district_id)
+        ).order_by(cls.name)
 
         result = query.first()
 
@@ -72,3 +73,41 @@ class Block(db.Model):
             return json_data
         else:
             return None
+        
+    @classmethod
+    def get_aspirational_blocks(cls):
+        from iJalagam.app.models.groundwater_extraction import GroundwaterExtraction
+        results = db.session.query(
+            cls.id.label('block_id'),
+            cls.name.label('block_name'),
+            District.id.label('district_id'),
+            District.name.label('district_name'),
+            State.id.label('state_id'),
+            State.name.label('state_name'),
+            GroundwaterExtraction.category.label('category')
+        ).join(District, District.id == cls.district_id
+        ).join(State, State.id == District.state_id
+        ).outerjoin(GroundwaterExtraction, GroundwaterExtraction.block_id==cls.id
+        ).filter(cls.code.in_([4876,6653,7130,539,172,3209,6050,7047,4027,3784,4010,3979,3837,4628,624,781,762,2157,6287,6468,6255,5250,951,823,994]),
+                 District.code.in_([745,196,641,72,20,338,563,9,434,398,431,426,405,500,92,115,112,227,583,596,610,721,129,119,132]) 
+        ).order_by(cls.name).all()
+        def replace_semi_critical(category):
+            if category:
+                if category.lower() == 'semi_critical':
+                    return 'critical'
+            else:
+                return 'na'
+            return category
+        if results:
+            return [{
+                'block_id':item[0],
+                'block_name':item[1],
+                'district_id':item[2],
+                'district_name':item[3],
+                'state_id':item[4],
+                'state_name':item[5],
+                'category':replace_semi_critical(item[6])
+            } for item in results]
+        else:
+            return None
+        # return cls.query.filter_by(id.contains(4876,6653,7130,539,172,3209,6050,7047,4027,3784,4010,3979,3837,4628,624,781,762,2157,6287,6468,6255,5250,951,823,994)).all()

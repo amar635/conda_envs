@@ -2,11 +2,14 @@ import os
 from dotenv import load_dotenv
 from flask import Flask
 from flask_migrate import Migrate
+from flask_login import LoginManager
 
 from iJalagam.app.db import db
 from iJalagam.app.models import State, District, Block, Village
+from iJalagam.app.models.users import User
 from iJalagam.app.routes.auth import blp as authBlueprint
 from iJalagam.app.routes.routes import blp as routesBlueprint
+from iJalagam.app.routes.entries import blp as entryBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -25,7 +28,15 @@ def create_app():
     migrations_directory = current_directory + '/iJalagam/migrations'
     migrate = Migrate(app, db, directory=migrations_directory)
 
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
     # register blueprints
     app.register_blueprint(authBlueprint )
     app.register_blueprint(routesBlueprint)
+    app.register_blueprint(entryBlueprint, url_prefix='/data')
     return app

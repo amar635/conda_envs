@@ -69,7 +69,7 @@
                     </tr>
                     {% for row in demand_side %}
                     <tr>
-                        <td>{{row.description | title}}</td>
+                        <td>{{row.category | title}}</td>
                         <td class="text-end">{{'%0.2f'|format(row.value|float)}}</td>
                     </tr>
                     {% endfor %}
@@ -77,10 +77,12 @@
                         <td colspan="2" class="fw-bold bg-success bg-opacity-50">Supply</td>
                     </tr>
                     {% for row in supply_side %}
+                    {% if row.category %}
                     <tr>
-                        <td>{{row.description | title}}</td>
+                        <td>{{row.category | title}}</td>
                         <td class="text-end">{{'%0.2f'|format(row.value|float)}}</td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                     <tr>
                         <td colspan="2" class="fw-bold bg-info bg-opacity-50 text-center">Water Budget</td>
@@ -118,211 +120,121 @@
     var chartDom = document.getElementById('main');
     var myChart = echarts.init(chartDom);
     let chart_data = JSON.parse(document.getElementById('chartData').value);
-    demand_data = chart_data['demand']['data'];
-    supply_data = chart_data['supply']['data']
-    let max_value = Math.ceil(Math.max(Math.max(...demand_data),Math.max(...supply_data)));
     var option;
+    const data = chart_data;        
     option = {
-        title: {
-            show: false,
-            text: "Demand / Supply",
+        title:{
+            text: data[0]['title'],
             left: 'center',
-            top: 0
         },
-        grid: [
-            { left: '7%', bottom: '10%', width: '45%', height: '75%' },
-            { right: '7%', bottom: '10%', width: '30%', height: '75%' },
-        ],
-        tooltip: {
-            formatter: 'Group {a}: ({c})'
-        },
-        xAxis: [
-            {
-            gridIndex: 0,
-            type:'category',
-            data: chart_data['demand']['category']
-            },
-            { 
-            gridIndex: 1,
+        xAxis: {
             type: 'category',
-            data: chart_data['supply']['category']
-            },
-        ],
-        yAxis: [
-            { gridIndex: 0,
-            type: 'value',
-            min: 0,
-            max:max_value,
-            },
-            { gridIndex: 1,
-            type:'value',
-            min: 0,
-            max:max_value,
-            },
-        ],
+            data: getCategories(data[0]['data']),
+            axisLabel: {
+                show: true,
+                rotate: 45,
+                textStyle: {
+                fontSize: 8
+                }
+            }
+        },
+        yAxis: {
+            type: 'value'
+        },
         series: [
             {
-            name: 'Demand',
-            type: 'bar',
-            barGap: 0,
-            label:{
-                show:true,
-                formatter:'{b}: {c}',
-                rotate: 90,
-                position: 'insideBottom',
-                verticalAlign: 'middle',
-                align: 'left',
-                color:'#222',
+            label: {
+                show: true,
+                position: 'inside',
+                formatter: function (params){
+                if (params.value > 0 ) {
+                    return params.value + '%'
+                } 
+                else {return ''} 
+                
+                },
+                textStyle:{
+                fontSize: 8,
+                }
             },
-            xAxisIndex: 0,
-            yAxisIndex: 0,
-            data: chart_data['demand']['data']
-            },
-            {
-            name: 'Supply',
-            type: 'bar',
-            barGap: 0,
-            label:{
-                show:true,
-                formatter:'{b}: {c}',
-                rotate: 90,
-                position: 'insideBottom',
-                verticalAlign: 'middle',
-                align: 'left',
-            },
-            xAxisIndex: 1,
-            yAxisIndex: 1,
-            data: chart_data['supply']['data']
-            },
+            data: transformArray(data[0]['data']),
+            type: 'bar'
+            }
         ]
         };
-    // option = {
-    //     title: {
-    //         show: false,
-    //         text: 'Water Budget',
-    //         subtext: 'Thousand Ha M',
-    //         left: 'center'
-    //     },
-    //     tooltip: {
-    //         trigger: 'item'
-    //     },
-    //     legend: {
-    //         show: false,
-    //         orient: 'vertical',
-    //         left: 'left'
-    //     },
-    //     series: [
-    //         {
-    //         name: 'Access From',
-    //         type: 'pie',
-    //         radius: '95%',
-    //         label:{
-    //             show:true,
-    //             position:'inside',
-    //         },
-    //         data: chart_data,
-    //         // data: [
-    //         //     { value: 13160, name: 'Demand' },
-    //         //     { value: 11560, name: 'Supply' },
-    //         // ],
-    //         emphasis: {
-    //             itemStyle: {
-    //             shadowBlur: 10,
-    //             shadowOffsetX: 10,
-    //             shadowColor: 'rgba(0, 0, 0, 1)'
-    //             }
-    //         }
-    //         }
-    //     ]
-    //     };
-    // const gaugeData = [
-    // {
-    //     value: chart_data[0]['value'],
-    //     name: chart_data[0]['name'],
-    //     title: {
-    //     offsetCenter: ['0%', '-35%']
-    //     },
-    //     detail: {
-    //     valueAnimation: true,
-    //     offsetCenter: ['0%', '-20%']
-    //     }
-    // },
-    // {
-    //     value: chart_data[1]['value'],
-    //     name: chart_data[1]['name'],
-    //     title: {
-    //     offsetCenter: ['0%', '-5%']
-    //     },
-    //     detail: {
-    //     valueAnimation: true,
-    //     offsetCenter: ['0%', '10%']
-    //     }
-    // },
-    // {
-    //     value: chart_data[2]['value'],
-    //     name: chart_data[2]['name'],
-    //     title: {
-    //     offsetCenter: ['0%', '25%']
-    //     },
-    //     detail: {
-    //     valueAnimation: true,
-    //     offsetCenter: ['0%', '40%']
-    //     }
-    // }
-    // ];
-    // option = {
-    // series: [
-    //         {
-    //         type: 'gauge',
-    //             startAngle: 90,
-    //             endAngle: -270,
-    //             pointer: {
-    //                 show: false
-    //             },
-    //             progress: {
-    //                 show: true,
-    //                 overlap: false,
-    //                 roundCap: true,
-    //                 clip: false,
-    //                 itemStyle: {
-    //                 borderWidth: 1,
-    //                 borderColor: '#464646'
-    //                 }
-    //             },
-    //             axisLine: {
-    //                 lineStyle: {
-    //                 width: 20
-    //                 }
-    //             },
-    //             splitLine: {
-    //                 show: false,
-    //                 distance: 0,
-    //                 length: 10
-    //             },
-    //             axisTick: {
-    //                 show: false
-    //             },
-    //             axisLabel: {
-    //                 show: false,
-    //                 distance: 50
-    //             },
-    //             data: gaugeData,
-    //             title: {
-    //                 fontSize: 10
-    //             },
-    //             detail: {
-    //                 width: 20,
-    //                 height: 3,
-    //                 fontSize: 8,
-    //                 color: 'inherit',
-    //                 borderColor: 'inherit',
-    //                 borderRadius: 10,
-    //                 borderWidth: 1,
-    //                 formatter: '{value}%'
-    //             }
-    //         }
-    //     ]
-    // };
+
+        idx = 0
+        setInterval(() => {
+        myChart.setOption({
+            title:{
+            text: data[idx]['title'],
+            left: 'center',
+            },
+            xAxis: {
+            type: 'category',
+            data: getCategories(data[idx]['data']),
+            axisLabel: {
+                show: true,
+                rotate: 45,
+                textStyle: {
+                fontSize: 8
+                }
+            }
+            },
+            yAxis: {
+            type: 'value',
+            min: 0,
+            max: 100,
+            },
+            series: [
+            {
+                
+                label: {
+                show: true,
+                position: 'inside',
+                formatter:function (params){
+                if (params.value > 0 ) {
+                    return params.value + '%'
+                } 
+                else {return ''} 
+                
+                },
+                textStyle:{
+                fontSize: 8,
+                }
+                },
+                data: transformArray(data[idx]['data']),
+                type: 'bar'
+            }
+            ]
+        });
+        idx=idx+1;
+        if (idx==3) { idx=0 }
+        }, 5000);
+
+
+
+        function transformArray(input_array) {
+            let output_array = [];
+            input_array.forEach((value, idx) => {
+                object = {
+                value: value['value'],
+                itemStyle: {
+                    color: value['color']
+                }
+                }
+                output_array.push(object);
+            });
+            return output_array;
+            }
+
+        function getCategories(input_array) {
+        output_array=[];
+        input_array.forEach((element, idx)=>{
+            output_array.push(element['category'])
+        });
+        return output_array;
+        }
 
     option && myChart.setOption(option);
 </script>

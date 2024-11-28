@@ -14,3 +14,7 @@ from iJalagam.app.models.groundwater_extraction import GroundwaterExtraction
 from iJalagam.app.models.crop_census import CropCensus
 from iJalagam.app.models.crop import Crop
 from iJalagam.app.models.livestock import Livestock
+from iJalagam.app.models.industry import Industry
+from iJalagam.app.models.external_sources import ExternalSources
+from iJalagam.app.models.water_transfers import WaterTransfer
+from iJalagam.app.models.users import User
