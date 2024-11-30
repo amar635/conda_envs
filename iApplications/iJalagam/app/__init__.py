@@ -10,6 +10,7 @@ from iJalagam.app.models.users import User
 from iJalagam.app.routes.auth import blp as authBlueprint
 from iJalagam.app.routes.routes import blp as routesBlueprint
 from iJalagam.app.routes.entries import blp as entryBlueprint
+from iJalagam.app.routes.mobile import blp as mobileBlueprint
 
 def create_app():
     app = Flask(__name__)
@@ -39,4 +40,5 @@ def create_app():
     app.register_blueprint(authBlueprint )
     app.register_blueprint(routesBlueprint)
     app.register_blueprint(entryBlueprint, url_prefix='/data')
+    app.register_blueprint(mobileBlueprint, url_prefix='/m')
     return app
