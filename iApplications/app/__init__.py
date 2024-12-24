@@ -12,6 +12,7 @@ from iSaksham import app as Saksham
 from eSaksham import app as eSaksham
 from iWork import app as Work
 from iJalagam import app as Jalagam
+from iJal import app as Jal
 
 application = DispatcherMiddleware(Core, {
     '/iwater': Water,
@@ -23,7 +24,8 @@ application = DispatcherMiddleware(Core, {
     '/isaksham':Saksham,
     '/esaksham':eSaksham,
     '/iwork':Work,
-    '/ijalagam': Jalagam
+    '/ijal': Jalagam,
+    '/ijalagam': Jal
 })
 
 # application = iCore

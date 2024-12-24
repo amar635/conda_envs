@@ -1,0 +1,30 @@
+# Ignore Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+iJalagam/__pycache__/
+iJalagam/app/__pycache__/
+iJalagam/app/models/__pycache__/
+iJalagam/app/classes/__pycache__/
+iJalagam/app/routes/__pycache__/
+# Ignore virtual environment directories
+venv/
+env/
+.venv/
+
+# Ignore IDE/editor config files
+.vscode/
+.idea/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore logs and temporary files
+*.log
+*.tmp
+
+# Ignore build artifacts
+build/
+dist/
+*.egg-info/
